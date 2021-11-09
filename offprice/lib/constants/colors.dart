@@ -15,6 +15,17 @@ class AppColors {
     900: Color.fromRGBO(48, 48, 48, 1),
   };
 
+  static const Color colorGlassmorphismCard = Color(0x00303030);
+  static const Color colorGlassmorphismCardBorder = Color(0x005b5b5b);
+  static const Color colorHeading = Color.fromRGBO(253, 238, 206, 1);
+  static const LinearGradient mainLinearGradient = LinearGradient(
+      begin: Alignment.bottomLeft,
+      end: Alignment.topRight,
+      colors: [
+        Color.fromRGBO(240, 39, 18, 1),
+        Color.fromRGBO(244, 175, 25, 1),
+      ]);
+
   static const Map<int, Color> colorSecondary = {
     50: Color.fromRGBO(244, 175, 25, .1),
     100: Color.fromRGBO(244, 175, 25, .2),
@@ -40,21 +51,4 @@ class AppColors {
     800: Color.fromRGBO(240, 39, 18, .9),
     900: Color.fromRGBO(240, 39, 18, 1),
   };
-}
-
-class AppTheme {
-  static ThemeData get darkTheme {
-    return ThemeData(
-        primaryColor: AppColors.colorPrimary[900],
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: AppColors.colorBackground[900],
-        fontFamily: 'Archivo Narrow',
-        textTheme: const TextTheme(
-          headline1: TextStyle(
-            fontSize: 72.0,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ));
-  }
 }

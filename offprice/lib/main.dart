@@ -1,7 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:offprice/components/glassmorphism_card.dart';
 import 'package:offprice/constants/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'constants/main_theme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,7 +33,7 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             title: 'Flutter Demo',
             theme: AppTheme.darkTheme,
-            home: const MyHomePage(title: 'Flutter Demo Home Page'),
+            home: const MyHomePage(title: 'OffPrice'),
           );
         }
       },
@@ -48,38 +51,28 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+      body: Stack(
+        children: [
+          Positioned(
+            bottom: -100,
+            top: 0,
+            left: -50,
+            right: -50,
+            child: SvgPicture.asset(
+              'public/images/coinsBackground2.svg',
+              alignment: Alignment.bottomLeft,
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              semanticsLabel: 'Background',
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+          ),
+          const Center(
+            child: GlassmorphismCard(),
+          )
+        ],
       ),
     );
   }
@@ -93,8 +86,15 @@ class Splash extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.colorBackground[900],
       body: Center(
-          child: SvgPicture.asset('public/images/SplashText.svg',
-              semanticsLabel: 'OffPrice logo')),
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SvgPicture.asset('public/images/SplashText.svg',
+              semanticsLabel: 'OffPrice logo'),
+          const SizedBox(height: 30),
+          const CupertinoActivityIndicator(animating: true, radius: 20),
+        ],
+      )),
     );
   }
 }
@@ -104,6 +104,6 @@ class Init {
   static final instance = Init._();
 
   Future initialize() async {
-    await Future.delayed(const Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 1));
   }
 }
