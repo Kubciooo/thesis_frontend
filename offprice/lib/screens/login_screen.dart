@@ -19,11 +19,22 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     auth = Provider.of<AuthProvider>(context, listen: false);
-    auth.automaticLogin();
   }
 
   String _login = '';
   String _password = '';
+  double _width = 0.9;
+  double _height = 0.4;
+
+  void goToPassword() {
+    setState(() {
+      if (_height == 0.4) {
+        _height = 0.8;
+      } else {
+        _height = 0.4;
+      }
+    });
+  }
 
   void _changeLogin(value) {
     setState(() {
@@ -40,6 +51,12 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          goToPassword();
+        },
+        child: Icon(Icons.arrow_forward),
+      ),
       body: Stack(
         children: [
           Positioned(
@@ -56,42 +73,47 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
           Center(
-            child: GlassmorphismCard(
-              width: MediaQuery.of(context).size.width * 0.9,
-              height: MediaQuery.of(context).size.height * 0.4,
-              child: Container(
+            child: AnimatedContainer(
+              width: MediaQuery.of(context).size.width * _width,
+              height: MediaQuery.of(context).size.height * _height,
+              duration: const Duration(milliseconds: 300),
+              child: GlassmorphismCard(
                 width: double.infinity,
-                padding: const EdgeInsets.all(20),
+                height: double.infinity,
                 child: Container(
-                    height: double.infinity,
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        TextFieldDark(
-                          onChanged: _changeLogin,
-                          labelText: 'Login',
-                          hintText: 'Enter your login',
-                          icon: const Icon(Icons.person),
-                        ),
-                        TextFieldDark(
-                          onChanged: _changePassword,
-                          labelText: 'Password',
-                          hintText: 'Enter your password',
-                          icon: const Icon(Icons.lock),
-                          obscureText: true,
-                        ),
-                        const SizedBox(height: 20),
-                        TextButton(
-                          onPressed: () {
-                            auth.login(_login, _password);
-                          },
-                          child: const Text('Login',
-                              style: TextStyle(fontSize: 20)),
-                        ),
-                      ],
-                    )),
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(20),
+                  child: Container(
+                      height: double.infinity,
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          TextFieldDark(
+                            onChanged: _changeLogin,
+                            labelText: 'Login',
+                            hintText: 'Enter your login',
+                            icon: const Icon(Icons.person),
+                          ),
+                          TextFieldDark(
+                            onChanged: _changePassword,
+                            labelText: 'Password',
+                            hintText: 'Enter your password',
+                            icon: const Icon(Icons.lock),
+                            obscureText: true,
+                          ),
+                          const SizedBox(height: 20),
+                          TextButton(
+                            onPressed: () {
+                              auth.login(_login, _password);
+                            },
+                            child: const Text('Login',
+                                style: TextStyle(fontSize: 20)),
+                          ),
+                        ],
+                      )),
+                ),
               ),
             ),
           )
