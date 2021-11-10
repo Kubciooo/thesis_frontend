@@ -63,7 +63,6 @@ class AuthProvider with ChangeNotifier {
         }),
       );
       final responseData = json.decode(response.body);
-      print(responseData);
 
       if (responseData['status'] != null) {
         throw HttpException(responseData['status']['meesage']);
@@ -71,7 +70,6 @@ class AuthProvider with ChangeNotifier {
 
       _token = responseData['data']['token'];
       await storeUser(login, password);
-      print(token);
       notifyListeners();
       return true;
     } catch (error) {
@@ -105,7 +103,6 @@ class AuthProvider with ChangeNotifier {
         throw HttpException(responseData['error']['message']);
       }
       _token = responseData['data']['token'];
-      print(token);
       notifyListeners();
       return true;
     } catch (error) {

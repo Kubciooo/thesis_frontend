@@ -5,14 +5,20 @@ import 'package:offprice/constants/colors.dart';
 
 class GlassmorphismCard extends StatelessWidget {
   final Widget child;
+  final double width, height;
 
-  const GlassmorphismCard({Key? key, required this.child}) : super(key: key);
+  const GlassmorphismCard(
+      {Key? key,
+      required this.child,
+      required this.width,
+      required this.height})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GlassmorphicContainer(
-        width: MediaQuery.of(context).size.width * 0.9,
-        height: MediaQuery.of(context).size.height * 0.75,
+        width: width,
+        height: height,
         borderRadius: 39,
         blur: 15,
         alignment: Alignment.bottomCenter,

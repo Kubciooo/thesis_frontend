@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const Map<int, Color> colorBackground = {
+  static const Map<int, Color?> colorBackground = {
     50: Color.fromRGBO(48, 48, 48, .1),
     100: Color.fromRGBO(48, 48, 48, .2),
     200: Color.fromRGBO(48, 48, 48, .3),

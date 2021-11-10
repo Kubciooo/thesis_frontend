@@ -10,6 +10,7 @@ class AppTheme {
         brightness: Brightness.dark,
         scaffoldBackgroundColor: AppColors.colorBackground[900],
         fontFamily: 'Archivo Narrow',
+        colorScheme: const ColorScheme.dark(primary: Colors.white70),
         textTheme: GoogleFonts.archivoNarrowTextTheme(const TextTheme(
           headline1: TextStyle(
             fontSize: 36.0,
