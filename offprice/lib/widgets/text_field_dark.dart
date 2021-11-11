@@ -8,6 +8,7 @@ class TextFieldDark extends StatefulWidget {
   final Function onChanged;
   final String labelText;
   final bool obscureText;
+  final Function validator;
 
   const TextFieldDark(
       {Key? key,
@@ -15,6 +16,7 @@ class TextFieldDark extends StatefulWidget {
       required this.labelText,
       required this.hintText,
       required this.icon,
+      required this.validator,
       this.obscureText = false})
       : super(key: key);
 
@@ -27,9 +29,12 @@ class _TextFieldDarkState extends State<TextFieldDark> {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       controller: controller,
       onChanged: (value) => widget.onChanged(value),
+      validator: (value) {
+        return widget.validator(value);
+      },
       decoration: InputDecoration(
         labelText: widget.labelText,
         hintText: widget.hintText,

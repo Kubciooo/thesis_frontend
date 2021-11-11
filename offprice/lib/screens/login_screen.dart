@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:offprice/components/glassmorphism_card.dart';
-import 'package:offprice/components/text_field_dark.dart';
+import 'package:offprice/widgets/glassmorphism_card.dart';
+import 'package:offprice/widgets/text_field_dark.dart';
 import 'package:offprice/providers/auth.dart';
 import 'package:provider/provider.dart';
+import 'package:validators/validators.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -14,24 +15,24 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  late final auth;
-  @override
-  void initState() {
-    super.initState();
-    auth = Provider.of<AuthProvider>(context, listen: false);
-  }
-
   String _login = '';
   String _password = '';
-  double _width = 0.9;
+  String _email = '';
+  String _retypePassword = '';
+  bool _isLogin = true;
+  final _formKey = GlobalKey<FormState>();
+
+  final double _width = 0.9;
   double _height = 0.4;
 
-  void goToPassword() {
+  void switchLoginAndRegister() {
     setState(() {
-      if (_height == 0.4) {
-        _height = 0.8;
+      if (_isLogin) {
+        _height = 0.6;
+        _isLogin = false;
       } else {
         _height = 0.4;
+        _isLogin = true;
       }
     });
   }
@@ -48,14 +49,26 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
+  void _changeEmail(value) {
+    setState(() {
+      _email = value;
+    });
+  }
+
+  void _changeRetypePassword(value) {
+    setState(() {
+      _retypePassword = value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          goToPassword();
+          switchLoginAndRegister();
         },
-        child: Icon(Icons.arrow_forward),
+        child: const Icon(Icons.arrow_forward),
       ),
       body: Stack(
         children: [
@@ -81,13 +94,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: double.infinity,
                 height: double.infinity,
                 child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(20),
-                  child: Container(
-                      height: double.infinity,
-                      padding: const EdgeInsets.all(20),
+                    height: double.infinity,
+                    padding: const EdgeInsets.all(40),
+                    child: Form(
+                      key: _formKey,
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           TextFieldDark(
@@ -95,6 +107,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             labelText: 'Login',
                             hintText: 'Enter your login',
                             icon: const Icon(Icons.person),
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter your login';
+                              }
+                              return null;
+                            },
                           ),
                           TextFieldDark(
                             onChanged: _changePassword,
@@ -102,18 +120,72 @@ class _LoginScreenState extends State<LoginScreen> {
                             hintText: 'Enter your password',
                             icon: const Icon(Icons.lock),
                             obscureText: true,
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter your password';
+                              }
+                              return null;
+                            },
                           ),
+                          if (!_isLogin)
+                            TextFieldDark(
+                              onChanged: _changeEmail,
+                              labelText: 'Email',
+                              hintText: 'Enter your email',
+                              icon: const Icon(Icons.email),
+                              validator: (value) {
+                                if (value.isEmpty || !isEmail(value)) {
+                                  return 'Please enter your email';
+                                }
+                                return null;
+                              },
+                            ),
+                          if (!_isLogin)
+                            TextFieldDark(
+                              onChanged: _changeRetypePassword,
+                              labelText: 'Retype password',
+                              hintText: 'Enter your password again',
+                              icon: const Icon(Icons.lock),
+                              obscureText: true,
+                              validator: (value) => value != _password
+                                  ? 'Passwords do not match'
+                                  : null,
+                            ),
                           const SizedBox(height: 20),
                           TextButton(
-                            onPressed: () {
-                              auth.login(_login, _password);
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                if (_isLogin) {
+                                  bool didSignIn =
+                                      await Provider.of<AuthProvider>(context,
+                                              listen: false)
+                                          .signIn(
+                                              login: _login,
+                                              password: _password);
+
+                                  if (didSignIn) {
+                                    Navigator.of(context).pushNamed('/home');
+                                  }
+                                } else {
+                                  bool didSignUp =
+                                      await Provider.of<AuthProvider>(context,
+                                              listen: false)
+                                          .signUp(
+                                              login: _login,
+                                              email: _email,
+                                              password: _password,
+                                              retypePassword: _retypePassword);
+
+                                  if (didSignUp) {}
+                                }
+                              }
                             },
-                            child: const Text('Login',
-                                style: TextStyle(fontSize: 20)),
+                            child: Text(_isLogin ? 'Login' : 'Register',
+                                style: const TextStyle(fontSize: 20)),
                           ),
                         ],
-                      )),
-                ),
+                      ),
+                    )),
               ),
             ),
           )

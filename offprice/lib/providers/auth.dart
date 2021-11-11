@@ -42,6 +42,7 @@ class AuthProvider with ChangeNotifier {
     var password = userData['password'];
     bool userLoggedIn = await signIn(login: login!, password: password!);
 
+    notifyListeners();
     return userLoggedIn;
   }
 
@@ -54,8 +55,13 @@ class AuthProvider with ChangeNotifier {
     try {
       final response = await http.post(
         url,
-        headers: <String, String>{
+        headers: {
           'Content-Type': 'application/json; charset=UTF-8',
+          "Access-Control-Allow-Origin":
+              "*", // Required for CORS support to work
+          "Access-Control-Allow-Headers":
+              "Origin,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,locale",
+          "Access-Control-Allow-Methods": "POST, OPTIONS"
         },
         body: jsonEncode(<String, String>{
           'login': login,
@@ -65,7 +71,7 @@ class AuthProvider with ChangeNotifier {
       final responseData = json.decode(response.body);
 
       if (responseData['status'] != null) {
-        throw HttpException(responseData['status']['meesage']);
+        throw HttpException(responseData['message']);
       }
 
       _token = responseData['data']['token'];
@@ -79,8 +85,11 @@ class AuthProvider with ChangeNotifier {
   }
 
   //function to register user via api with url and body
-  Future<bool> signUp(String login, String email, String password,
-      String retypePassword) async {
+  Future<bool> signUp(
+      {required String login,
+      required String email,
+      required String password,
+      required String retypePassword}) async {
     var url = Uri.parse('http://localhost:3000/api/users/signup');
 
     try {
@@ -98,9 +107,9 @@ class AuthProvider with ChangeNotifier {
       );
 
       final responseData = json.decode(response.body);
-
-      if (responseData['error'] != null) {
-        throw HttpException(responseData['error']['message']);
+      print(responseData);
+      if (responseData['status'] == 'error') {
+        throw HttpException(responseData['message']);
       }
       _token = responseData['data']['token'];
       notifyListeners();
@@ -127,10 +136,9 @@ class AuthProvider with ChangeNotifier {
       );
 
       final responseData = json.decode(response.body);
-      print(responseData);
 
-      if (responseData['error'] != null) {
-        throw HttpException(responseData['error']['message']);
+      if (responseData['status'] != null) {
+        throw HttpException(responseData['message']);
       }
       notifyListeners();
       return true;

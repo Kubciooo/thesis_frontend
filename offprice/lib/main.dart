@@ -4,7 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:offprice/constants/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:offprice/providers/auth.dart';
+import 'package:offprice/providers/promotions.dart';
 import 'package:offprice/screens/login_screen.dart';
+import 'package:offprice/screens/main_screen.dart';
 import 'package:provider/provider.dart';
 import 'constants/main_theme.dart';
 
@@ -12,8 +14,15 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
       overlays: [SystemUiOverlay.bottom, SystemUiOverlay.top]);
-  runApp(ChangeNotifierProvider(
-      create: (BuildContext context) => AuthProvider(), child: const MyApp()));
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(
+      create: (context) => AuthProvider(),
+    ),
+    ChangeNotifierProxyProvider<AuthProvider, PromotionsProvider>(
+      create: (context) => PromotionsProvider(),
+      update: (context, auth, promotions) => promotions!..update(auth),
+    ),
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -38,12 +47,19 @@ class MyApp extends StatelessWidget {
           /**
            * @todo autologin -> login on false / mainPage on true 
            */
-          print(snapshot.data);
+          Widget screen = const LoginScreen();
+          if (snapshot.data == true) {
+            screen = const MainScreen();
+          }
           return Consumer<AuthProvider>(
               builder: (ctx, auth, _) => MaterialApp(
                     title: 'Offprice',
                     theme: AppTheme.darkTheme,
-                    home: const LoginScreen(),
+                    home: screen,
+                    routes: {
+                      '/login': (context) => const LoginScreen(),
+                      '/home': (context) => const MainScreen(),
+                    },
                   ));
         }
       },

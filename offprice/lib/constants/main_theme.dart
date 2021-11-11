@@ -26,6 +26,20 @@ class AppTheme {
             height: 1.1,
             letterSpacing: -0.03,
           ),
+          headline3: TextStyle(
+            fontSize: 20.0,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+            height: 1.15,
+            letterSpacing: -0.03,
+          ),
+          headline4: TextStyle(
+            fontSize: 18.0,
+            fontWeight: FontWeight.w500,
+            color: Color(0x00e0e0ff),
+            height: 1.15,
+            letterSpacing: -0.03,
+          ),
         )));
   }
 }
