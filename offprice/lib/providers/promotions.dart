@@ -26,7 +26,7 @@ class PromotionsProvider with ChangeNotifier {
     return getPromotions(refresh: true);
   }
 
-  Future<List<DealModel>> getPromotions({refresh = false}) async {
+  Future<List<DealModel>> getPromotions({refresh = false, filter = ''}) async {
     if (_deals.isEmpty) {
       await getLatestPromotions();
     }
@@ -34,7 +34,12 @@ class PromotionsProvider with ChangeNotifier {
     if (refresh) {
       clearPromotions();
     }
-
+    if (filter != '') {
+      return _deals
+          .where((deal) =>
+              deal.product.name.toLowerCase().contains(filter.toLowerCase()))
+          .toList();
+    }
     return _deals;
   }
 
