@@ -5,6 +5,7 @@ class DealModel {
   final String type;
   final ProductModel product;
   final double startingPrice;
+  final int rating;
   final String discountType;
   final String coupon;
   final double cash;
@@ -16,6 +17,7 @@ class DealModel {
     required this.id,
     required this.type,
     required this.startingPrice,
+    required this.rating,
     required this.discountType,
     required this.startsAt,
     required this.product,
@@ -40,6 +42,7 @@ class DealModel {
       type: json['type'],
       startingPrice: json['startingPrice'].toDouble(),
       discountType: json['discountType'],
+      rating: json['rating'],
       coupon: json['coupon'] ?? '',
       cash: json['cash'] != null ? json['cash'].toDouble() : 0.0,
       percent: json['percentage'] ?? 0,

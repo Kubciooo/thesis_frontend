@@ -10,6 +10,7 @@ class PromotionsProvider with ChangeNotifier {
   // create a function to login user via api with url and body
   String _token = '';
   final List<DealModel> _deals = [];
+  final List<DealModel> _favDeals = [];
   get token => _token;
 
   void update(AuthProvider auth) {
@@ -29,11 +30,48 @@ class PromotionsProvider with ChangeNotifier {
     if (_deals.isEmpty) {
       await getLatestPromotions();
     }
+
     if (refresh) {
       clearPromotions();
     }
 
     return _deals;
+  }
+
+  Future<String> followPromotion(promotionId) async {
+    final url = 'http://localhost:3000/api/promotions/products/$promotionId';
+    final uri = Uri.parse(url);
+    final response = await http.patch(
+      uri,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer $_token',
+      },
+    );
+    if (response.statusCode == 200) {
+      _favDeals.clear();
+      await getFavPromotions();
+      return 'Promotion followed';
+    } else {
+      return 'Failed to add promotion to user';
+    }
+  }
+
+  Future<String> unfollowPromotion(promotionId) async {
+    final url = 'http://localhost:3000/api/promotions/products/$promotionId';
+    final uri = Uri.parse(url);
+    final response = await http.delete(
+      uri,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer $_token',
+      },
+    );
+    if (response.statusCode == 200) {
+      _favDeals.clear();
+      await getFavPromotions();
+      return 'Promotion unfollowed';
+    } else {
+      return 'Failed to unfollow promotion';
+    }
   }
 
   // function to reset forgotten password
@@ -60,6 +98,46 @@ class PromotionsProvider with ChangeNotifier {
         _deals.add(
             DealModel.fromJson(responseData['data']['productPromotions'][i]));
       }
+      notifyListeners();
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  bool isFollowed(String promotionId) {
+    for (var i = 0; i < _favDeals.length; i++) {
+      if (_favDeals[i].id == promotionId) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  Future<void> getFavPromotions() async {
+    var url = Uri.parse('http://localhost:3000/api/users/productPromotions');
+    try {
+      final response = await http.get(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          "Authorization": "Bearer " + token,
+        },
+      );
+
+      final responseData = json.decode(response.body);
+
+      if (responseData['status'] == 'Error') {
+        throw HttpException(responseData['message']);
+      }
+
+      for (var i = 0;
+          i < responseData['data']['productPromotions'].length;
+          i++) {
+        // print(responseData['data']['productPromotions'][i]);
+        _favDeals.add(
+            DealModel.fromJson(responseData['data']['productPromotions'][i]));
+      }
+
       notifyListeners();
     } catch (error) {
       print(error);

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:offprice/models/deal.dart';
+import 'package:offprice/screens/product_promotion.dart';
 import 'package:offprice/widgets/gradient_text.dart';
 import 'package:offprice/constants/colors.dart';
 import 'package:offprice/providers/promotions.dart';
@@ -15,6 +16,12 @@ class HotDeals extends StatefulWidget {
 }
 
 class _HotDealsState extends State<HotDeals> {
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<PromotionsProvider>(context, listen: false).getFavPromotions();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -54,7 +61,13 @@ class _HotDealsState extends State<HotDeals> {
                     physics: const AlwaysScrollableScrollPhysics(),
                     itemBuilder: (BuildContext context, int index) {
                       return ListTile(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.of(context).push(PageRouteBuilder(
+                              opaque: false,
+                              pageBuilder: (BuildContext context, _, __) =>
+                                  ProductPromotionScreen(
+                                      productPromotion: data[index])));
+                        },
                         title: Text(data[index].product.name,
                             style: Theme.of(context).textTheme.headline3),
                         subtitle: Text(data[index].finalPrice.toString(),
@@ -73,7 +86,7 @@ class _HotDealsState extends State<HotDeals> {
                                 ),
                                 Center(
                                   child: Text(
-                                    '${index + 1}',
+                                    data[index].rating.toString(),
                                     style: Theme.of(context)
                                         .textTheme
                                         .headline3!
