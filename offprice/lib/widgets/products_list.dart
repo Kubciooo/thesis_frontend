@@ -26,6 +26,11 @@ class _ProductsListState extends State<ProductsList> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Expanded(
       child: FutureBuilder(

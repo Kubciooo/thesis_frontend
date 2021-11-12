@@ -21,7 +21,6 @@ class ProductsProvider with ChangeNotifier {
   void clearProducts() {
     _products.clear();
     shouldFetch = true;
-    notifyListeners();
   }
 
   Future<List<ProductModel>> refreshProducts({min, max, name}) async {
@@ -36,6 +35,7 @@ class ProductsProvider with ChangeNotifier {
     }
     if (refresh) {
       clearProducts();
+      notifyListeners();
     }
 
     return _products;

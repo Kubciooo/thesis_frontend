@@ -35,7 +35,11 @@ class _AddPromotionScreenState extends State<AddPromotionScreen> {
 
   void _changePriceMin(String value) {
     setState(() {
-      _priceMin = int.parse(value);
+      if (value != '') {
+        _priceMin = int.parse(value);
+      } else {
+        _priceMin = 0;
+      }
       Provider.of<ProductsProvider>(context, listen: false)
           .refreshProducts(name: _name, min: _priceMin, max: _priceMax);
     });
@@ -43,6 +47,11 @@ class _AddPromotionScreenState extends State<AddPromotionScreen> {
 
   void _changePriceMax(String value) {
     setState(() {
+      if (value != '') {
+        _priceMax = int.parse(value);
+      } else {
+        _priceMax = 0;
+      }
       _priceMax = int.parse(value);
       Provider.of<ProductsProvider>(context, listen: false)
           .refreshProducts(name: _name, min: _priceMin, max: _priceMax);
