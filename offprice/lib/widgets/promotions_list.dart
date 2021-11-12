@@ -23,7 +23,6 @@ class _PromotionsListState extends State<PromotionsList> {
   @override
   void initState() {
     super.initState();
-    Provider.of<PromotionsProvider>(context, listen: false).getFavPromotions();
   }
 
   @override
@@ -31,7 +30,7 @@ class _PromotionsListState extends State<PromotionsList> {
     return Expanded(
       child: FutureBuilder(
           future: Provider.of<PromotionsProvider>(context, listen: true)
-              .getPromotions(filter: widget.searchTerm),
+              .getPromotions(filter: widget.searchTerm, fetchUser: true),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(

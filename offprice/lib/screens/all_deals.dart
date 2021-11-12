@@ -93,7 +93,9 @@ class _AllDealsScreenState extends State<AllDealsScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).pushNamed('/add-promotion');
+        },
         child: const Icon(
           Icons.add,
           color: Colors.white,

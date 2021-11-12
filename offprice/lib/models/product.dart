@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:offprice/models/shop.dart';
+
 class _OtherPromotions {
   final String name;
   final String id;
@@ -48,6 +50,8 @@ class ProductModel {
   final String id;
   final String url;
   final String name;
+  final double price;
+  final String shop;
   final List<String> categories;
   final List<String> coupons;
   final List<_OtherPromotions> otherPromotions;
@@ -57,6 +61,8 @@ class ProductModel {
       {required this.id,
       required this.url,
       required this.name,
+      required this.price,
+      required this.shop,
       required this.categories,
       required this.coupons,
       required this.otherPromotions,
@@ -68,6 +74,26 @@ class ProductModel {
       id: json['_id'],
       url: json['url'],
       name: json['name'],
+      price: json['price'].toDouble(),
+      shop: json['shop'],
+      categories: ((json['categories']) as List<dynamic>).cast<String>(),
+      coupons: ((json['coupons']) as List<dynamic>).cast<String>(),
+      otherPromotions: (json['otherPromotions'] as List<dynamic>)
+          .map((promotion) => _OtherPromotions.fromJson(promotion))
+          .toList(),
+      snapshots: (json['snapshots'] as List<dynamic>)
+          .map((snapshot) => _Snapshot.fromJson(snapshot))
+          .toList(),
+    );
+  }
+
+  factory ProductModel.fromJsonShop(Map<String, dynamic> json) {
+    return ProductModel(
+      id: json['_id'],
+      url: json['url'],
+      name: json['name'],
+      price: json['price'].toDouble(),
+      shop: ShopModel.fromJson(json['shop']).id,
       categories: ((json['categories']) as List<dynamic>).cast<String>(),
       coupons: ((json['coupons']) as List<dynamic>).cast<String>(),
       otherPromotions: (json['otherPromotions'] as List<dynamic>)

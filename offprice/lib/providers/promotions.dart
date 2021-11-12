@@ -11,6 +11,7 @@ class PromotionsProvider with ChangeNotifier {
   String _token = '';
   final List<DealModel> _deals = [];
   final List<DealModel> _favDeals = [];
+  bool _shouldFetch = true;
   get token => _token;
 
   void update(AuthProvider auth) {
@@ -18,21 +19,27 @@ class PromotionsProvider with ChangeNotifier {
   }
 
   void clearPromotions() {
+    _shouldFetch = true;
     _deals.clear();
-    notifyListeners();
   }
 
   Future<List<DealModel>> refreshPromotions() async {
     return getPromotions(refresh: true);
   }
 
-  Future<List<DealModel>> getPromotions({refresh = false, filter = ''}) async {
-    if (_deals.isEmpty) {
-      await getLatestPromotions();
-    }
-
+  Future<List<DealModel>> getPromotions(
+      {refresh = false, filter = '', fetchUser = false}) async {
     if (refresh) {
       clearPromotions();
+    }
+
+    if (_shouldFetch) {
+      _shouldFetch = false;
+      await getLatestPromotions();
+      if (fetchUser) {
+        await getUserPromotions();
+      }
+      notifyListeners();
     }
     if (filter != '') {
       return _deals
@@ -54,7 +61,7 @@ class PromotionsProvider with ChangeNotifier {
     );
     if (response.statusCode == 200) {
       _favDeals.clear();
-      await getFavPromotions();
+      await getUserPromotions();
       return 'Promotion followed';
     } else {
       return 'Failed to add promotion to user';
@@ -72,7 +79,7 @@ class PromotionsProvider with ChangeNotifier {
     );
     if (response.statusCode == 200) {
       _favDeals.clear();
-      await getFavPromotions();
+      await getUserPromotions();
       return 'Promotion unfollowed';
     } else {
       return 'Failed to unfollow promotion';
@@ -118,7 +125,7 @@ class PromotionsProvider with ChangeNotifier {
     return false;
   }
 
-  Future<void> getFavPromotions() async {
+  Future<void> getUserPromotions() async {
     var url = Uri.parse('http://localhost:3000/api/users/productPromotions');
     try {
       final response = await http.get(
