@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:offprice/providers/products.dart';
+import 'package:offprice/screens/add_promotion_next.dart';
 import 'package:offprice/widgets/glassmorphism_card.dart';
 import 'package:offprice/widgets/products_list.dart';
-import 'package:offprice/widgets/text_field_dark.dart';
 import 'package:provider/provider.dart';
 
 class AddPromotionScreen extends StatefulWidget {
@@ -19,8 +19,6 @@ class _AddPromotionScreenState extends State<AddPromotionScreen> {
   String _name = '';
   int _priceMin = 0;
   int _priceMax = 0;
-
-  final _formKey = GlobalKey<FormState>();
 
   final double _width = 0.9;
   final double _height = 0.9;
@@ -119,6 +117,14 @@ class _AddPromotionScreenState extends State<AddPromotionScreen> {
                         ),
                       ]),
                       ProductsList(
+                          onProductSelected: (product) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      AddPromotionNext(product: product),
+                                ));
+                          },
                           name: _name,
                           priceMin: _priceMin,
                           priceMax: _priceMax == 0 ? 999999 : _priceMax),

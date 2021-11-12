@@ -86,6 +86,48 @@ class PromotionsProvider with ChangeNotifier {
     }
   }
 
+  Future<String> addPromotion(
+      {required String product,
+      required double startingPrice,
+      required String type,
+      required String discountType,
+      required String coupon,
+      required bool userValidation,
+      required DateTime expiresAt,
+      required int percentage,
+      required double cash}) async {
+    var url = Uri.parse('http://localhost:3000/api/promotions/products');
+    try {
+      final response = await http.post(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          "Authorization": "Bearer " + token,
+        },
+        body: jsonEncode(<String, dynamic>{
+          'product': product,
+          'type': type,
+          'startingPrice': startingPrice,
+          'discountType': discountType,
+          'coupon': coupon,
+          'percentage': percentage,
+          'cash': cash,
+          'expiresAt': expiresAt.toIso8601String(),
+        }),
+      );
+      final responseData = json.decode(response.body);
+
+      if (responseData['status'] == 'error') {
+        throw HttpException(responseData['message']);
+      }
+      notifyListeners();
+      return 'Promotion added successfully';
+    } catch (error) {
+      print(error);
+      return error.toString();
+    }
+  }
+
   // function to reset forgotten password
   Future<void> getLatestPromotions() async {
     var url = Uri.parse('http://localhost:3000/api/promotions/products');

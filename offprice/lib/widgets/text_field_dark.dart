@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:offprice/constants/colors.dart';
 
 class TextFieldDark extends StatefulWidget {
@@ -9,6 +10,7 @@ class TextFieldDark extends StatefulWidget {
   final String labelText;
   final bool obscureText;
   final Function validator;
+  final bool isNumeric;
 
   const TextFieldDark(
       {Key? key,
@@ -17,6 +19,7 @@ class TextFieldDark extends StatefulWidget {
       required this.hintText,
       required this.icon,
       required this.validator,
+      this.isNumeric = false,
       this.obscureText = false})
       : super(key: key);
 
@@ -41,6 +44,12 @@ class _TextFieldDarkState extends State<TextFieldDark> {
         icon: widget.icon,
         fillColor: AppColors.colorSecondary[900],
       ),
+      keyboardType:
+          widget.isNumeric ? TextInputType.number : TextInputType.text,
+      inputFormatters: <TextInputFormatter>[
+        if (widget.isNumeric)
+          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+      ],
       obscureText: widget.obscureText,
     );
   }

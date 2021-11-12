@@ -8,10 +8,12 @@ class ProductsList extends StatefulWidget {
   final String name;
   final int priceMin;
   final int priceMax;
+  final Function onProductSelected;
   const ProductsList({
     this.name = '',
     this.priceMax = 999999999,
     this.priceMin = 0,
+    required this.onProductSelected,
     Key? key,
   }) : super(key: key);
 
@@ -61,13 +63,7 @@ class _ProductsListState extends State<ProductsList> {
                 physics: const AlwaysScrollableScrollPhysics(),
                 itemBuilder: (BuildContext context, int index) {
                   return ListTile(
-                    onTap: () {
-                      // Navigator.of(context).push(PageRouteBuilder(
-                      //     opaque: false,
-                      //     pageBuilder: (BuildContext context, _, __) =>
-                      //         ProductPromotionScreen(
-                      //             productPromotion: products[index])));
-                    },
+                    onTap: () => widget.onProductSelected(products[index]),
                     title: Text(products[index].name,
                         style: Theme.of(context)
                             .textTheme
