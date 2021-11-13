@@ -175,7 +175,10 @@ class ProductsProvider with ChangeNotifier {
 
   Future<void> getLatestProducts({min = -1, max = 9000000, name = ''}) async {
     var url =
-        ('http://localhost:3000/api/products?price[gte]=${min.toString()}&price[lte]=${max.toString()}&name=$name');
+        ('http://localhost:3000/api/products?price[gte]=${min.toString()}&price[lte]=${max.toString()}');
+    if (name != '') {
+      url += '&name=$name';
+    }
 
     var uri = Uri.parse(url);
 
