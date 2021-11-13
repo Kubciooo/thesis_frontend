@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:offprice/widgets/glassmorphism_card.dart';
+import 'package:offprice/widgets/main_screen/favourite_product.dart';
 import 'package:offprice/widgets/main_screen/hot_deals.dart';
 
 class MainScreen extends StatefulWidget {
@@ -60,8 +61,9 @@ class _MainScreenState extends State<MainScreen> {
                     ),
                     Center(
                       child: GlassmorphismCard(
-                        child: Container(
-                          child: Text('2'),
+                        child: Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: FavouriteProduct(),
                         ),
                         width: MediaQuery.of(context).size.width * 0.9,
                         height: MediaQuery.of(context).size.height * 0.8,

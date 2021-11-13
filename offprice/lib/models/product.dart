@@ -18,14 +18,14 @@ class _OtherPromotions {
   }
 }
 
-class _Snapshot {
+class Snapshot {
   final String id;
   final List<String> coupons;
   final List<_OtherPromotions> otherPromotions;
   final double price;
   final DateTime updatedAt;
 
-  _Snapshot(
+  Snapshot(
       {required this.id,
       required this.coupons,
       required this.otherPromotions,
@@ -33,8 +33,8 @@ class _Snapshot {
       required this.updatedAt});
 
   //json to model object
-  factory _Snapshot.fromJson(Map<String, dynamic> json) {
-    return _Snapshot(
+  factory Snapshot.fromJson(Map<String, dynamic> json) {
+    return Snapshot(
       id: json['_id'],
       coupons: ((json['coupons']) as List<dynamic>).cast<String>(),
       otherPromotions: (json['otherPromotions'] as List<dynamic>)
@@ -55,7 +55,7 @@ class ProductModel {
   final List<String> categories;
   final List<String> coupons;
   final List<_OtherPromotions> otherPromotions;
-  final List<_Snapshot> snapshots;
+  final List<Snapshot> snapshots;
 
   ProductModel(
       {required this.id,
@@ -82,7 +82,7 @@ class ProductModel {
           .map((promotion) => _OtherPromotions.fromJson(promotion))
           .toList(),
       snapshots: (json['snapshots'] as List<dynamic>)
-          .map((snapshot) => _Snapshot.fromJson(snapshot))
+          .map((snapshot) => Snapshot.fromJson(snapshot))
           .toList(),
     );
   }
@@ -100,7 +100,7 @@ class ProductModel {
           .map((promotion) => _OtherPromotions.fromJson(promotion))
           .toList(),
       snapshots: (json['snapshots'] as List<dynamic>)
-          .map((snapshot) => _Snapshot.fromJson(snapshot))
+          .map((snapshot) => Snapshot.fromJson(snapshot))
           .toList(),
     );
   }

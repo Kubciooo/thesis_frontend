@@ -8,11 +8,15 @@ class ProductsList extends StatefulWidget {
   final String name;
   final int priceMin;
   final int priceMax;
+  final bool favouritesOnly;
+  final bool useScrapper;
   final Function onProductSelected;
   const ProductsList({
     this.name = '',
     this.priceMax = 999999999,
     this.priceMin = 0,
+    this.favouritesOnly = false,
+    this.useScrapper = false,
     required this.onProductSelected,
     Key? key,
   }) : super(key: key);
@@ -40,6 +44,7 @@ class _ProductsListState extends State<ProductsList> {
               .getProducts(
                   name: widget.name,
                   min: widget.priceMin,
+                  favouritesOnly: widget.favouritesOnly,
                   max: widget.priceMax),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -47,6 +52,12 @@ class _ProductsListState extends State<ProductsList> {
                 child: CircularProgressIndicator(),
               );
             }
+            if (snapshot.hasError) {
+              return Center(
+                child: Text('Error: ${snapshot.error}'),
+              );
+            }
+
             final List<ProductModel> products =
                 snapshot.data as List<ProductModel>;
 
@@ -56,6 +67,7 @@ class _ProductsListState extends State<ProductsList> {
                     .refreshProducts(
                         min: widget.priceMin,
                         max: widget.priceMax,
+                        favouritesOnly: widget.favouritesOnly,
                         name: widget.name);
               },
               child: ListView.builder(

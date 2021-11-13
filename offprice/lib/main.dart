@@ -8,6 +8,7 @@ import 'package:offprice/providers/products.dart';
 import 'package:offprice/providers/promotions.dart';
 import 'package:offprice/screens/add_promotion.dart';
 import 'package:offprice/screens/all_deals.dart';
+import 'package:offprice/screens/all_products.dart';
 import 'package:offprice/screens/login_screen.dart';
 import 'package:offprice/screens/main_screen.dart';
 import 'package:provider/provider.dart';
@@ -68,6 +69,7 @@ class MyApp extends StatelessWidget {
                       '/home': (context) => const MainScreen(),
                       '/all-deals': (context) => const AllDealsScreen(),
                       '/add-promotion': (context) => const AddPromotionScreen(),
+                      '/all-products': (context) => const AllProductsScreen(),
                     },
                   ));
         }

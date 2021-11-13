@@ -44,6 +44,7 @@ dependencies:
   validators: ^3.0.0
   url_launcher: ^6.0.12
   flutter_datetime_picker: ^1.5.1
+  charts_flutter: ^0.12.0
 
 dev_dependencies:
   flutter_test:
