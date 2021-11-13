@@ -1,10 +1,9 @@
 import 'package:charts_flutter/flutter.dart';
 import 'package:flutter/widgets.dart';
-import 'package:offprice/models/product_chart.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
 class Chart extends StatelessWidget {
-  final List<charts.Series<ProductChartModel, String>> productChart;
+  final List<charts.Series<dynamic, String>> productChart;
   const Chart({Key? key, required this.productChart}) : super(key: key);
 
   @override
@@ -14,8 +13,9 @@ class Chart extends StatelessWidget {
       animate: true,
       selectionModels: [
         SelectionModelConfig(changedListener: (SelectionModel model) {
-          if (model.hasDatumSelection)
-            print((model.selectedDatum[0].datum as ProductChartModel).date);
+          if (model.hasDatumSelection) {
+            print((model.selectedDatum[0].datum as dynamic));
+          }
         })
       ],
       domainAxis: charts.OrdinalAxisSpec(

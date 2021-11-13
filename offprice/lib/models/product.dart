@@ -46,6 +46,26 @@ class Snapshot {
   }
 }
 
+class UserProductsModel {
+  final String name;
+  final String id;
+  final List<ProductModel> products;
+
+  UserProductsModel(
+      {required this.id, required this.name, required this.products});
+
+  // json to model
+  factory UserProductsModel.fromJson(Map<String, dynamic> json) {
+    return UserProductsModel(
+      id: json['_id'],
+      name: json['name'],
+      products: (json['products'] as List<dynamic>)
+          .map((product) => ProductModel.fromJsonShop(product))
+          .toList(),
+    );
+  }
+}
+
 class ProductModel {
   final String id;
   final String url;
@@ -93,7 +113,7 @@ class ProductModel {
       url: json['url'],
       name: json['name'],
       price: json['price'].toDouble(),
-      shop: ShopModel.fromJson(json['shop']).id,
+      shop: ShopModel.fromJson(json['shop']).name,
       categories: ((json['categories']) as List<dynamic>).cast<String>(),
       coupons: ((json['coupons']) as List<dynamic>).cast<String>(),
       otherPromotions: (json['otherPromotions'] as List<dynamic>)

@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:charts_flutter/flutter.dart' as charts;
 
 import 'package:flutter/material.dart';
+import 'package:offprice/constants/api.dart';
 // import color package
 
 import 'package:offprice/models/product.dart';
@@ -85,6 +86,8 @@ class ProductsProvider with ChangeNotifier {
     }
     if (refresh) {
       clearProducts();
+      print('XD');
+      await getLatestProducts(min: min, max: max, name: name);
       notifyListeners();
     }
     // print(favouritesOnly); // Todo: why does it happen 3 times?
@@ -93,7 +96,7 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<String> followProduct(productId) async {
-    final url = 'http://localhost:3000/api/products/$productId';
+    final url = '$host/api/products/$productId';
     final uri = Uri.parse(url);
     final response = await http.patch(
       uri,
@@ -111,7 +114,7 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<String> unfollowProduct(productId) async {
-    final url = 'http://localhost:3000/api/products/$productId';
+    final url = '$host/api/products/$productId';
     final uri = Uri.parse(url);
     final response = await http.delete(
       uri,
@@ -132,7 +135,7 @@ class ProductsProvider with ChangeNotifier {
 
   Future<void> getProductsFromScrapper(
       {min = -1, max = 9000000, name = ''}) async {
-    var url = ('http://localhost:3000/api/products/scrapper');
+    var url = ('$host/api/products/scrapper');
 
     var uri = Uri.parse(url);
 
@@ -175,7 +178,7 @@ class ProductsProvider with ChangeNotifier {
 
   Future<void> getLatestProducts({min = -1, max = 9000000, name = ''}) async {
     var url =
-        ('http://localhost:3000/api/products?price[gte]=${min.toString()}&price[lte]=${max.toString()}');
+        ('$host/api/products?price[gte]=${min.toString()}&price[lte]=${max.toString()}');
     if (name != '') {
       url += '&name=$name';
     }
@@ -217,7 +220,7 @@ class ProductsProvider with ChangeNotifier {
 
   Future<void> getFavourites() async {
     _favourites.clear();
-    var url = Uri.parse('http://localhost:3000/api/users/products');
+    var url = Uri.parse('$host/api/users/products');
     try {
       final response = await http.get(
         url,
@@ -235,8 +238,8 @@ class ProductsProvider with ChangeNotifier {
 
       for (var i = 0; i < responseData['data']['products'].length; i++) {
         // print(responseData['data']['products'][i]);
-        _favourites
-            .add(ProductModel.fromJson(responseData['data']['products'][i]));
+        _favourites.add(
+            ProductModel.fromJsonShop(responseData['data']['products'][i]));
       }
 
       notifyListeners();

@@ -10,6 +10,7 @@ class ProductsList extends StatefulWidget {
   final int priceMax;
   final bool favouritesOnly;
   final bool useScrapper;
+
   final Function onProductSelected;
   const ProductsList({
     this.name = '',

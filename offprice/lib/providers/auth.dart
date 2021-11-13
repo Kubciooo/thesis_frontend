@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
+import 'package:offprice/constants/api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthProvider with ChangeNotifier {
@@ -50,8 +51,8 @@ class AuthProvider with ChangeNotifier {
       {required String login,
       required String password,
       bool automatic = false}) async {
-    var url = Uri.parse('http://localhost:3000/api/users/login');
-
+    var url = Uri.parse('$host/api/users/login');
+    print(url);
     try {
       final response = await http.post(
         url,
@@ -90,7 +91,7 @@ class AuthProvider with ChangeNotifier {
       required String email,
       required String password,
       required String retypePassword}) async {
-    var url = Uri.parse('http://localhost:3000/api/users/signup');
+    var url = Uri.parse('$host/api/users/signup');
 
     try {
       final response = await http.post(
@@ -122,7 +123,7 @@ class AuthProvider with ChangeNotifier {
 
   // function to reset forgotten password
   Future<bool> forgotPassword(String login) async {
-    var url = Uri.parse('http://localhost:3000/api/users/forgotPassword');
+    var url = Uri.parse('$host/api/users/forgotPassword');
 
     try {
       final response = await http.post(

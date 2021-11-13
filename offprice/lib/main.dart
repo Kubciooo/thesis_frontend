@@ -4,10 +4,13 @@ import 'package:flutter/services.dart';
 import 'package:offprice/constants/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:offprice/providers/auth.dart';
+import 'package:offprice/providers/folders.dart';
 import 'package:offprice/providers/products.dart';
 import 'package:offprice/providers/promotions.dart';
+import 'package:offprice/screens/add_foder.dart';
 import 'package:offprice/screens/add_promotion.dart';
 import 'package:offprice/screens/all_deals.dart';
+import 'package:offprice/screens/all_folders.dart';
 import 'package:offprice/screens/all_products.dart';
 import 'package:offprice/screens/login_screen.dart';
 import 'package:offprice/screens/main_screen.dart';
@@ -28,7 +31,11 @@ void main() {
     ),
     ChangeNotifierProxyProvider<AuthProvider, ProductsProvider>(
       create: (context) => ProductsProvider(),
-      update: (context, auth, promotions) => promotions!..update(auth),
+      update: (context, auth, products) => products!..update(auth),
+    ),
+    ChangeNotifierProxyProvider<AuthProvider, FoldersProvider>(
+      create: (context) => FoldersProvider(),
+      update: (context, auth, folders) => folders!..update(auth),
     ),
   ], child: const MyApp()));
 }
@@ -69,7 +76,9 @@ class MyApp extends StatelessWidget {
                       '/home': (context) => const MainScreen(),
                       '/all-deals': (context) => const AllDealsScreen(),
                       '/add-promotion': (context) => const AddPromotionScreen(),
+                      '/add-folder': (context) => const AddFolderScreen(),
                       '/all-products': (context) => const AllProductsScreen(),
+                      '/all-folders': (context) => const AllFoldersScreen(),
                     },
                   ));
         }

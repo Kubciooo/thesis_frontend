@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
+import 'package:offprice/constants/api.dart';
 import 'package:offprice/models/deal.dart';
 import 'package:offprice/providers/auth.dart';
 
@@ -51,7 +52,7 @@ class PromotionsProvider with ChangeNotifier {
   }
 
   Future<String> followPromotion(promotionId) async {
-    final url = 'http://localhost:3000/api/promotions/products/$promotionId';
+    final url = '$host/api/promotions/products/$promotionId';
     final uri = Uri.parse(url);
     final response = await http.patch(
       uri,
@@ -69,7 +70,7 @@ class PromotionsProvider with ChangeNotifier {
   }
 
   Future<String> unfollowPromotion(promotionId) async {
-    final url = 'http://localhost:3000/api/promotions/products/$promotionId';
+    final url = '$host/api/promotions/products/$promotionId';
     final uri = Uri.parse(url);
     final response = await http.delete(
       uri,
@@ -96,7 +97,7 @@ class PromotionsProvider with ChangeNotifier {
       required DateTime expiresAt,
       required int percentage,
       required double cash}) async {
-    var url = Uri.parse('http://localhost:3000/api/promotions/products');
+    var url = Uri.parse('$host/api/promotions/products');
     try {
       final response = await http.post(
         url,
@@ -130,7 +131,7 @@ class PromotionsProvider with ChangeNotifier {
 
   // function to reset forgotten password
   Future<void> getLatestPromotions() async {
-    var url = Uri.parse('http://localhost:3000/api/promotions/products');
+    var url = Uri.parse('$host/api/promotions/products');
     try {
       final response = await http.get(
         url,
@@ -168,7 +169,7 @@ class PromotionsProvider with ChangeNotifier {
   }
 
   Future<void> getUserPromotions() async {
-    var url = Uri.parse('http://localhost:3000/api/users/productPromotions');
+    var url = Uri.parse('$host/api/users/productPromotions');
     try {
       final response = await http.get(
         url,

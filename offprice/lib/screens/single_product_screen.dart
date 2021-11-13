@@ -8,6 +8,7 @@ import 'package:offprice/widgets/glassmorphism_card.dart';
 import 'package:offprice/widgets/gradient_text.dart';
 import 'package:offprice/widgets/main_screen/chart.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SingleProductScreen extends StatefulWidget {
   final ProductModel product;
@@ -78,7 +79,25 @@ class _MainScreenState extends State<SingleProductScreen> {
                           Text(
                             widget.product.name,
                             textAlign: TextAlign.left,
-                            style: Theme.of(context).textTheme.headline1,
+                            style:
+                                Theme.of(context).textTheme.headline1!.copyWith(
+                                      fontSize: 25,
+                                    ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Text(widget.product.shop,
+                              style: Theme.of(context).textTheme.headline3),
+                          OutlinedButton(
+                            onPressed: () async {
+                              await canLaunch(widget.product.url)
+                                  ? await launch(widget.product.url)
+                                  : print('error');
+                            },
+                            child: Text('Open in browser',
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.headline3),
                           ),
                         ],
                       ),

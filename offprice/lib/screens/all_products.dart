@@ -145,11 +145,11 @@ class _AddPromotionScreenState extends State<AllProductsScreen> {
                             ],
                           ),
                         ),
-                        CupertinoButton(
-                            child: Text("Use scraper",
-                                style: Theme.of(context).textTheme.headline2),
-                            onPressed: _useScrapper),
-                        if (!_favouritesOnly)
+                        if (!_favouritesOnly) ...[
+                          CupertinoButton(
+                              child: Text("Use scraper",
+                                  style: Theme.of(context).textTheme.headline2),
+                              onPressed: _useScrapper),
                           TextField(
                             decoration: const InputDecoration(
                               hintText: 'Name',
@@ -159,7 +159,6 @@ class _AddPromotionScreenState extends State<AllProductsScreen> {
                               _name = value;
                             }),
                           ),
-                        if (!_favouritesOnly)
                           TextField(
                             inputFormatters: [
                               FilteringTextInputFormatter.digitsOnly,
@@ -172,7 +171,6 @@ class _AddPromotionScreenState extends State<AllProductsScreen> {
                               _priceMin = int.parse(value);
                             }),
                           ),
-                        if (!_favouritesOnly)
                           TextField(
                             inputFormatters: [
                               FilteringTextInputFormatter.digitsOnly,
@@ -185,6 +183,7 @@ class _AddPromotionScreenState extends State<AllProductsScreen> {
                               _priceMax = int.parse(value);
                             }),
                           ),
+                        ],
                       ]),
                       ProductsList(
                           favouritesOnly: _favouritesOnly,
