@@ -7,6 +7,7 @@ import 'package:offprice/providers/products.dart';
 import 'package:offprice/widgets/glassmorphism_card.dart';
 import 'package:offprice/widgets/gradient_text.dart';
 import 'package:offprice/widgets/main_screen/chart.dart';
+import 'package:offprice/widgets/settings_button.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -37,8 +38,8 @@ class _MainScreenState extends State<SingleProductScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final productCharts =
-        Provider.of<ProductsProvider>(context).getProductChart(widget.product);
+    final productCharts = Provider.of<ProductsProvider>(context, listen: false)
+        .getProductChart(widget.product);
     return Scaffold(
       body: Stack(
         children: [
@@ -63,42 +64,78 @@ class _MainScreenState extends State<SingleProductScreen> {
                   children: [
                     SizedBox(
                       width: double.infinity,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          GradientText(
-                            'Product',
-                            gradient: AppColors.mainLinearGradient,
-                            style:
-                                Theme.of(context).textTheme.headline1!.copyWith(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                GradientText(
+                                  'Product',
+                                  gradient: AppColors.mainLinearGradient,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline1!
+                                      .copyWith(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
+                                Text(
+                                  widget.product.name,
+                                  textAlign: TextAlign.left,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline1!
+                                      .copyWith(
+                                        fontSize: 25,
+                                      ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Text(widget.product.shop,
+                                    style:
+                                        Theme.of(context).textTheme.headline3),
+                                OutlinedButton(
+                                  onPressed: () async {
+                                    await canLaunch(widget.product.url)
+                                        ? await launch(widget.product.url)
+                                        : print('error');
+                                  },
+                                  child: Text('Open in browser',
+                                      textAlign: TextAlign.center,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline3),
+                                ),
+                              ],
+                            ),
                           ),
-                          Text(
-                            widget.product.name,
-                            textAlign: TextAlign.left,
-                            style:
-                                Theme.of(context).textTheme.headline1!.copyWith(
-                                      fontSize: 25,
-                                    ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Text(widget.product.shop,
-                              style: Theme.of(context).textTheme.headline3),
-                          OutlinedButton(
-                            onPressed: () async {
-                              await canLaunch(widget.product.url)
-                                  ? await launch(widget.product.url)
-                                  : print('error');
-                            },
-                            child: Text('Open in browser',
-                                textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme.headline3),
-                          ),
+                          SettingsButton(
+                            title: 'Product settings',
+                            actions: [
+                              if (!Provider.of<ProductsProvider>(context)
+                                  .isFavorite(widget.product))
+                                TextButton(
+                                  child: const Text('Mark as favourite'),
+                                  onPressed: () async {
+                                    await Provider.of<ProductsProvider>(context,
+                                            listen: false)
+                                        .setFavouriteProduct(widget.product);
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              TextButton(
+                                child: const Text('Delete product'),
+                                onPressed: () async {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          )
                         ],
                       ),
                     ),

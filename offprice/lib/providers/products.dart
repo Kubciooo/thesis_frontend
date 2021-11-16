@@ -15,9 +15,27 @@ class ProductsProvider with ChangeNotifier {
   // create a function to login user via api with url and body
   String _token = '';
   bool shouldFetch = true;
+  ProductModel _favouriteProduct = ProductModel(
+    categories: [],
+    id: '',
+    name: '',
+    price: 0,
+    coupons: [],
+    otherPromotions: [],
+    shop: '',
+    snapshots: [],
+    url: '',
+  );
   final List<ProductModel> _products = [];
   final List<ProductModel> _favourites = [];
   get token => _token;
+
+  get isFavouriteProductSet => _favouriteProduct.id != '';
+  get favouriteProduct => _favouriteProduct;
+
+  bool isFavorite(ProductModel product) {
+    return favouriteProduct.id == product.id;
+  }
 
   void update(AuthProvider auth) {
     _token = auth.token;
@@ -34,6 +52,59 @@ class ProductsProvider with ChangeNotifier {
   void clearProducts() {
     _products.clear();
     shouldFetch = true;
+  }
+
+  Future<void> setFavouriteProduct(ProductModel product) async {
+    final url = '$host/api/users/favourites/product';
+
+    final uri = Uri.parse(url);
+    try {
+      final response = await http.post(
+        uri,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          "Authorization": "Bearer " + token,
+        },
+        body: jsonEncode(<String, dynamic>{
+          'productId': product.id,
+        }),
+      );
+      if (response.statusCode == 201) {
+        final responseData = json.decode(response.body);
+        _favouriteProduct =
+            ProductModel.fromJsonShop(responseData['data']['favouriteProduct']);
+        notifyListeners();
+      } else {
+        throw HttpException(json.decode(response.body)['message']);
+      }
+    } catch (err) {
+      print(err);
+    }
+  }
+
+  Future<void> fetchFavouriteProduct() async {
+    final url = '$host/api/users/favourites/product';
+    final uri = Uri.parse(url);
+    try {
+      final response = await http.get(uri, headers: {
+        HttpHeaders.authorizationHeader: 'Bearer $_token',
+      });
+
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+
+        if (responseData['data']['favouriteProduct'] != null) {
+          _favouriteProduct = ProductModel.fromJsonShop(
+              responseData['data']['favouriteProduct']);
+        }
+
+        notifyListeners();
+      } else {
+        throw HttpException(json.decode(response.body)['message']);
+      }
+    } catch (err) {
+      print(err);
+    }
   }
 
   List<charts.Series<ProductChartModel, String>> getProductChart(
@@ -86,7 +157,6 @@ class ProductsProvider with ChangeNotifier {
     }
     if (refresh) {
       clearProducts();
-      print('XD');
       await getLatestProducts(min: min, max: max, name: name);
       notifyListeners();
     }
@@ -123,7 +193,6 @@ class ProductsProvider with ChangeNotifier {
       },
     );
 
-    print(response.body);
     if (response.statusCode == 200) {
       _favourites.clear();
       await getFavourites();

@@ -19,6 +19,12 @@ class _AddPromotionScreenState extends State<AllFoldersScreen> {
   final double _height = 0.9;
 
   @override
+  void initState() {
+    Provider.of<FoldersProvider>(context, listen: false).fetchFolders();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final foldersProvider = Provider.of<FoldersProvider>(context);
     return Scaffold(

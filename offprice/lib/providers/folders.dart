@@ -13,11 +13,21 @@ class FoldersProvider with ChangeNotifier {
   // create a function to login user via api with url and body
   String _token = '';
   bool shouldFetch = true;
+  UserProductsModel _favouriteFolder =
+      UserProductsModel(id: '', name: 'Favourite', products: []);
   final List<UserProductsModel> _folders = [];
   get token => _token;
 
+  get isFavouriteFolderSet => _favouriteFolder.id != '';
+
+  get favouriteFolder => _favouriteFolder;
+
   void update(AuthProvider auth) {
     _token = auth.token;
+  }
+
+  bool isFavourite(UserProductsModel folder) {
+    return folder.id == _favouriteFolder.id;
   }
 
   List<UserProductsModel> get folders {
@@ -46,7 +56,60 @@ class FoldersProvider with ChangeNotifier {
     ];
   }
 
-  Future<void> createFolder(String name, List<ProductModel> products) async {
+  Future<void> setFavouriteFolder(UserProductsModel folder) async {
+    final url = '$host/api/users/favourites/folder';
+
+    final uri = Uri.parse(url);
+    try {
+      final response = await http.post(
+        uri,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          "Authorization": "Bearer " + token,
+        },
+        body: jsonEncode(<String, dynamic>{
+          'folderId': folder.id,
+        }),
+      );
+      if (response.statusCode == 201) {
+        final folderData = json.decode(response.body);
+        _favouriteFolder = UserProductsModel.fromJson(
+            folderData['data']['favouriteUserProducts']);
+        notifyListeners();
+      } else {
+        throw HttpException(json.decode(response.body)['message']);
+      }
+    } catch (err) {
+      rethrow;
+    }
+  }
+
+  Future<void> fetchFavouriteFolder() async {
+    final url = '$host/api/users/favourites/folder';
+    final uri = Uri.parse(url);
+    try {
+      final response = await http.get(uri, headers: {
+        HttpHeaders.authorizationHeader: 'Bearer $_token',
+      });
+
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+
+        if (responseData['data']['favouriteUserProducts'] != null) {
+          _favouriteFolder = UserProductsModel.fromJson(
+              responseData['data']['favouriteUserProducts']);
+        }
+
+        notifyListeners();
+      } else {
+        throw HttpException(json.decode(response.body)['message']);
+      }
+    } catch (err) {
+      rethrow;
+    }
+  }
+
+  Future<void> createFolder(String name, List<String> products) async {
     var url = ('$host/api/userProducts');
 
     var uri = Uri.parse(url);
@@ -58,10 +121,7 @@ class FoldersProvider with ChangeNotifier {
           'Content-Type': 'application/json; charset=UTF-8',
           "Authorization": "Bearer " + token,
         },
-        body: jsonEncode(<String, dynamic>{
-          'name': name,
-          'products': products.map((product) => product.id).toList()
-        }),
+        body: jsonEncode(<String, dynamic>{'name': name, 'products': products}),
       );
 
       final responseData = json.decode(response.body);

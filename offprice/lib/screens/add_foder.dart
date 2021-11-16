@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:offprice/constants/colors.dart';
+import 'package:offprice/providers/folders.dart';
 import 'package:offprice/providers/products.dart';
-import 'package:offprice/screens/add_promotion_next.dart';
 import 'package:offprice/widgets/glassmorphism_card.dart';
-import 'package:offprice/widgets/products_list.dart';
 import 'package:provider/provider.dart';
 
 class AddFolderScreen extends StatefulWidget {
@@ -16,6 +16,7 @@ class AddFolderScreen extends StatefulWidget {
 }
 
 class _AddFolderScreenState extends State<AddFolderScreen> {
+  final _formKey = GlobalKey<FormState>();
   String _folderName = '';
   final List<String> _products = [];
   String _name = '';
@@ -68,6 +69,21 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
   Widget build(BuildContext context) {
     final provider = Provider.of<ProductsProvider>(context);
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          if (_formKey.currentState!.validate()) {
+            Provider.of<FoldersProvider>(context, listen: false)
+                .createFolder(_folderName, _products);
+            Navigator.of(context).pop();
+          }
+        },
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        backgroundColor: AppColors.colorBackground[900],
+        focusColor: AppColors.colorBackground[900],
+      ),
       body: Stack(
         children: [
           Positioned(
@@ -100,12 +116,21 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
                         style: Theme.of(context).textTheme.headline1,
                       ),
                       Column(children: [
-                        TextField(
-                          decoration: const InputDecoration(
-                            hintText: 'Folder name',
-                            prefixIcon: Icon(Icons.folder),
+                        Form(
+                          key: _formKey,
+                          child: TextFormField(
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter some text';
+                              }
+                              return null;
+                            },
+                            decoration: const InputDecoration(
+                              hintText: 'Folder name',
+                              prefixIcon: Icon(Icons.folder),
+                            ),
+                            onChanged: _changeFolderName,
                           ),
-                          onChanged: _changeFolderName,
                         ),
                         TextField(
                           decoration: const InputDecoration(
@@ -148,6 +173,8 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
                                 itemCount: provider.products.length,
                                 itemBuilder: (context, index) {
                                   return CheckboxListTile(
+                                      activeColor: Theme.of(context)
+                                          .secondaryHeaderColor,
                                       title:
                                           Text(provider.products[index].name),
                                       value: _products.contains(
@@ -157,8 +184,6 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
                                           if (value == true) {
                                             _products.add(
                                                 provider.products[index].id);
-                                            print(_products);
-                                            print('xd');
                                           } else {
                                             _products.remove(
                                                 provider.products[index].id);

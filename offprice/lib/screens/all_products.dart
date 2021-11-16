@@ -16,6 +16,12 @@ class AllProductsScreen extends StatefulWidget {
 }
 
 class _AddPromotionScreenState extends State<AllProductsScreen> {
+  @override
+  void initState() {
+    Provider.of<ProductsProvider>(context, listen: false).getFavourites();
+    super.initState();
+  }
+
   String _name = '';
   int _priceMin = 0;
   int _priceMax = 0;

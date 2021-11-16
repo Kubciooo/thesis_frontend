@@ -7,6 +7,8 @@ import 'package:offprice/widgets/glassmorphism_card.dart';
 import 'package:offprice/widgets/gradient_text.dart';
 import 'package:offprice/constants/colors.dart';
 import 'package:offprice/widgets/main_screen/chart.dart';
+import 'package:offprice/widgets/product_card.dart';
+import 'package:offprice/widgets/settings_button.dart';
 import 'package:provider/provider.dart';
 
 class SingleFolder extends StatelessWidget {
@@ -41,24 +43,54 @@ class SingleFolder extends StatelessWidget {
                 children: [
                   SizedBox(
                     width: double.infinity,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        GradientText(
-                          'Chosen folder',
-                          gradient: AppColors.mainLinearGradient,
-                          style:
-                              Theme.of(context).textTheme.headline1!.copyWith(
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            GradientText(
+                              'Chosen folder',
+                              gradient: AppColors.mainLinearGradient,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline1!
+                                  .copyWith(
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                   ),
+                            ),
+                            Text(
+                              folder.name,
+                              textAlign: TextAlign.left,
+                              style: Theme.of(context).textTheme.headline1,
+                            ),
+                          ],
                         ),
-                        Text(
-                          folder.name,
-                          textAlign: TextAlign.left,
-                          style: Theme.of(context).textTheme.headline1,
-                        ),
+                        SettingsButton(
+                          title: 'Product Settings',
+                          actions: [
+                            if (!Provider.of<FoldersProvider>(context,
+                                    listen: false)
+                                .isFavourite(folder))
+                              TextButton(
+                                child: const Text('Mark as favourite'),
+                                onPressed: () async {
+                                  await Provider.of<FoldersProvider>(context,
+                                          listen: false)
+                                      .setFavouriteFolder(folder);
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            TextButton(
+                              child: const Text('Delete folder'),
+                              onPressed: () async {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        )
                       ],
                     ),
                   ),
@@ -67,6 +99,45 @@ class SingleFolder extends StatelessWidget {
                     productChart: Provider.of<FoldersProvider>(context)
                         .getFolderChart(folder),
                   )),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: folder.products.length,
+                      itemBuilder: (context, index) {
+                        return ProductCard(
+                          onTap: (ProductModel product) {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: Text(product.name),
+                                    content: Text(product.shop),
+                                    actions: [
+                                      TextButton(
+                                        child: Text('Close'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      TextButton(
+                                        child: Text('Delete'),
+                                        onPressed: () async {
+                                          await Provider.of<FoldersProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .removeProductFromFolder(
+                                                  folder.id, product.id);
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                });
+                          },
+                          product: folder.products[index],
+                        );
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),
