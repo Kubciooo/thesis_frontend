@@ -255,10 +255,25 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> getLatestProducts({min = -1, max = 9000000, name = ''}) async {
-    var url =
-        ('$host/api/products?price[gte]=${min.toString()}&price[lte]=${max.toString()}');
+    var url = ('$host/api/products');
+    if (min > 0) {
+      url += '?price[gte]=${min.toString()}';
+    }
+    if (max < 999999 && max > 0) {
+      if (min > 0) {
+        url += '&';
+      } else {
+        url += '?';
+      }
+      url += 'price[lte]=${max.toString()}';
+    }
     if (name != '') {
-      url += '&name=$name';
+      if ((min > 0) || (max < 999999 && max > 0)) {
+        url += '&';
+      } else {
+        url += '?';
+      }
+      url += 'name=$name';
     }
 
     var uri = Uri.parse(url);
