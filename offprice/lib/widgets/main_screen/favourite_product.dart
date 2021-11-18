@@ -66,6 +66,7 @@ class FavouriteProduct extends StatelessWidget {
                     ),
                     Expanded(
                         child: Chart(
+                      isProductSeries: true,
                       productChart: productCharts,
                     )),
                   ],

@@ -115,17 +115,26 @@ class ProductsProvider with ChangeNotifier {
       productChart.add(
           ProductChartModel(date: snapshot.updatedAt, price: snapshot.price));
     }
+    productChart.sort((a, b) => a.date.compareTo(b.date));
     return [
       charts.Series<ProductChartModel, String>(
         id: 'Snapshots',
         colorFn: (_, __) => charts.ColorUtil.fromDartColor(Colors.white38),
         patternColorFn: (_, __) => charts.MaterialPalette.white,
         domainFn: (ProductChartModel snapshot, _) =>
-            '${snapshot.date.year}-${snapshot.date.month < 9 ? '0' : ''}${snapshot.date.month}-${snapshot.date.day < 9 ? '0' : ''}${snapshot.date.day}\n${snapshot.date.hour}:${snapshot.date.minute}',
+            getChartDateFromDateTime(snapshot.date),
         measureFn: (ProductChartModel snapshot, _) => snapshot.price,
         data: productChart,
       )
     ];
+  }
+
+  String appendZero(int number) {
+    return number < 10 ? '0$number' : '$number';
+  }
+
+  String getChartDateFromDateTime(DateTime date) {
+    return '${date.year}-${appendZero(date.month)}-${appendZero(date.day)}\n${appendZero(date.hour)}:${appendZero(date.minute)}';
   }
 
   Future<List<ProductModel>> refreshProducts({
