@@ -39,7 +39,24 @@ class _MainScreenState extends State<MainScreen> {
           ),
           Column(
             children: [
-              SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.1,
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child:
+                      Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                    IconButton(
+                        onPressed: () {
+                          Navigator.of(context).pushNamed('/user-settings');
+                        },
+                        icon: const Icon(
+                          Icons.menu,
+                          color: Colors.white,
+                          size: 30,
+                        )),
+                  ]),
+                ),
+              ),
               Container(
                 height: MediaQuery.of(context).size.height * 0.8,
                 child: PageView(

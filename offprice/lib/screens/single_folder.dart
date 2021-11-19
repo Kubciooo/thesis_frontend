@@ -77,10 +77,19 @@ class SingleFolder extends StatelessWidget {
                               TextButton(
                                 child: const Text('Mark as favourite'),
                                 onPressed: () async {
-                                  await Provider.of<FoldersProvider>(context,
-                                          listen: false)
-                                      .setFavouriteFolder(folder);
-                                  Navigator.of(context).pop();
+                                  int statusCode =
+                                      await Provider.of<FoldersProvider>(
+                                              context,
+                                              listen: false)
+                                          .setFavouriteFolder(folder);
+
+                                  if (statusCode == 401) {
+                                    Navigator.of(context)
+                                        .pushNamedAndRemoveUntil(
+                                            '/login', (route) => false);
+                                  } else {
+                                    Navigator.of(context).pop();
+                                  }
                                 },
                               ),
                             TextButton(
@@ -121,12 +130,18 @@ class SingleFolder extends StatelessWidget {
                                       TextButton(
                                         child: Text('Delete'),
                                         onPressed: () async {
-                                          await Provider.of<FoldersProvider>(
-                                                  context,
+                                          int statusCode = await Provider.of<
+                                                      FoldersProvider>(context,
                                                   listen: false)
                                               .removeProductFromFolder(
                                                   folder.id, product.id);
-                                          Navigator.of(context).pop();
+                                          if (statusCode == 401) {
+                                            Navigator.of(context)
+                                                .pushNamedAndRemoveUntil(
+                                                    '/login', (route) => false);
+                                          } else {
+                                            Navigator.of(context).pop();
+                                          }
                                         },
                                       ),
                                     ],

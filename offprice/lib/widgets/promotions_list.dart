@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:offprice/providers/auth.dart';
 import 'package:offprice/providers/promotions.dart';
 import 'package:offprice/models/deal.dart';
 import 'package:offprice/screens/product_promotion.dart';
@@ -37,12 +38,26 @@ class _PromotionsListState extends State<PromotionsList> {
                 child: CircularProgressIndicator(),
               );
             }
+
+            int statusCode = snapshot.data as int;
+            if (statusCode == 401) {
+              Provider.of<AuthProvider>(context, listen: false).logout();
+              Navigator.of(context)
+                  .pushNamedAndRemoveUntil('/login', (route) => false);
+            }
             final List<DealModel> data =
                 Provider.of<PromotionsProvider>(context).deals;
             return RefreshIndicator(
               onRefresh: () async {
-                await Provider.of<PromotionsProvider>(context, listen: false)
+                int statusCode = await Provider.of<PromotionsProvider>(context,
+                        listen: false)
                     .refreshPromotions();
+
+                if (statusCode == 401) {
+                  Provider.of<AuthProvider>(context, listen: false).logout();
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil('/login', (route) => false);
+                }
               },
               child: ListView.builder(
                 shrinkWrap: true,

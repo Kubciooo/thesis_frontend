@@ -122,10 +122,17 @@ class _MainScreenState extends State<SingleProductScreen> {
                                 TextButton(
                                   child: const Text('Mark as favourite'),
                                   onPressed: () async {
-                                    await Provider.of<ProductsProvider>(context,
+                                    int statusCode = await Provider.of<
+                                                ProductsProvider>(context,
                                             listen: false)
                                         .setFavouriteProduct(widget.product);
-                                    Navigator.of(context).pop();
+                                    if (statusCode == 401) {
+                                      Navigator.of(context)
+                                          .pushNamedAndRemoveUntil(
+                                              '/login', (route) => false);
+                                    } else {
+                                      Navigator.of(context).pop();
+                                    }
                                   },
                                 ),
                               TextButton(
@@ -159,7 +166,7 @@ class _MainScreenState extends State<SingleProductScreen> {
                               )),
                     TextButton(
                       onPressed: () async {
-                        final String response = _isFollowed
+                        final int response = _isFollowed
                             ? await Provider.of<ProductsProvider>(context,
                                     listen: false)
                                 .unfollowProduct(widget.product.id)
@@ -169,8 +176,12 @@ class _MainScreenState extends State<SingleProductScreen> {
 
                         Navigator.of(context).restorablePush(_dialogBuilder,
                             arguments: response);
-                        if (!response.contains('Failed')) {
+                        if (response == 200 || response == 201) {
                           changeFollowStatus();
+                        } else {
+                          //redirect to login
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              '/login', (route) => false);
                         }
                       },
                       child: Text(

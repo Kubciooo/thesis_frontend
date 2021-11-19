@@ -20,7 +20,15 @@ class _AddPromotionScreenState extends State<AllFoldersScreen> {
 
   @override
   void initState() {
-    Provider.of<FoldersProvider>(context, listen: false).fetchFolders();
+    Provider.of<FoldersProvider>(context, listen: false)
+        .fetchFolders()
+        .then((statusCode) => {
+              if (statusCode == 401)
+                {
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                      '/login', (Route<dynamic> route) => false)
+                }
+            });
     super.initState();
   }
 
@@ -74,7 +82,12 @@ class _AddPromotionScreenState extends State<AllFoldersScreen> {
                       Expanded(
                         child: RefreshIndicator(
                           onRefresh: () async {
-                            await foldersProvider.fetchFolders();
+                            int statusCode =
+                                await foldersProvider.fetchFolders();
+                            if (statusCode == 401) {
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                  '/login', (Route<dynamic> route) => false);
+                            }
                           },
                           child: ListView.builder(
                             itemCount: foldersProvider.folders.length,

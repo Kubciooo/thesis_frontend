@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:offprice/constants/colors.dart';
 import 'package:offprice/widgets/glassmorphism_card.dart';
 import 'package:offprice/widgets/text_field_dark.dart';
 import 'package:offprice/providers/auth.dart';
@@ -64,12 +65,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          switchLoginAndRegister();
-        },
-        child: const Icon(Icons.arrow_forward),
-      ),
       body: Stack(
         children: [
           Positioned(
@@ -103,6 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           TextFieldDark(
+                            initialValue: _login,
                             onEditingCompleted: () {},
                             onChanged: _changeLogin,
                             labelText: 'Login',
@@ -117,6 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           TextFieldDark(
                             onEditingCompleted: () {},
+                            initialValue: _password,
                             onChanged: _changePassword,
                             labelText: 'Password',
                             hintText: 'Enter your password',
@@ -131,6 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           if (!_isLogin)
                             TextFieldDark(
+                              initialValue: _email,
                               onEditingCompleted: () {},
                               onChanged: _changeEmail,
                               labelText: 'Email',
@@ -145,6 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           if (!_isLogin)
                             TextFieldDark(
+                              initialValue: _retypePassword,
                               onEditingCompleted: () {},
                               onChanged: _changeRetypePassword,
                               labelText: 'Retype password',
@@ -156,43 +155,107 @@ class _LoginScreenState extends State<LoginScreen> {
                                   : null,
                             ),
                           const SizedBox(height: 20),
-                          TextButton(
-                            onPressed: () async {
-                              if (_formKey.currentState!.validate()) {
-                                if (_isLogin) {
-                                  bool didSignIn =
-                                      await Provider.of<AuthProvider>(context,
-                                              listen: false)
-                                          .signIn(
-                                              login: _login,
-                                              password: _password);
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              TextButton(
+                                  child: Text(
+                                    _isLogin
+                                        ? 'Not a member yet?\nRegister now!'
+                                        : 'Already have and account?\nLogin',
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    switchLoginAndRegister();
+                                  }),
+                              TextButton(
+                                onPressed: () async {
+                                  if (_formKey.currentState!.validate()) {
+                                    if (_isLogin) {
+                                      bool didSignIn =
+                                          await Provider.of<AuthProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .signIn(
+                                                  login: _login,
+                                                  password: _password);
 
-                                  if (didSignIn) {
-                                    Navigator.of(context).pushNamed('/home');
+                                      if (didSignIn) {
+                                        Navigator.of(context)
+                                            .pushReplacementNamed('/home');
+                                      } else {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) => AlertDialog(
+                                                  title: const Text('Error'),
+                                                  content: const Text(
+                                                      'Wrong login or password'),
+                                                  actions: [
+                                                    TextButton(
+                                                      child: Text('Ok',
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .headline3),
+                                                      onPressed: () =>
+                                                          Navigator.of(context)
+                                                              .pop(),
+                                                    )
+                                                  ],
+                                                ));
+                                      }
+                                    } else {
+                                      bool didSignUp =
+                                          await Provider.of<AuthProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .signUp(
+                                                  login: _login,
+                                                  email: _email,
+                                                  password: _password,
+                                                  retypePassword:
+                                                      _retypePassword);
+
+                                      if (didSignUp) {
+                                        Navigator.of(context)
+                                            .pushReplacementNamed('/home');
+                                      } else {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) => AlertDialog(
+                                                  title: const Text('Error'),
+                                                  content: const Text(
+                                                      'There was an error during register!\nTry again!'),
+                                                  actions: [
+                                                    TextButton(
+                                                      child: Text('Ok',
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .headline3),
+                                                      onPressed: () =>
+                                                          Navigator.of(context)
+                                                              .pop(),
+                                                    )
+                                                  ],
+                                                ));
+                                      }
+                                    }
                                   }
-                                } else {
-                                  bool didSignUp =
-                                      await Provider.of<AuthProvider>(context,
-                                              listen: false)
-                                          .signUp(
-                                              login: _login,
-                                              email: _email,
-                                              password: _password,
-                                              retypePassword: _retypePassword);
-
-                                  if (didSignUp) {}
-                                }
-                              }
-                            },
-                            child: Text(_isLogin ? 'Login' : 'Register',
-                                style: const TextStyle(fontSize: 20)),
+                                },
+                                child: Text(_isLogin ? 'Login' : 'Register',
+                                    style: const TextStyle(fontSize: 20)),
+                              ),
+                            ],
                           ),
                         ],
                       ),
                     )),
               ),
             ),
-          )
+          ),
         ],
       ),
     );

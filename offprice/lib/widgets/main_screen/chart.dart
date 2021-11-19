@@ -48,7 +48,7 @@ class Chart extends StatelessWidget {
       domainAxis: charts.OrdinalAxisSpec(
         viewport: charts.OrdinalViewport(
             isProductSeries
-                ? Provider.of<ProductsProvider>(context)
+                ? Provider.of<ProductsProvider>(context, listen: false)
                     .getChartDateFromDateTime(productChart[0]
                         .data[productChart[0].data.length - 1]
                         .date)

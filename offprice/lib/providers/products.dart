@@ -39,6 +39,21 @@ class ProductsProvider with ChangeNotifier {
 
   void update(AuthProvider auth) {
     _token = auth.token;
+    shouldFetch = true;
+    _favouriteProduct = ProductModel(
+      categories: [],
+      id: '',
+      name: '',
+      price: 0,
+      coupons: [],
+      otherPromotions: [],
+      shop: '',
+      snapshots: [],
+      url: '',
+    );
+    _products.clear();
+    _favourites.clear();
+    notifyListeners();
   }
 
   List<ProductModel> get products {
@@ -54,7 +69,7 @@ class ProductsProvider with ChangeNotifier {
     shouldFetch = true;
   }
 
-  Future<void> setFavouriteProduct(ProductModel product) async {
+  Future<int> setFavouriteProduct(ProductModel product) async {
     final url = '$host/api/users/favourites/product';
 
     final uri = Uri.parse(url);
@@ -75,14 +90,17 @@ class ProductsProvider with ChangeNotifier {
             ProductModel.fromJsonShop(responseData['data']['favouriteProduct']);
         notifyListeners();
       } else {
-        throw HttpException(json.decode(response.body)['message']);
+        print(json.decode(response.body)['message']);
       }
+
+      return response.statusCode;
     } catch (err) {
       print(err);
+      return 500;
     }
   }
 
-  Future<void> fetchFavouriteProduct() async {
+  Future<int> fetchFavouriteProduct() async {
     final url = '$host/api/users/favourites/product';
     final uri = Uri.parse(url);
     try {
@@ -100,10 +118,12 @@ class ProductsProvider with ChangeNotifier {
 
         notifyListeners();
       } else {
-        throw HttpException(json.decode(response.body)['message']);
+        print(json.decode(response.body)['message']);
       }
+      return response.statusCode;
     } catch (err) {
       print(err);
+      return 500;
     }
   }
 
@@ -137,7 +157,7 @@ class ProductsProvider with ChangeNotifier {
     return '${date.year}-${appendZero(date.month)}-${appendZero(date.day)}\n${appendZero(date.hour)}:${appendZero(date.minute)}';
   }
 
-  Future<List<ProductModel>> refreshProducts({
+  Future<int> refreshProducts({
     min,
     max,
     name,
@@ -151,30 +171,31 @@ class ProductsProvider with ChangeNotifier {
         favouritesOnly: favouritesOnly);
   }
 
-  Future<List<ProductModel>> getProducts(
+  Future<int> getProducts(
       {refresh = false,
       min = 0,
       max = 999999,
       name = '',
       favouritesOnly = false}) async {
+    int statusCode = 401;
     if (refresh) {
       clearProducts();
     }
     if (shouldFetch) {
       shouldFetch = false;
       if (favouritesOnly) {
-        await getFavourites();
+        statusCode = await getFavourites();
       }
-      await getLatestProducts(min: min, max: max, name: name);
+      statusCode = await getLatestProducts(min: min, max: max, name: name);
     }
     notifyListeners();
 
     // print(favouritesOnly); // Todo: why does it happen 3 times?
 
-    return favouritesOnly ? favourites : products;
+    return statusCode;
   }
 
-  Future<String> followProduct(productId) async {
+  Future<int> followProduct(productId) async {
     final url = '$host/api/products/$productId';
     final uri = Uri.parse(url);
     final response = await http.patch(
@@ -185,14 +206,12 @@ class ProductsProvider with ChangeNotifier {
     );
     if (response.statusCode == 200) {
       _favourites.clear();
-      await getFavourites();
-      return 'Product followed';
-    } else {
-      return 'Failed to add product to user';
+      return await getFavourites();
     }
+    return response.statusCode;
   }
 
-  Future<String> unfollowProduct(productId) async {
+  Future<int> unfollowProduct(productId) async {
     final url = '$host/api/products/$productId';
     final uri = Uri.parse(url);
     final response = await http.delete(
@@ -205,13 +224,11 @@ class ProductsProvider with ChangeNotifier {
     if (response.statusCode == 200) {
       _favourites.clear();
       await getFavourites();
-      return 'Product unfollowed';
-    } else {
-      return 'Failed to unfollow product';
     }
+    return response.statusCode;
   }
 
-  Future<void> getProductsFromScrapper(
+  Future<int> getProductsFromScrapper(
       {min = 0, max = 9000000, name = ''}) async {
     var url = ('$host/api/products/scrapper');
     var uri = Uri.parse(url);
@@ -239,8 +256,10 @@ class ProductsProvider with ChangeNotifier {
       );
 
       final responseData = json.decode(response.body);
-      if (responseData['status'] == 'error') {
-        throw HttpException(responseData['message']);
+
+      if (response.statusCode != 200) {
+        print(responseData['message']);
+        return response.statusCode;
       }
       for (var i = 0; i < responseData['data']['products'].length; i++) {
         // print(responseData['data']['products'][i]);
@@ -248,14 +267,14 @@ class ProductsProvider with ChangeNotifier {
             ProductModel.fromJsonShop(responseData['data']['products'][i]));
       }
       notifyListeners();
+      return response.statusCode;
     } catch (error) {
       print(error);
+      return 500;
     }
   }
 
-  Future<void> getLatestProducts({min = 0, max = 9000000, name = ''}) async {
-    print('min: $min');
-    print('max: $max');
+  Future<int> getLatestProducts({min = 0, max = 9000000, name = ''}) async {
     var url = ('$host/api/products');
     if (min > 0) {
       url += '?price[gte]=$min';
@@ -289,16 +308,19 @@ class ProductsProvider with ChangeNotifier {
       );
 
       final responseData = json.decode(response.body);
-      if (responseData['status'] == 'error') {
-        throw HttpException(responseData['message']);
+      if (response.statusCode != 200) {
+        print(responseData['message']);
+        return response.statusCode;
       }
       for (var i = 0; i < responseData['data']['products'].length; i++) {
         // print(responseData['data']['products'][i]);
         _products.add(
             ProductModel.fromJsonShop(responseData['data']['products'][i]));
       }
+      return response.statusCode;
     } catch (error) {
       print(error);
+      return 500;
     }
   }
 
@@ -311,7 +333,7 @@ class ProductsProvider with ChangeNotifier {
     return false;
   }
 
-  Future<void> getFavourites() async {
+  Future<int> getFavourites() async {
     _favourites.clear();
     var url = Uri.parse('$host/api/users/products');
     try {
@@ -325,8 +347,9 @@ class ProductsProvider with ChangeNotifier {
 
       final responseData = json.decode(response.body);
 
-      if (responseData['status'] == 'error') {
-        throw HttpException(responseData['message']);
+      if (response.statusCode != 200) {
+        print(responseData['message']);
+        return response.statusCode;
       }
 
       for (var i = 0; i < responseData['data']['products'].length; i++) {
@@ -334,10 +357,11 @@ class ProductsProvider with ChangeNotifier {
         _favourites.add(
             ProductModel.fromJsonShop(responseData['data']['products'][i]));
       }
-
       notifyListeners();
+      return response.statusCode;
     } catch (error) {
       print(error);
+      return 500;
     }
   }
 }

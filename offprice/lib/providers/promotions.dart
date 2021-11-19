@@ -22,6 +22,11 @@ class PromotionsProvider with ChangeNotifier {
 
   void update(AuthProvider auth) {
     _token = auth.token;
+    _shouldFetch = true;
+    _deals.clear();
+    _favDeals.clear();
+    _shouldFetch = true;
+    _likes = 0;
   }
 
   void clearPromotions() {
@@ -29,12 +34,13 @@ class PromotionsProvider with ChangeNotifier {
     _deals.clear();
   }
 
-  Future<List<DealModel>> refreshPromotions() async {
+  Future<int> refreshPromotions() async {
     return getPromotions(refresh: true);
   }
 
-  Future<List<DealModel>> getPromotions(
+  Future<int> getPromotions(
       {refresh = false, filter = '', fetchUser = false}) async {
+    int statusCode = 401;
     if (refresh) {
       clearPromotions();
     }
@@ -42,9 +48,9 @@ class PromotionsProvider with ChangeNotifier {
     if (_shouldFetch) {
       await getLikes();
       _shouldFetch = false;
-      await getLatestPromotions();
+      statusCode = await getLatestPromotions();
       if (fetchUser) {
-        await getUserPromotions();
+        statusCode = await getUserPromotions();
       }
       notifyListeners();
     }
@@ -52,7 +58,7 @@ class PromotionsProvider with ChangeNotifier {
       _deals.removeWhere((deal) =>
           !deal.product.name.toLowerCase().contains(filter.toLowerCase()));
     }
-    return _deals;
+    return statusCode;
   }
 
   Future<int> followPromotion(promotionId) async {
@@ -134,7 +140,7 @@ class PromotionsProvider with ChangeNotifier {
     return response.statusCode;
   }
 
-  Future<String> addPromotion(
+  Future<int> addPromotion(
       {required String product,
       required double startingPrice,
       required String type,
@@ -169,14 +175,14 @@ class PromotionsProvider with ChangeNotifier {
         throw HttpException(responseData['message']);
       }
       notifyListeners();
-      return 'Promotion added successfully';
+      return response.statusCode;
     } catch (error) {
       print(error);
-      return error.toString();
+      return 401;
     }
   }
 
-  Future<void> getLatestPromotions() async {
+  Future<int> getLatestPromotions() async {
     var url = Uri.parse('$host/api/promotions/products');
     try {
       final response = await http.get(
@@ -189,6 +195,10 @@ class PromotionsProvider with ChangeNotifier {
 
       final responseData = json.decode(response.body);
 
+      if (response.statusCode == 401) {
+        return response.statusCode;
+      }
+
       if (responseData['status'] == 'Error') {
         throw HttpException(responseData['message']);
       }
@@ -199,8 +209,11 @@ class PromotionsProvider with ChangeNotifier {
         _deals.add(
             DealModel.fromJson(responseData['data']['productPromotions'][i]));
       }
+
+      return response.statusCode;
     } catch (error) {
       print(error);
+      return 500;
     }
   }
 

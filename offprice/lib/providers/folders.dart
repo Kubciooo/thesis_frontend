@@ -24,6 +24,11 @@ class FoldersProvider with ChangeNotifier {
 
   void update(AuthProvider auth) {
     _token = auth.token;
+    shouldFetch = true;
+    _favouriteFolder =
+        UserProductsModel(id: '', name: 'Favourite', products: []);
+    _folders.clear();
+    notifyListeners();
   }
 
   bool isFavourite(UserProductsModel folder) {
@@ -56,7 +61,7 @@ class FoldersProvider with ChangeNotifier {
     ];
   }
 
-  Future<void> setFavouriteFolder(UserProductsModel folder) async {
+  Future<int> setFavouriteFolder(UserProductsModel folder) async {
     final url = '$host/api/users/favourites/folder';
 
     final uri = Uri.parse(url);
@@ -79,12 +84,13 @@ class FoldersProvider with ChangeNotifier {
       } else {
         throw HttpException(json.decode(response.body)['message']);
       }
+      return response.statusCode;
     } catch (err) {
-      rethrow;
+      return 500;
     }
   }
 
-  Future<void> fetchFavouriteFolder() async {
+  Future<int> fetchFavouriteFolder() async {
     final url = '$host/api/users/favourites/folder';
     final uri = Uri.parse(url);
     try {
@@ -102,14 +108,16 @@ class FoldersProvider with ChangeNotifier {
 
         notifyListeners();
       } else {
-        throw HttpException(json.decode(response.body)['message']);
+        print(json.decode(response.body)['message']);
       }
+      return response.statusCode;
     } catch (err) {
-      rethrow;
+      print(err);
+      return 500;
     }
   }
 
-  Future<void> createFolder(String name, List<String> products) async {
+  Future<int> createFolder(String name, List<String> products) async {
     var url = ('$host/api/userProducts');
 
     var uri = Uri.parse(url);
@@ -134,12 +142,14 @@ class FoldersProvider with ChangeNotifier {
           UserProductsModel.fromJson(responseData['data']['userProducts']));
 
       notifyListeners();
+      return response.statusCode;
     } catch (error) {
       print(error);
+      return 500;
     }
   }
 
-  Future<void> deleteFolder(String id) async {
+  Future<int> deleteFolder(String id) async {
     var url = ('$host/api/userProducts/$id');
 
     var uri = Uri.parse(url);
@@ -162,13 +172,14 @@ class FoldersProvider with ChangeNotifier {
       _folders.removeWhere((folder) => folder.id == id);
 
       notifyListeners();
+      return response.statusCode;
     } catch (error) {
       print(error);
+      return 500;
     }
   }
 
-  Future<void> removeProductFromFolder(
-      String folderId, String productId) async {
+  Future<int> removeProductFromFolder(String folderId, String productId) async {
     var url = ('$host/api/userProducts/$folderId');
 
     var uri = Uri.parse(url);
@@ -195,12 +206,14 @@ class FoldersProvider with ChangeNotifier {
           .removeWhere((product) => product.id == productId);
 
       notifyListeners();
+      return response.statusCode;
     } catch (error) {
       print(error);
+      return 500;
     }
   }
 
-  Future<void> addProductToFolder(String folderId, String productId) async {
+  Future<int> addProductToFolder(String folderId, String productId) async {
     var url = ('$host/api/userProducts/$folderId');
 
     var uri = Uri.parse(url);
@@ -226,12 +239,14 @@ class FoldersProvider with ChangeNotifier {
               responseData['data']['userProducts']['products']));
 
       notifyListeners();
+      return response.statusCode;
     } catch (error) {
       print(error);
+      return 500;
     }
   }
 
-  Future<void> fetchFolders() async {
+  Future<int> fetchFolders() async {
     var url = ('$host/api/userProducts');
 
     var uri = Uri.parse(url);
@@ -247,17 +262,17 @@ class FoldersProvider with ChangeNotifier {
 
       final responseData = json.decode(response.body);
 
-      if (responseData['status'] == 'error') {
-        throw HttpException(responseData['message']);
-      }
+      if (response.statusCode != 200) return response.statusCode;
       clearFolders();
       for (var folder in responseData['data']['userProducts']) {
         _folders.add(UserProductsModel.fromJson(folder));
       }
 
       notifyListeners();
+      return response.statusCode;
     } catch (error) {
       print(error);
+      return 500;
     }
   }
 }

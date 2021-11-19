@@ -4,7 +4,9 @@ import 'package:flutter/widgets.dart';
 class SettingsButton extends StatefulWidget {
   final List<Widget> actions;
   final String title;
-  const SettingsButton({Key? key, required this.title, required this.actions})
+  final double size;
+  const SettingsButton(
+      {Key? key, required this.title, required this.actions, this.size = 30})
       : super(key: key);
 
   @override
@@ -27,10 +29,10 @@ class _SettingsButtonState extends State<SettingsButton> {
               );
             });
       },
-      icon: const Icon(
+      icon: Icon(
         Icons.settings,
         color: Colors.white70,
-        size: 30,
+        size: widget.size,
       ),
     );
   }

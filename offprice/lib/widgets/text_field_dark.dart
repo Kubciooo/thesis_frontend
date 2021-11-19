@@ -32,9 +32,19 @@ class TextFieldDark extends StatefulWidget {
 }
 
 class _TextFieldDarkState extends State<TextFieldDark> {
+  final controller = TextEditingController();
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final controller = TextEditingController(text: widget.initialValue);
+    controller.text = widget.initialValue;
+    controller.selection = TextSelection.fromPosition(
+        TextPosition(offset: controller.text.length));
     return TextFormField(
       autovalidateMode: AutovalidateMode.onUserInteraction,
       controller: controller,

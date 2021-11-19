@@ -125,7 +125,10 @@ class _ProductPromotionScreenState extends State<ProductPromotionScreen> {
                           : await Provider.of<PromotionsProvider>(context,
                                   listen: false)
                               .followPromotion(widget.productPromotion.id);
-
+                      if (responseStatus == 401) {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            '/login', (Route<dynamic> route) => false);
+                      }
                       Navigator.of(context).restorablePush(_dialogBuilder,
                           arguments: responseStatus == 200
                               ? 'Promotion followed'

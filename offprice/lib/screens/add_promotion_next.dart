@@ -83,9 +83,9 @@ class _LoginScreenState extends State<AddPromotionNext> {
         ),
         backgroundColor: AppColors.colorBackground[900],
         focusColor: AppColors.colorBackground[900],
-        onPressed: () {
+        onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            Provider.of<PromotionsProvider>(context, listen: false)
+            await Provider.of<PromotionsProvider>(context, listen: false)
                 .addPromotion(
                     userValidation: _userValidation,
                     startingPrice: widget.product.price,
@@ -97,9 +97,13 @@ class _LoginScreenState extends State<AddPromotionNext> {
                     percentage: _percentage,
                     cash: _cash)
                 .then((value) {
+              if (value == 401) {
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    '/login', (Route<dynamic> route) => false);
+              }
               Navigator.of(context).restorablePush(
                 _dialogBuilder,
-                arguments: value,
+                arguments: value == 201 ? 'Promotion added' : 'Error',
               );
             });
           }
@@ -139,11 +143,11 @@ class _LoginScreenState extends State<AddPromotionNext> {
                           value: _discountType,
                           isExpanded: true,
                           borderRadius: BorderRadius.circular(10),
-                          icon: Icon(Icons.arrow_drop_down),
+                          icon: const Icon(Icons.arrow_drop_down),
                           iconSize: 24,
                           elevation: 3,
                           style: Theme.of(context).textTheme.headline3,
-                          underline: SizedBox(),
+                          underline: const SizedBox(),
                           onChanged: _changeDiscountType,
                           items: <String>['percentage', 'cash']
                               .map<DropdownMenuItem<String>>((String value) {
@@ -157,11 +161,11 @@ class _LoginScreenState extends State<AddPromotionNext> {
                           value: _type,
                           isExpanded: true,
                           borderRadius: BorderRadius.circular(10),
-                          icon: Icon(Icons.arrow_drop_down),
+                          icon: const Icon(Icons.arrow_drop_down),
                           iconSize: 24,
                           elevation: 3,
                           style: Theme.of(context).textTheme.headline3,
-                          underline: SizedBox(),
+                          underline: const SizedBox(),
                           onChanged: _changeType,
                           items: <String>['coupon', 'promotion', 'other']
                               .map<DropdownMenuItem<String>>((String value) {
@@ -246,9 +250,12 @@ class _LoginScreenState extends State<AddPromotionNext> {
                                 theme: DatePickerTheme(
                                   backgroundColor:
                                       AppColors.colorBackground[900]!,
-                                  cancelStyle: TextStyle(color: Colors.white),
-                                  itemStyle: TextStyle(color: Colors.white),
-                                  doneStyle: TextStyle(color: Colors.white),
+                                  cancelStyle:
+                                      const TextStyle(color: Colors.white),
+                                  itemStyle:
+                                      const TextStyle(color: Colors.white),
+                                  doneStyle:
+                                      const TextStyle(color: Colors.white),
                                 ));
                           },
                           child: Text(_expiresAt.toString()),

@@ -28,6 +28,11 @@ class FavouriteProduct extends StatelessWidget {
                   child: Text('Error: ${snapshot.error}'),
                 );
               }
+              int statusCode = snapshot.data as int;
+              if (statusCode == 401) {
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil('/login', (route) => false);
+              }
               final favouriteProduct =
                   Provider.of<ProductsProvider>(context).favouriteProduct;
 

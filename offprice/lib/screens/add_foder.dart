@@ -36,7 +36,14 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
     setState(() {
       _name = value;
       Provider.of<ProductsProvider>(context, listen: false)
-          .refreshProducts(name: _name, min: _priceMin, max: _priceMax);
+          .refreshProducts(name: _name, min: _priceMin, max: _priceMax)
+          .then((statusCode) => {
+                if (statusCode == 401)
+                  {
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        '/login', (Route<dynamic> route) => false)
+                  }
+              });
     });
   }
 
@@ -48,7 +55,14 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
         _priceMin = 0;
       }
       Provider.of<ProductsProvider>(context, listen: false)
-          .refreshProducts(name: _name, min: _priceMin, max: _priceMax);
+          .refreshProducts(name: _name, min: _priceMin, max: _priceMax)
+          .then((statusCode) => {
+                if (statusCode == 401)
+                  {
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        '/login', (Route<dynamic> route) => false)
+                  }
+              });
     });
   }
 
@@ -61,7 +75,14 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
       }
       _priceMax = int.parse(value);
       Provider.of<ProductsProvider>(context, listen: false)
-          .refreshProducts(name: _name, min: _priceMin, max: _priceMax);
+          .refreshProducts(name: _name, min: _priceMin, max: _priceMax)
+          .then((statusCode) => {
+                if (statusCode == 401)
+                  {
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        '/login', (Route<dynamic> route) => false)
+                  }
+              });
     });
   }
 
@@ -70,11 +91,18 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
     final provider = Provider.of<ProductsProvider>(context);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            Provider.of<FoldersProvider>(context, listen: false)
-                .createFolder(_folderName, _products);
-            Navigator.of(context).pop();
+            int statusCode =
+                await Provider.of<FoldersProvider>(context, listen: false)
+                    .createFolder(_folderName, _products);
+
+            if (statusCode == 401) {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  '/login', (Route<dynamic> route) => false);
+            } else if (statusCode == 201) {
+              Navigator.of(context).pop();
+            }
           }
         },
         child: const Icon(
@@ -161,13 +189,18 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
                       Expanded(
                         child: RefreshIndicator(
                             onRefresh: () async {
-                              Provider.of<ProductsProvider>(context,
-                                      listen: false)
-                                  .refreshProducts(
+                              int statusCode =
+                                  await Provider.of<ProductsProvider>(context,
+                                          listen: false)
+                                      .refreshProducts(
                                 name: _name,
                                 min: _priceMin,
                                 max: _priceMax,
                               );
+                              if (statusCode == 401) {
+                                Navigator.of(context).pushNamedAndRemoveUntil(
+                                    '/login', (Route<dynamic> route) => false);
+                              }
                             },
                             child: ListView.builder(
                                 itemCount: provider.products.length,

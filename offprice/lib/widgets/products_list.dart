@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:offprice/models/product.dart';
+import 'package:offprice/providers/auth.dart';
 import 'package:offprice/providers/products.dart';
 import 'package:provider/provider.dart';
 
@@ -35,42 +36,66 @@ class _ProductsListState extends State<ProductsList> {
 
     widget.favouritesOnly.listen((bool event) async {
       favouritesOnly = event;
-      await Provider.of<ProductsProvider>(context, listen: false)
-          .refreshProducts(
-              min: priceMin,
-              max: priceMax,
-              favouritesOnly: favouritesOnly,
-              name: name);
+      int statusCode =
+          await Provider.of<ProductsProvider>(context, listen: false)
+              .refreshProducts(
+                  min: priceMin,
+                  max: priceMax,
+                  favouritesOnly: favouritesOnly,
+                  name: name);
+      if (statusCode == 401) {
+        Provider.of<AuthProvider>(context, listen: false).logout();
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/login', (route) => false);
+      }
     });
 
     widget.name.listen((String event) async {
       name = event;
-      await Provider.of<ProductsProvider>(context, listen: false)
-          .refreshProducts(
-              min: priceMin,
-              max: priceMax,
-              favouritesOnly: favouritesOnly,
-              name: name);
+      int statusCode =
+          await Provider.of<ProductsProvider>(context, listen: false)
+              .refreshProducts(
+                  min: priceMin,
+                  max: priceMax,
+                  favouritesOnly: favouritesOnly,
+                  name: name);
+      if (statusCode == 401) {
+        Provider.of<AuthProvider>(context, listen: false).logout();
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/login', (route) => false);
+      }
     });
 
     widget.priceMin.listen((int event) async {
       priceMin = event;
-      await Provider.of<ProductsProvider>(context, listen: false)
-          .refreshProducts(
-              min: priceMin,
-              max: priceMax,
-              favouritesOnly: favouritesOnly,
-              name: name);
+      int statusCode =
+          await Provider.of<ProductsProvider>(context, listen: false)
+              .refreshProducts(
+                  min: priceMin,
+                  max: priceMax,
+                  favouritesOnly: favouritesOnly,
+                  name: name);
+      if (statusCode == 401) {
+        Provider.of<AuthProvider>(context, listen: false).logout();
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/login', (route) => false);
+      }
     });
 
     widget.priceMax.listen((int event) async {
       priceMax = event;
-      await Provider.of<ProductsProvider>(context, listen: false)
-          .refreshProducts(
-              min: priceMin,
-              max: priceMax,
-              favouritesOnly: favouritesOnly,
-              name: name);
+      int statusCode =
+          await Provider.of<ProductsProvider>(context, listen: false)
+              .refreshProducts(
+                  min: priceMin,
+                  max: priceMax,
+                  favouritesOnly: favouritesOnly,
+                  name: name);
+      if (statusCode == 401) {
+        Provider.of<AuthProvider>(context, listen: false).logout();
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/login', (route) => false);
+      }
     });
   }
 
@@ -99,6 +124,13 @@ class _ProductsListState extends State<ProductsList> {
               return Center(
                 child: Text('Error: ${snapshot.error}'),
               );
+            }
+
+            int statusCode = snapshot.data as int;
+            if (statusCode == 401) {
+              Provider.of<AuthProvider>(context, listen: false).logout();
+              Navigator.of(context)
+                  .pushNamedAndRemoveUntil('/login', (route) => false);
             }
 
             List<ProductModel> products = favouritesOnly

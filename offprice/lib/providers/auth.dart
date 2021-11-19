@@ -119,6 +119,14 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  Future<void> logout() async {
+    _token = '';
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove('login');
+    prefs.remove('password');
+    notifyListeners();
+  }
+
   // function to reset forgotten password
   Future<bool> forgotPassword(String login) async {
     var url = Uri.parse('$host/api/users/forgotPassword');

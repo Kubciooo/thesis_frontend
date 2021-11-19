@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:offprice/providers/auth.dart';
 import 'package:offprice/providers/products.dart';
 import 'package:offprice/screens/single_product_screen.dart';
 import 'package:offprice/widgets/glassmorphism_card.dart';
@@ -237,6 +238,13 @@ Route<Object?> _dialogBuilder(BuildContext context, Object? arguments) {
                   child: Text(
                 'Error: ${snapshot.error}',
               ));
+            }
+            int statusCode = snapshot.data as int;
+
+            if (statusCode == 401) {
+              Provider.of<AuthProvider>(context, listen: false).logout();
+              Navigator.of(context)
+                  .pushNamedAndRemoveUntil('/login', (route) => false);
             }
             return CupertinoAlertDialog(
               title: const Text(

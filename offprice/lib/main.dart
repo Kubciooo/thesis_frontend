@@ -14,6 +14,7 @@ import 'package:offprice/screens/all_folders.dart';
 import 'package:offprice/screens/all_products.dart';
 import 'package:offprice/screens/login_screen.dart';
 import 'package:offprice/screens/main_screen.dart';
+import 'package:offprice/screens/user_settings.dart';
 import 'package:provider/provider.dart';
 import 'constants/main_theme.dart';
 
@@ -79,6 +80,7 @@ class MyApp extends StatelessWidget {
                       '/add-folder': (context) => const AddFolderScreen(),
                       '/all-products': (context) => AllProductsScreen(),
                       '/all-folders': (context) => const AllFoldersScreen(),
+                      '/user-settings': (context) => UserSettingsScreen(),
                     },
                   ));
         }
