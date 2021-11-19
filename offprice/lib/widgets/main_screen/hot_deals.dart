@@ -42,7 +42,7 @@ class HotDeals extends StatelessWidget {
                   icon: const Icon(Icons.drive_file_rename_outline_outlined),
                   labelText: '',
                   onEditingCompleted: (value) async {
-                    if (value.isNotEmpty && int.parse(value) > 0) {
+                    if (value.isNotEmpty && int.parse(value) >= 0) {
                       final statusCode = await Provider.of<PromotionsProvider>(
                               context,
                               listen: false)
@@ -60,7 +60,13 @@ class HotDeals extends StatelessWidget {
                           ),
                         );
                       }
-                      ;
+                    } else {
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Please enter a valid number'),
+                        ),
+                      );
                     }
                   },
                   isNumeric: true,
