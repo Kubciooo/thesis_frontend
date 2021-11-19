@@ -71,6 +71,7 @@ class _AllDealsScreenState extends State<AllDealsScreen> {
                       style: Theme.of(context).textTheme.bodyText1,
                     ),
                     TextFieldDark(
+                        onEditingCompleted: (value) {},
                         onChanged: setSearchTerm,
                         labelText: 'Product name',
                         hintText: 'Search',

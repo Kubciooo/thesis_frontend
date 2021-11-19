@@ -1,3 +1,8 @@
+import 'dart:html';
+import 'dart:math' show Rectangle;
+
+import 'package:charts_common/common.dart' as chartsCommon;
+import 'package:charts_common/src/data/series.dart' show AccessorFn;
 import 'package:charts_flutter/flutter.dart';
 import 'package:flutter/widgets.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
@@ -5,6 +10,7 @@ import 'package:offprice/constants/colors.dart';
 import 'package:offprice/providers/products.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import 'tooltip.dart';
 
 class Chart extends StatelessWidget {
   final List<charts.Series<dynamic, String>> productChart;
@@ -70,6 +76,8 @@ class Chart extends StatelessWidget {
         ),
       ),
       behaviors: [
+        // charts.LinePointHighlighter(
+        //     symbolRenderer: CustomCircleSymbolRenderer()),
         if (isProductSeries)
           charts.InitialSelection(selectedDataConfig: [
             charts.SeriesDatumConfig(
@@ -81,8 +89,7 @@ class Chart extends StatelessWidget {
             ),
           ]),
         charts.SlidingViewport(),
-
-        // charts.PanAndZoomBehavior(),
+        charts.PanAndZoomBehavior(),
       ],
       defaultRenderer: charts.BarRendererConfig(
           fillPattern: charts.FillPatternType.solid,

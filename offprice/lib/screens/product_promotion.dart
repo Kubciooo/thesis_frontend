@@ -118,7 +118,7 @@ class _ProductPromotionScreenState extends State<ProductPromotionScreen> {
                   ),
                   TextButton(
                     onPressed: () async {
-                      final String response = _isFollowed
+                      final int responseStatus = _isFollowed
                           ? await Provider.of<PromotionsProvider>(context,
                                   listen: false)
                               .unfollowPromotion(widget.productPromotion.id)
@@ -126,9 +126,11 @@ class _ProductPromotionScreenState extends State<ProductPromotionScreen> {
                                   listen: false)
                               .followPromotion(widget.productPromotion.id);
 
-                      Navigator.of(context)
-                          .restorablePush(_dialogBuilder, arguments: response);
-                      if (!response.contains('Failed')) {
+                      Navigator.of(context).restorablePush(_dialogBuilder,
+                          arguments: responseStatus == 200
+                              ? 'Promotion followed'
+                              : 'Failed to add promotion to user');
+                      if (responseStatus == 200) {
                         changeFollowStatus();
                       }
                     },

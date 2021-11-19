@@ -103,6 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           TextFieldDark(
+                            onEditingCompleted: () {},
                             onChanged: _changeLogin,
                             labelText: 'Login',
                             hintText: 'Enter your login',
@@ -115,6 +116,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             },
                           ),
                           TextFieldDark(
+                            onEditingCompleted: () {},
                             onChanged: _changePassword,
                             labelText: 'Password',
                             hintText: 'Enter your password',
@@ -129,6 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           if (!_isLogin)
                             TextFieldDark(
+                              onEditingCompleted: () {},
                               onChanged: _changeEmail,
                               labelText: 'Email',
                               hintText: 'Enter your email',
@@ -142,6 +145,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           if (!_isLogin)
                             TextFieldDark(
+                              onEditingCompleted: () {},
                               onChanged: _changeRetypePassword,
                               labelText: 'Retype password',
                               hintText: 'Enter your password again',

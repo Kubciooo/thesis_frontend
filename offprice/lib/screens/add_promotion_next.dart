@@ -173,6 +173,7 @@ class _LoginScreenState extends State<AddPromotionNext> {
                         ),
                         if (_type == 'coupon')
                           TextFieldDark(
+                            onEditingCompleted: () {},
                             onChanged: _changeCoupon,
                             labelText: 'Coupon',
                             hintText: 'Enter the coupon',
@@ -194,6 +195,7 @@ class _LoginScreenState extends State<AddPromotionNext> {
                           ),
                         if (_discountType == 'percentage')
                           TextFieldDark(
+                            onEditingCompleted: () {},
                             isNumeric: true,
                             onChanged: _changePercentage,
                             labelText: 'Percentage',
@@ -214,10 +216,13 @@ class _LoginScreenState extends State<AddPromotionNext> {
                           ),
                         if (_discountType == 'cash')
                           TextFieldDark(
+                            onEditingCompleted: () {},
                             isNumeric: true,
                             onChanged: _changeCash,
                             labelText: 'Cash',
-                            hintText: 'Enter the cash',
+                            hintText: Provider.of<PromotionsProvider>(context,
+                                    listen: false)
+                                .likes,
                             icon: const Icon(Icons.attach_money_outlined),
                             validator: (value) {
                               if (value.isEmpty) {

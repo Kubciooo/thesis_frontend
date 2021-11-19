@@ -142,6 +142,7 @@ class _MainScreenState extends State<SingleProductScreen> {
                     Expanded(
                         child: productCharts.first.data.isNotEmpty
                             ? Chart(
+                                isProductSeries: true,
                                 productChart: productCharts,
                               )
                             : Center(

@@ -13,6 +13,8 @@ class PromotionsProvider with ChangeNotifier {
   final List<DealModel> _deals = [];
   final List<DealModel> _favDeals = [];
   bool _shouldFetch = true;
+  int _likes = 0;
+  get likes => _likes;
   get token => _token;
 
   void update(AuthProvider auth) {
@@ -35,6 +37,7 @@ class PromotionsProvider with ChangeNotifier {
     }
 
     if (_shouldFetch) {
+      await getLikes();
       _shouldFetch = false;
       await getLatestPromotions();
       if (fetchUser) {
@@ -51,7 +54,7 @@ class PromotionsProvider with ChangeNotifier {
     return _deals;
   }
 
-  Future<String> followPromotion(promotionId) async {
+  Future<int> followPromotion(promotionId) async {
     final url = '$host/api/promotions/products/$promotionId';
     final uri = Uri.parse(url);
     final response = await http.patch(
@@ -63,13 +66,58 @@ class PromotionsProvider with ChangeNotifier {
     if (response.statusCode == 200) {
       _favDeals.clear();
       await getUserPromotions();
-      return 'Promotion followed';
+      // return 'Promotion followed';
     } else {
-      return 'Failed to add promotion to user';
+      print(response.body);
+      // return 'Failed to add promotion to user';
     }
+    return response.statusCode;
   }
 
-  Future<String> unfollowPromotion(promotionId) async {
+  Future<int> setLikes(int likes) async {
+    final url = '$host/api/users/likes';
+    final uri = Uri.parse(url);
+
+    final response = await http.post(
+      uri,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer $_token',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'likes': likes,
+      }),
+    );
+    if (response.statusCode == 201) {
+      _likes = likes;
+      notifyListeners();
+    } else {
+      print(response.body);
+    }
+    return response.statusCode;
+  }
+
+  Future<int> getLikes() async {
+    final url = '$host/api/users/likes';
+    final uri = Uri.parse(url);
+    final response = await http.get(
+      uri,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer $_token',
+      },
+    );
+    if (response.statusCode == 200) {
+      _likes = json.decode(response.body)['data']['likes'];
+      print(response.body);
+      print(_likes);
+    } else {
+      print(response.body);
+    }
+
+    return response.statusCode;
+  }
+
+  Future<int> unfollowPromotion(promotionId) async {
     final url = '$host/api/promotions/products/$promotionId';
     final uri = Uri.parse(url);
     final response = await http.delete(
@@ -81,10 +129,12 @@ class PromotionsProvider with ChangeNotifier {
     if (response.statusCode == 200) {
       _favDeals.clear();
       await getUserPromotions();
-      return 'Promotion unfollowed';
+      // return 'Promotion unfollowed';
     } else {
-      return 'Failed to unfollow promotion';
+      print(response.body);
+      // return 'Failed to unfollow promotion';
     }
+    return response.statusCode;
   }
 
   Future<String> addPromotion(

@@ -96,7 +96,6 @@ class SingleFolder extends StatelessWidget {
                   ),
                   Expanded(
                       child: Chart(
-                    isProductSeries: true,
                     productChart: Provider.of<FoldersProvider>(context)
                         .getFolderChart(folder),
                   )),

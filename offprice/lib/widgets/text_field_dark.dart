@@ -10,7 +10,9 @@ class TextFieldDark extends StatefulWidget {
   final String labelText;
   final bool obscureText;
   final Function validator;
+  final Function onEditingCompleted;
   final bool isNumeric;
+  final String initialValue;
 
   const TextFieldDark(
       {Key? key,
@@ -20,6 +22,8 @@ class TextFieldDark extends StatefulWidget {
       required this.icon,
       required this.validator,
       this.isNumeric = false,
+      required this.onEditingCompleted,
+      this.initialValue = '',
       this.obscureText = false})
       : super(key: key);
 
@@ -28,13 +32,15 @@ class TextFieldDark extends StatefulWidget {
 }
 
 class _TextFieldDarkState extends State<TextFieldDark> {
-  final controller = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
+    final controller = TextEditingController(text: widget.initialValue);
     return TextFormField(
+      autovalidateMode: AutovalidateMode.always,
       controller: controller,
       onChanged: (value) => widget.onChanged(value),
+      onEditingComplete: () async =>
+          await widget.onEditingCompleted(controller.text),
       validator: (value) {
         return widget.validator(value);
       },
