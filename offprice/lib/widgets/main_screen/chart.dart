@@ -1,20 +1,21 @@
-import 'dart:html';
-import 'dart:math' show Rectangle;
+// import 'package:charts_common/common.dart' as chartsCommon;
+// import 'package:charts_common/src/data/series.dart' show AccessorFn;
+import 'dart:math';
 
-import 'package:charts_common/common.dart' as chartsCommon;
-import 'package:charts_common/src/data/series.dart' show AccessorFn;
+//   tooltip.dart
 import 'package:charts_flutter/flutter.dart';
+import 'package:charts_flutter/src/text_element.dart' as ChartText;
+import 'package:charts_flutter/src/text_style.dart' as ChartStyle;
 import 'package:flutter/widgets.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:offprice/constants/colors.dart';
 import 'package:offprice/providers/products.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-import 'tooltip.dart';
 
 class Chart extends StatelessWidget {
   final List<charts.Series<dynamic, String>> productChart;
   final bool isProductSeries;
+  static String pointerValue = '';
   const Chart(
       {Key? key, required this.productChart, this.isProductSeries = false})
       : super(key: key);
@@ -24,22 +25,23 @@ class Chart extends StatelessWidget {
     return charts.BarChart(
       productChart,
       animate: true,
+      primaryMeasureAxis: const charts.NumericAxisSpec(
+          renderSpec: charts.GridlineRendererSpec(
+            labelStyle: charts.TextStyleSpec(
+              fontSize: 12,
+              color: charts.MaterialPalette.white,
+            ),
+            lineStyle: charts.LineStyleSpec(
+              color: charts.MaterialPalette.white,
+            ),
+          ),
+          tickProviderSpec:
+              charts.BasicNumericTickProviderSpec(desiredTickCount: 10)),
       selectionModels: [
-        SelectionModelConfig(changedListener: (SelectionModel model) {
+        charts.SelectionModelConfig(
+            changedListener: (charts.SelectionModel model) {
           if (model.hasDatumSelection) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                backgroundColor: AppColors.colorBackground[700],
-                duration: const Duration(seconds: 1),
-                content: Text(
-                  '${model.selectedDatum[0].datum.price}',
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headline1!.copyWith(
-                        fontSize: 20,
-                      ),
-                ),
-              ),
-            );
+            pointerValue = '${model.selectedDatum[0].datum.price}';
           }
         })
       ],
@@ -64,30 +66,9 @@ class Chart extends StatelessWidget {
       ),
       rtlSpec:
           const charts.RTLSpec(axisDirection: charts.AxisDirection.reversed),
-      primaryMeasureAxis: const charts.NumericAxisSpec(
-        renderSpec: charts.GridlineRendererSpec(
-          labelStyle: charts.TextStyleSpec(
-            fontSize: 12,
-            color: charts.MaterialPalette.white,
-          ),
-          lineStyle: charts.LineStyleSpec(
-            color: charts.MaterialPalette.white,
-          ),
-        ),
-      ),
       behaviors: [
-        // charts.LinePointHighlighter(
-        //     symbolRenderer: CustomCircleSymbolRenderer()),
-        if (isProductSeries)
-          charts.InitialSelection(selectedDataConfig: [
-            charts.SeriesDatumConfig(
-              'Snapshots', // This is the name of the series
-              Provider.of<ProductsProvider>(context).getChartDateFromDateTime(
-                  productChart[0]
-                      .data[productChart[0].data.length - 1]
-                      .date), // This is the index of the datum in the series
-            ),
-          ]),
+        charts.LinePointHighlighter(
+            symbolRenderer: CustomCircleSymbolRenderer()),
         charts.SlidingViewport(),
         charts.PanAndZoomBehavior(),
       ],
@@ -100,5 +81,27 @@ class Chart extends StatelessWidget {
           // To change the radius of the bars, use [ConstCornerStrategy]
           cornerStrategy: const charts.ConstCornerStrategy(10)),
     );
+  }
+}
+
+class CustomCircleSymbolRenderer extends CircleSymbolRenderer {
+  @override
+  void paint(ChartCanvas canvas, Rectangle<num> bounds,
+      {List<int>? dashPattern,
+      Color? fillColor,
+      FillPatternType? fillPattern,
+      Color? strokeColor,
+      double? strokeWidthPx}) {
+    super.paint(canvas, bounds,
+        dashPattern: dashPattern,
+        fillColor: fillColor,
+        strokeColor: strokeColor,
+        strokeWidthPx: strokeWidthPx);
+    ChartStyle.TextStyle textStyle = ChartStyle.TextStyle();
+
+    textStyle.color = Color.white;
+    textStyle.fontSize = 15;
+    canvas.drawText(ChartText.TextElement(Chart.pointerValue, style: textStyle),
+        (bounds.left).round(), (bounds.top - 28).round());
   }
 }
