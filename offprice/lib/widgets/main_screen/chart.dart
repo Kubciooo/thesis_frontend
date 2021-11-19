@@ -100,7 +100,7 @@ class CustomCircleSymbolRenderer extends CircleSymbolRenderer {
     ChartStyle.TextStyle textStyle = ChartStyle.TextStyle();
 
     textStyle.color = Color.white;
-    textStyle.fontSize = 15;
+    textStyle.fontSize = 18;
     canvas.drawText(ChartText.TextElement(Chart.pointerValue, style: textStyle),
         (bounds.left).round(), (bounds.top - 28).round());
   }
