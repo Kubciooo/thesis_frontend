@@ -143,7 +143,7 @@ class ProductsProvider with ChangeNotifier {
     name,
     favouritesOnly = false,
   }) async {
-    return getProducts(
+    return await getProducts(
         refresh: true,
         min: min,
         max: max,
@@ -157,6 +157,9 @@ class ProductsProvider with ChangeNotifier {
       max = 999999,
       name = '',
       favouritesOnly = false}) async {
+    if (refresh) {
+      clearProducts();
+    }
     if (shouldFetch) {
       shouldFetch = false;
       if (favouritesOnly) {
@@ -164,11 +167,8 @@ class ProductsProvider with ChangeNotifier {
       }
       await getLatestProducts(min: min, max: max, name: name);
     }
-    if (refresh) {
-      clearProducts();
-      await getLatestProducts(min: min, max: max, name: name);
-      notifyListeners();
-    }
+    notifyListeners();
+
     // print(favouritesOnly); // Todo: why does it happen 3 times?
 
     return favouritesOnly ? favourites : products;
@@ -212,9 +212,8 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> getProductsFromScrapper(
-      {min = -1, max = 9000000, name = ''}) async {
+      {min = 0, max = 9000000, name = ''}) async {
     var url = ('$host/api/products/scrapper');
-
     var uri = Uri.parse(url);
 
     try {
@@ -225,8 +224,8 @@ class ProductsProvider with ChangeNotifier {
           "Authorization": "Bearer " + token,
         },
         body: jsonEncode(<String, dynamic>{
-          'minPrice': min,
-          'maxPrice': max,
+          'minPrice': '$min',
+          'maxPrice': '$max',
           'productName': name,
           "categoryId": "617432a7df9937b6933d193d",
           "shops": [
@@ -254,10 +253,12 @@ class ProductsProvider with ChangeNotifier {
     }
   }
 
-  Future<void> getLatestProducts({min = -1, max = 9000000, name = ''}) async {
+  Future<void> getLatestProducts({min = 0, max = 9000000, name = ''}) async {
+    print('min: $min');
+    print('max: $max');
     var url = ('$host/api/products');
     if (min > 0) {
-      url += '?price[gte]=${min.toString()}';
+      url += '?price[gte]=$min';
     }
     if (max < 999999 && max > 0) {
       if (min > 0) {
@@ -265,7 +266,7 @@ class ProductsProvider with ChangeNotifier {
       } else {
         url += '?';
       }
-      url += 'price[lte]=${max.toString()}';
+      url += 'price[lte]=$max';
     }
     if (name != '') {
       if ((min > 0) || (max < 999999 && max > 0)) {
@@ -296,7 +297,6 @@ class ProductsProvider with ChangeNotifier {
         _products.add(
             ProductModel.fromJsonShop(responseData['data']['products'][i]));
       }
-      notifyListeners();
     } catch (error) {
       print(error);
     }

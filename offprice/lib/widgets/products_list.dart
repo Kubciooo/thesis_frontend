@@ -5,19 +5,17 @@ import 'package:offprice/providers/products.dart';
 import 'package:provider/provider.dart';
 
 class ProductsList extends StatefulWidget {
-  final String name;
-  final int priceMin;
-  final int priceMax;
-  final bool favouritesOnly;
-  final bool useScrapper;
+  final Stream<String> name;
+  final Stream<int> priceMin;
+  final Stream<int> priceMax;
+  final Stream<bool> favouritesOnly;
 
   final Function onProductSelected;
   const ProductsList({
-    this.name = '',
-    this.priceMax = 999999999,
-    this.priceMin = 0,
-    this.favouritesOnly = false,
-    this.useScrapper = false,
+    required this.name,
+    required this.priceMax,
+    required this.priceMin,
+    required this.favouritesOnly,
     required this.onProductSelected,
     Key? key,
   }) : super(key: key);
@@ -27,9 +25,53 @@ class ProductsList extends StatefulWidget {
 }
 
 class _ProductsListState extends State<ProductsList> {
+  String name = '';
+  int priceMin = 0;
+  int priceMax = 9999999999;
+  bool favouritesOnly = false;
   @override
   void initState() {
     super.initState();
+
+    widget.favouritesOnly.listen((bool event) async {
+      favouritesOnly = event;
+      await Provider.of<ProductsProvider>(context, listen: false)
+          .refreshProducts(
+              min: priceMin,
+              max: priceMax,
+              favouritesOnly: favouritesOnly,
+              name: name);
+    });
+
+    widget.name.listen((String event) async {
+      name = event;
+      await Provider.of<ProductsProvider>(context, listen: false)
+          .refreshProducts(
+              min: priceMin,
+              max: priceMax,
+              favouritesOnly: favouritesOnly,
+              name: name);
+    });
+
+    widget.priceMin.listen((int event) async {
+      priceMin = event;
+      await Provider.of<ProductsProvider>(context, listen: false)
+          .refreshProducts(
+              min: priceMin,
+              max: priceMax,
+              favouritesOnly: favouritesOnly,
+              name: name);
+    });
+
+    widget.priceMax.listen((int event) async {
+      priceMax = event;
+      await Provider.of<ProductsProvider>(context, listen: false)
+          .refreshProducts(
+              min: priceMin,
+              max: priceMax,
+              favouritesOnly: favouritesOnly,
+              name: name);
+    });
   }
 
   @override
@@ -41,12 +83,12 @@ class _ProductsListState extends State<ProductsList> {
   Widget build(BuildContext context) {
     return Expanded(
       child: FutureBuilder(
-          future: Provider.of<ProductsProvider>(context, listen: true)
+          future: Provider.of<ProductsProvider>(context, listen: false)
               .getProducts(
-                  name: widget.name,
-                  min: widget.priceMin,
-                  favouritesOnly: widget.favouritesOnly,
-                  max: widget.priceMax),
+                  name: name,
+                  min: priceMin,
+                  favouritesOnly: favouritesOnly,
+                  max: priceMax),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
@@ -59,17 +101,17 @@ class _ProductsListState extends State<ProductsList> {
               );
             }
 
-            final List<ProductModel> products =
-                snapshot.data as List<ProductModel>;
-
+            List<ProductModel> products = favouritesOnly
+                ? Provider.of<ProductsProvider>(context).favourites
+                : Provider.of<ProductsProvider>(context).products;
             return RefreshIndicator(
               onRefresh: () async {
                 await Provider.of<ProductsProvider>(context, listen: false)
                     .refreshProducts(
-                        min: widget.priceMin,
-                        max: widget.priceMax,
-                        favouritesOnly: widget.favouritesOnly,
-                        name: widget.name);
+                        min: priceMin,
+                        max: priceMax,
+                        favouritesOnly: favouritesOnly,
+                        name: name);
               },
               child: ListView.builder(
                 // shrinkWrap: true,

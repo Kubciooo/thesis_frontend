@@ -48,6 +48,9 @@ class HotDeals extends StatelessWidget {
                               listen: false)
                           .setLikes((int.parse(value)));
                       if (statusCode == 201) {
+                        await Provider.of<PromotionsProvider>(context,
+                                listen: false)
+                            .refreshPromotions();
                         Navigator.of(context).pop();
                       } else if (statusCode == 401) {
                         Navigator.of(context).pushNamedAndRemoveUntil(

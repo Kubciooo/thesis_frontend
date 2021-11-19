@@ -12,6 +12,9 @@ class PromotionsProvider with ChangeNotifier {
   String _token = '';
   final List<DealModel> _deals = [];
   final List<DealModel> _favDeals = [];
+
+  get deals => [..._deals];
+  get favDeals => [..._favDeals];
   bool _shouldFetch = true;
   int _likes = 0;
   get likes => _likes;
@@ -46,10 +49,8 @@ class PromotionsProvider with ChangeNotifier {
       notifyListeners();
     }
     if (filter != '') {
-      return _deals
-          .where((deal) =>
-              deal.product.name.toLowerCase().contains(filter.toLowerCase()))
-          .toList();
+      _deals.removeWhere((deal) =>
+          !deal.product.name.toLowerCase().contains(filter.toLowerCase()));
     }
     return _deals;
   }
@@ -108,8 +109,6 @@ class PromotionsProvider with ChangeNotifier {
     );
     if (response.statusCode == 200) {
       _likes = json.decode(response.body)['data']['likes'];
-      print(response.body);
-      print(_likes);
     } else {
       print(response.body);
     }
@@ -129,10 +128,8 @@ class PromotionsProvider with ChangeNotifier {
     if (response.statusCode == 200) {
       _favDeals.clear();
       await getUserPromotions();
-      // return 'Promotion unfollowed';
     } else {
       print(response.body);
-      // return 'Failed to unfollow promotion';
     }
     return response.statusCode;
   }
@@ -179,7 +176,6 @@ class PromotionsProvider with ChangeNotifier {
     }
   }
 
-  // function to reset forgotten password
   Future<void> getLatestPromotions() async {
     var url = Uri.parse('$host/api/promotions/products');
     try {
@@ -203,7 +199,6 @@ class PromotionsProvider with ChangeNotifier {
         _deals.add(
             DealModel.fromJson(responseData['data']['productPromotions'][i]));
       }
-      notifyListeners();
     } catch (error) {
       print(error);
     }
@@ -218,7 +213,7 @@ class PromotionsProvider with ChangeNotifier {
     return false;
   }
 
-  Future<void> getUserPromotions() async {
+  Future<int> getUserPromotions() async {
     var url = Uri.parse('$host/api/users/productPromotions');
     try {
       final response = await http.get(
@@ -243,9 +238,10 @@ class PromotionsProvider with ChangeNotifier {
             DealModel.fromJson(responseData['data']['productPromotions'][i]));
       }
 
-      notifyListeners();
+      return response.statusCode;
     } catch (error) {
       print(error);
+      return 401;
     }
   }
 }

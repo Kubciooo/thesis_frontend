@@ -71,17 +71,16 @@ class _AllDealsScreenState extends State<AllDealsScreen> {
                       style: Theme.of(context).textTheme.bodyText1,
                     ),
                     TextFieldDark(
-                        onEditingCompleted: (value) {},
+                        initialValue: _searchTerm,
+                        onEditingCompleted: (value) {
+                          setSearchTerm(value);
+                        },
                         onChanged: setSearchTerm,
                         labelText: 'Product name',
                         hintText: 'Search',
                         icon: const Icon(Icons.search),
                         validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Please enter some text';
-                          } else {
-                            return null;
-                          }
+                          return null;
                         }),
                     PromotionsList(
                       searchTerm: _searchTerm,

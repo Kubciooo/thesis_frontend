@@ -36,7 +36,7 @@ class _TextFieldDarkState extends State<TextFieldDark> {
   Widget build(BuildContext context) {
     final controller = TextEditingController(text: widget.initialValue);
     return TextFormField(
-      autovalidateMode: AutovalidateMode.always,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       controller: controller,
       onChanged: (value) => widget.onChanged(value),
       onEditingComplete: () async =>

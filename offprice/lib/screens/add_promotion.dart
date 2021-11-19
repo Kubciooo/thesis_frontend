@@ -1,12 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:offprice/providers/products.dart';
 import 'package:offprice/screens/add_promotion_next.dart';
 import 'package:offprice/widgets/glassmorphism_card.dart';
 import 'package:offprice/widgets/products_list.dart';
-import 'package:provider/provider.dart';
 
 class AddPromotionScreen extends StatefulWidget {
   const AddPromotionScreen({Key? key}) : super(key: key);
@@ -20,40 +20,36 @@ class _AddPromotionScreenState extends State<AddPromotionScreen> {
   int _priceMin = 0;
   int _priceMax = 0;
 
+  final StreamController<String> _nameController = StreamController<String>();
+  final StreamController<int> _priceMinController = StreamController<int>();
+  final StreamController<int> _priceMaxController = StreamController<int>();
+  final StreamController<bool> _favouritesOnlyController =
+      StreamController<bool>();
+
   final double _width = 0.9;
   final double _height = 0.9;
 
   void _changeName(String value) {
-    setState(() {
-      _name = value;
-      Provider.of<ProductsProvider>(context, listen: false)
-          .refreshProducts(name: _name, min: _priceMin, max: _priceMax);
-    });
+    _name = value;
+    _nameController.add(_name);
   }
 
   void _changePriceMin(String value) {
-    setState(() {
-      if (value != '') {
-        _priceMin = int.parse(value);
-      } else {
-        _priceMin = 0;
-      }
-      Provider.of<ProductsProvider>(context, listen: false)
-          .refreshProducts(name: _name, min: _priceMin, max: _priceMax);
-    });
+    if (value != '') {
+      _priceMin = int.parse(value);
+    } else {
+      _priceMin = 0;
+    }
+    _priceMinController.add(_priceMin);
   }
 
   void _changePriceMax(String value) {
-    setState(() {
-      if (value != '') {
-        _priceMax = int.parse(value);
-      } else {
-        _priceMax = 0;
-      }
+    if (value != '') {
       _priceMax = int.parse(value);
-      Provider.of<ProductsProvider>(context, listen: false)
-          .refreshProducts(name: _name, min: _priceMin, max: _priceMax);
-    });
+    } else {
+      _priceMax = 9999999;
+    }
+    _priceMaxController.add(_priceMax);
   }
 
   @override
@@ -125,9 +121,10 @@ class _AddPromotionScreenState extends State<AddPromotionScreen> {
                                       AddPromotionNext(product: product),
                                 ));
                           },
-                          name: _name,
-                          priceMin: _priceMin,
-                          priceMax: _priceMax == 0 ? 999999 : _priceMax),
+                          name: _nameController.stream,
+                          priceMin: _priceMinController.stream,
+                          priceMax: _priceMaxController.stream,
+                          favouritesOnly: _favouritesOnlyController.stream),
                     ],
                   ),
                 ),

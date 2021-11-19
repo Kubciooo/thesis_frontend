@@ -1,108 +1,78 @@
+import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:offprice/providers/products.dart';
 import 'package:offprice/screens/single_product_screen.dart';
 import 'package:offprice/widgets/glassmorphism_card.dart';
 import 'package:offprice/widgets/products_list.dart';
+import 'package:offprice/widgets/text_field_dark.dart';
 import 'package:provider/provider.dart';
 
 class AllProductsScreen extends StatefulWidget {
-  const AllProductsScreen({Key? key}) : super(key: key);
+  AllProductsScreen({Key? key}) : super(key: key);
 
   @override
-  State<AllProductsScreen> createState() => _AddPromotionScreenState();
+  State<AllProductsScreen> createState() => _AllProductsScreenState();
 }
 
-class _AddPromotionScreenState extends State<AllProductsScreen> {
-  @override
-  void initState() {
-    Provider.of<ProductsProvider>(context, listen: false).getFavourites();
-    super.initState();
-  }
-
+class _AllProductsScreenState extends State<AllProductsScreen> {
   String _name = '';
+
   int _priceMin = 0;
-  int _priceMax = 0;
+
+  int _priceMax = 999999;
+
   bool _favouritesOnly = false;
 
+  final StreamController<String> _nameController = StreamController<String>();
+
+  final StreamController<int> _priceMinController = StreamController<int>();
+
+  final StreamController<int> _priceMaxController = StreamController<int>();
+
+  final StreamController<bool> _favouritesOnlyController =
+      StreamController<bool>();
+
   final double _width = 0.9;
+
   final double _height = 0.9;
 
   void _changeName(String value) {
-    setState(() {
-      _name = value;
-      Provider.of<ProductsProvider>(context, listen: false).refreshProducts(
-        name: _name,
-        min: _priceMin,
-        max: _priceMax,
-        favouritesOnly: _favouritesOnly,
-      );
-    });
-  }
-
-  void _useScrapper() {
-    // Provider.of<ProductsProvider>(context, listen: false).refreshProducts(
-    //   name: _name,
-    //   min: _priceMin,
-    //   max: _priceMax,
-    //   favouritesOnly: _favouritesOnly,
-    // );
-
-    Navigator.of(context).restorablePush(_dialogBuilder,
-        arguments:
-            ScrapperArguments(min: _priceMin, max: _priceMax, name: _name)
-                .toMap());
+    _name = value;
+    _nameController.add(_name);
   }
 
   void _changePriceMin(String value) {
-    setState(() {
-      if (value != '') {
-        _priceMin = int.parse(value);
-      } else {
-        _priceMin = 0;
-      }
-      Provider.of<ProductsProvider>(context, listen: false).refreshProducts(
-        name: _name,
-        min: _priceMin,
-        max: _priceMax,
-        favouritesOnly: _favouritesOnly,
-      );
-    });
+    if (value != '') {
+      _priceMin = int.parse(value);
+    } else {
+      _priceMin = 0;
+    }
+    _priceMinController.add(_priceMin);
   }
 
   void _changeFavouritesOnly(bool value) {
     setState(() {
       _favouritesOnly = value;
-      Provider.of<ProductsProvider>(context, listen: false).refreshProducts(
-        name: _name,
-        min: _priceMin,
-        max: _priceMax,
-        favouritesOnly: _favouritesOnly,
-      );
+      _favouritesOnlyController.add(_favouritesOnly);
     });
   }
 
   void _changePriceMax(String value) {
-    setState(() {
-      if (value != '') {
-        _priceMax = int.parse(value);
-      } else {
-        _priceMax = 0;
-      }
-      _priceMax = int.parse(value);
-      Provider.of<ProductsProvider>(context, listen: false).refreshProducts(
-        name: _name,
-        min: _priceMin,
-        max: _priceMax,
-        favouritesOnly: _favouritesOnly,
-      );
-    });
+    _priceMax = int.parse(value);
+    _priceMaxController.add(_priceMax);
   }
 
   @override
   Widget build(BuildContext context) {
+    void _useScrapper() {
+      Navigator.of(context).restorablePush(_dialogBuilder,
+          arguments:
+              ScrapperArguments(min: _priceMin, max: _priceMax, name: _name)
+                  .toMap());
+    }
+
     return Scaffold(
       body: Stack(
         children: [
@@ -156,43 +126,74 @@ class _AddPromotionScreenState extends State<AllProductsScreen> {
                               child: Text("Use scraper",
                                   style: Theme.of(context).textTheme.headline2),
                               onPressed: _useScrapper),
-                          TextField(
-                            decoration: const InputDecoration(
-                              hintText: 'Name',
-                            ),
-                            onSubmitted: _changeName,
-                            onChanged: (value) => setState(() {
-                              _name = value;
-                            }),
+                          TextFieldDark(
+                            hintText: 'Name',
+                            onChanged: (value) {},
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter a name';
+                              }
+                              return null;
+                            },
+                            initialValue: _name,
+                            icon: const Icon(Icons.search),
+                            labelText: 'Name',
+                            onEditingCompleted: (value) {
+                              _changeName(value);
+                            },
                           ),
-                          TextField(
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly,
-                            ],
-                            decoration: const InputDecoration(
-                              hintText: 'Price min',
-                            ),
-                            onSubmitted: _changePriceMin,
-                            onChanged: (value) => setState(() {
-                              _priceMin = int.parse(value);
-                            }),
+                          TextFieldDark(
+                            hintText: 'Price min',
+                            onChanged: (value) {},
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter a number';
+                              }
+                              if (int.tryParse(value) == null) {
+                                return 'Please enter a number';
+                              } else {
+                                final valueInt = int.parse(value);
+                                if (valueInt < 0) {
+                                  return 'Please enter a number greater than 0';
+                                }
+                              }
+                              return null;
+                            },
+                            initialValue: _priceMin.toString(),
+                            icon: const Icon(Icons.attach_money),
+                            labelText: 'Price min',
+                            onEditingCompleted: (value) {
+                              _changePriceMin(value);
+                            },
                           ),
-                          TextField(
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly,
-                            ],
-                            decoration: const InputDecoration(
-                              hintText: 'Price max',
-                            ),
-                            onSubmitted: _changePriceMax,
-                            onChanged: (value) => setState(() {
-                              _priceMax = int.parse(value);
-                            }),
+                          TextFieldDark(
+                            hintText: 'Price max',
+                            onChanged: (value) {},
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter a number';
+                              }
+                              if (int.tryParse(value) == null) {
+                                return 'Please enter a number';
+                              } else {
+                                final valueInt = int.parse(value);
+                                if (valueInt < 0) {
+                                  return 'Please enter a number greater than 0';
+                                }
+                              }
+                              return null;
+                            },
+                            initialValue: _priceMax.toString(),
+                            icon: const Icon(Icons.attach_money),
+                            labelText: 'Price Max',
+                            onEditingCompleted: (value) {
+                              _changePriceMax(value);
+                            },
                           ),
                         ],
                       ]),
                       ProductsList(
-                          favouritesOnly: _favouritesOnly,
+                          favouritesOnly: _favouritesOnlyController.stream,
                           onProductSelected: (product) {
                             Navigator.push(
                                 context,
@@ -201,9 +202,9 @@ class _AddPromotionScreenState extends State<AllProductsScreen> {
                                       SingleProductScreen(product: product),
                                 ));
                           },
-                          name: _name,
-                          priceMin: _priceMin,
-                          priceMax: _priceMax == 0 ? 999999 : _priceMax),
+                          name: _nameController.stream,
+                          priceMin: _priceMinController.stream,
+                          priceMax: _priceMaxController.stream),
                     ],
                   ),
                 ),
@@ -245,7 +246,6 @@ Route<Object?> _dialogBuilder(BuildContext context, Object? arguments) {
                     child: const Text('Ok'),
                     onPressed: () {
                       Navigator.of(context).pop();
-                      // Navigator.of(context).pop();
                     }),
               ],
             );

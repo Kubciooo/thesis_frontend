@@ -29,7 +29,7 @@ class _PromotionsListState extends State<PromotionsList> {
   Widget build(BuildContext context) {
     return Expanded(
       child: FutureBuilder(
-          future: Provider.of<PromotionsProvider>(context, listen: true)
+          future: Provider.of<PromotionsProvider>(context, listen: false)
               .getPromotions(filter: widget.searchTerm, fetchUser: true),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -37,7 +37,8 @@ class _PromotionsListState extends State<PromotionsList> {
                 child: CircularProgressIndicator(),
               );
             }
-            final List<DealModel> data = snapshot.data as List<DealModel>;
+            final List<DealModel> data =
+                Provider.of<PromotionsProvider>(context).deals;
             return RefreshIndicator(
               onRefresh: () async {
                 await Provider.of<PromotionsProvider>(context, listen: false)
