@@ -52,9 +52,6 @@ class HotDeals extends StatelessWidget {
                                 listen: false)
                             .refreshPromotions();
                         Navigator.of(context).pop();
-                      } else if (statusCode == 401) {
-                        Navigator.of(context).pushNamedAndRemoveUntil(
-                            '/login', (Route<dynamic> route) => false);
                       } else {
                         Navigator.of(context).pop();
                         ScaffoldMessenger.of(context).showSnackBar(

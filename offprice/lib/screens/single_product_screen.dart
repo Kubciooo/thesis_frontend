@@ -178,7 +178,7 @@ class _MainScreenState extends State<SingleProductScreen> {
                             arguments: response);
                         if (response == 200 || response == 201) {
                           changeFollowStatus();
-                        } else {
+                        } else if (response == 401) {
                           //redirect to login
                           Navigator.of(context).pushNamedAndRemoveUntil(
                               '/login', (route) => false);

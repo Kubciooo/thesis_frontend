@@ -54,6 +54,7 @@ class _TextFieldDarkState extends State<TextFieldDark> {
       validator: (value) {
         return widget.validator(value);
       },
+      autocorrect: false,
       decoration: InputDecoration(
         labelText: widget.labelText,
         hintText: widget.hintText,

@@ -1,0 +1,599 @@
+@startuml
+set namespaceSeparator ::
+
+class "offprice::constants::main_theme.dart::AppTheme" {
+  {static} +ThemeData darkTheme
+}
+
+"offprice::constants::main_theme.dart::AppTheme" o-- "flutter::src::material::theme_data.dart::ThemeData"
+
+class "offprice::constants::colors.dart::AppColors" {
+  {static} +Map<int, Color?> colorBackground
+  {static} +Color colorGlassmorphismCard
+  {static} +Color colorGlassmorphismCardBorder
+  {static} +Color colorHeading
+  {static} +LinearGradient mainLinearGradient
+  {static} +Map<int, Color> colorSecondary
+  {static} +Map<int, Color> colorPrimary
+}
+
+"offprice::constants::colors.dart::AppColors" o-- "dart::ui::Color"
+"offprice::constants::colors.dart::AppColors" o-- "flutter::src::painting::gradient.dart::LinearGradient"
+
+class "offprice::providers::auth.dart::AuthProvider" {
+  -String _token
+  +String token
+  +Future<void> storeUser()
+  +Future<Map<String, String>> getUserLoginAndPassword()
+  +Future<bool> automaticLogin()
+  +Future<bool> signIn()
+  +Future<bool> signUp()
+  +Future<void> logout()
+  +Future<bool> forgotPassword()
+}
+
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "offprice::providers::auth.dart::AuthProvider"
+
+class "offprice::providers::products.dart::ProductsProvider" {
+  -String _token
+  +bool shouldFetch
+  -ProductModel _favouriteProduct
+  -List<ProductModel> _products
+  -List<ProductModel> _favourites
+  +dynamic token
+  +dynamic isFavouriteProductSet
+  +dynamic favouriteProduct
+  +List<ProductModel> products
+  +List<ProductModel> favourites
+  +bool isFavorite()
+  +void update()
+  +void clearProducts()
+  +Future<int> setFavouriteProduct()
+  +Future<int> fetchFavouriteProduct()
+  +List<Series<ProductChartModel, String>> getProductChart()
+  +String appendZero()
+  +String getChartDateFromDateTime()
+  +Future<int> refreshProducts()
+  +Future<int> getProducts()
+  +Future<int> followProduct()
+  +Future<int> unfollowProduct()
+  +Future<int> getProductsFromScrapper()
+  +Future<int> getLatestProducts()
+  +bool isFollowed()
+  +Future<int> getFavourites()
+}
+
+"offprice::providers::products.dart::ProductsProvider" o-- "offprice::models::product.dart::ProductModel"
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "offprice::providers::products.dart::ProductsProvider"
+
+class "offprice::providers::folders.dart::FoldersProvider" {
+  -String _token
+  +bool shouldFetch
+  -UserProductsModel _favouriteFolder
+  -List<UserProductsModel> _folders
+  +dynamic token
+  +dynamic isFavouriteFolderSet
+  +dynamic favouriteFolder
+  +List<UserProductsModel> folders
+  +void update()
+  +bool isFavourite()
+  +void clearFolders()
+  +List<Series<FolderChartModel, String>> getFolderChart()
+  +Future<int> setFavouriteFolder()
+  +Future<int> fetchFavouriteFolder()
+  +Future<int> createFolder()
+  +Future<int> deleteFolder()
+  +Future<int> removeProductFromFolder()
+  +Future<int> addProductToFolder()
+  +Future<int> fetchFolders()
+}
+
+"offprice::providers::folders.dart::FoldersProvider" o-- "offprice::models::product.dart::UserProductsModel"
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "offprice::providers::folders.dart::FoldersProvider"
+
+class "offprice::providers::promotions.dart::PromotionsProvider" {
+  -String _token
+  -List<DealModel> _deals
+  -List<DealModel> _favDeals
+  -bool _shouldFetch
+  -int _likes
+  +dynamic deals
+  +dynamic favDeals
+  +dynamic likes
+  +dynamic token
+  +void update()
+  +void clearPromotions()
+  +Future<int> refreshPromotions()
+  +Future<int> getPromotions()
+  +Future<int> followPromotion()
+  +Future<int> setLikes()
+  +Future<int> getLikes()
+  +Future<int> unfollowPromotion()
+  +Future<int> addPromotion()
+  +Future<int> getLatestPromotions()
+  +bool isFollowed()
+  +Future<int> getUserPromotions()
+}
+
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "offprice::providers::promotions.dart::PromotionsProvider"
+
+class "offprice::models::product.dart::_OtherPromotions" {
+  +String name
+  +String id
+  +String url
+}
+
+class "offprice::models::product.dart::Snapshot" {
+  +String id
+  +List<String> coupons
+  +List<_OtherPromotions> otherPromotions
+  +double price
+  +DateTime updatedAt
+}
+
+class "offprice::models::product.dart::UserProductsModel" {
+  +String name
+  +String id
+  +List<ProductModel> products
+}
+
+class "offprice::models::product.dart::ProductModel" {
+  +String id
+  +String url
+  +String name
+  +double price
+  +String shop
+  +List<String> categories
+  +List<String> coupons
+  +List<_OtherPromotions> otherPromotions
+  +List<Snapshot> snapshots
+}
+
+class "offprice::models::shop.dart::ShopModel" {
+  +String name
+  +String id
+  +String mainUrl
+}
+
+class "offprice::models::product_chart.dart::ProductChartModel" {
+  +DateTime date
+  +double price
+}
+
+class "offprice::models::product_chart.dart::FolderChartModel" {
+  +String shop
+  +double price
+}
+
+class "offprice::models::deal.dart::DealModel" {
+  +String id
+  +String type
+  +ProductModel product
+  +double startingPrice
+  +int rating
+  +String discountType
+  +String coupon
+  +double cash
+  +int percent
+  +DateTime startsAt
+  +DateTime expiresAt
+  +double finalPrice
+}
+
+"offprice::models::deal.dart::DealModel" o-- "offprice::models::product.dart::ProductModel"
+
+class "offprice::screens::all_folders.dart::AllFoldersScreen" {
+  +State<AllFoldersScreen> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "offprice::screens::all_folders.dart::AllFoldersScreen"
+
+class "offprice::screens::all_folders.dart::_AddPromotionScreenState" {
+  -double _width
+  -double _height
+  +void initState()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "offprice::screens::all_folders.dart::_AddPromotionScreenState"
+
+class "offprice::screens::all_products.dart::AllProductsScreen" {
+  +State<AllProductsScreen> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "offprice::screens::all_products.dart::AllProductsScreen"
+
+class "offprice::screens::all_products.dart::_AllProductsScreenState" {
+  -String _name
+  -int _priceMin
+  -int _priceMax
+  -bool _favouritesOnly
+  -StreamController<String> _nameController
+  -StreamController<int> _priceMinController
+  -StreamController<int> _priceMaxController
+  -StreamController<bool> _favouritesOnlyController
+  -double _width
+  -double _height
+  -void _changeName()
+  -void _changePriceMin()
+  -void _changeFavouritesOnly()
+  -void _changePriceMax()
+  +Widget build()
+}
+
+"offprice::screens::all_products.dart::_AllProductsScreenState" o-- "dart::async::StreamController<String>"
+"offprice::screens::all_products.dart::_AllProductsScreenState" o-- "dart::async::StreamController<int>"
+"offprice::screens::all_products.dart::_AllProductsScreenState" o-- "dart::async::StreamController<bool>"
+"flutter::src::widgets::framework.dart::State" <|-- "offprice::screens::all_products.dart::_AllProductsScreenState"
+
+class "offprice::screens::all_products.dart::ScrapperArguments" {
+  +int min
+  +int max
+  +String name
+  +Map<String, dynamic> toMap()
+}
+
+class "offprice::screens::add_promotion.dart::AddPromotionScreen" {
+  +State<AddPromotionScreen> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "offprice::screens::add_promotion.dart::AddPromotionScreen"
+
+class "offprice::screens::add_promotion.dart::_AddPromotionScreenState" {
+  -String _name
+  -int _priceMin
+  -int _priceMax
+  -StreamController<String> _nameController
+  -StreamController<int> _priceMinController
+  -StreamController<int> _priceMaxController
+  -StreamController<bool> _favouritesOnlyController
+  -double _width
+  -double _height
+  -void _changeName()
+  -void _changePriceMin()
+  -void _changePriceMax()
+  +Widget build()
+}
+
+"offprice::screens::add_promotion.dart::_AddPromotionScreenState" o-- "dart::async::StreamController<String>"
+"offprice::screens::add_promotion.dart::_AddPromotionScreenState" o-- "dart::async::StreamController<int>"
+"offprice::screens::add_promotion.dart::_AddPromotionScreenState" o-- "dart::async::StreamController<bool>"
+"flutter::src::widgets::framework.dart::State" <|-- "offprice::screens::add_promotion.dart::_AddPromotionScreenState"
+
+class "offprice::screens::single_folder.dart::SingleFolder" {
+  +UserProductsModel folder
+  +Widget build()
+}
+
+"offprice::screens::single_folder.dart::SingleFolder" o-- "offprice::models::product.dart::UserProductsModel"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "offprice::screens::single_folder.dart::SingleFolder"
+
+class "offprice::screens::all_deals.dart::AllDealsScreen" {
+  +State<AllDealsScreen> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "offprice::screens::all_deals.dart::AllDealsScreen"
+
+class "offprice::screens::all_deals.dart::_AllDealsScreenState" {
+  -String _searchTerm
+  -Timer _debounce
+  +void dispose()
+  +void setSearchTerm()
+  +Widget build()
+}
+
+"offprice::screens::all_deals.dart::_AllDealsScreenState" o-- "dart::async::Timer"
+"flutter::src::widgets::framework.dart::State" <|-- "offprice::screens::all_deals.dart::_AllDealsScreenState"
+
+class "offprice::screens::add_foder.dart::AddFolderScreen" {
+  +State<AddFolderScreen> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "offprice::screens::add_foder.dart::AddFolderScreen"
+
+class "offprice::screens::add_foder.dart::_AddFolderScreenState" {
+  -GlobalKey<FormState> _formKey
+  -String _folderName
+  -List<String> _products
+  -String _name
+  -int _priceMin
+  -int _priceMax
+  -double _width
+  -double _height
+  -void _changeFolderName()
+  -void _changeName()
+  -void _changePriceMin()
+  -void _changePriceMax()
+  +Widget build()
+}
+
+"offprice::screens::add_foder.dart::_AddFolderScreenState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"flutter::src::widgets::framework.dart::State" <|-- "offprice::screens::add_foder.dart::_AddFolderScreenState"
+
+class "offprice::screens::single_product_screen.dart::SingleProductScreen" {
+  +ProductModel product
+  +State<SingleProductScreen> createState()
+}
+
+"offprice::screens::single_product_screen.dart::SingleProductScreen" o-- "offprice::models::product.dart::ProductModel"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "offprice::screens::single_product_screen.dart::SingleProductScreen"
+
+class "offprice::screens::single_product_screen.dart::_MainScreenState" {
+  -bool _isFollowed
+  +void initState()
+  +void changeFollowStatus()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "offprice::screens::single_product_screen.dart::_MainScreenState"
+
+class "offprice::screens::login_screen.dart::LoginScreen" {
+  +State<LoginScreen> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "offprice::screens::login_screen.dart::LoginScreen"
+
+class "offprice::screens::login_screen.dart::_LoginScreenState" {
+  -String _login
+  -String _password
+  -String _email
+  -String _retypePassword
+  -bool _isLogin
+  -GlobalKey<FormState> _formKey
+  -double _width
+  -double _height
+  +void switchLoginAndRegister()
+  -void _changeLogin()
+  -void _changePassword()
+  -void _changeEmail()
+  -void _changeRetypePassword()
+  +Widget build()
+}
+
+"offprice::screens::login_screen.dart::_LoginScreenState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"flutter::src::widgets::framework.dart::State" <|-- "offprice::screens::login_screen.dart::_LoginScreenState"
+
+class "offprice::screens::user_settings.dart::UserSettingsScreen" {
+  +State<UserSettingsScreen> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "offprice::screens::user_settings.dart::UserSettingsScreen"
+
+class "offprice::screens::user_settings.dart::_AddPromotionScreenState" {
+  -double _width
+  -double _height
+  +void initState()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "offprice::screens::user_settings.dart::_AddPromotionScreenState"
+
+class "offprice::screens::main_screen.dart::MainScreen" {
+  +State<MainScreen> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "offprice::screens::main_screen.dart::MainScreen"
+
+class "offprice::screens::main_screen.dart::_MainScreenState" {
+  -int _selectedIndex
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "offprice::screens::main_screen.dart::_MainScreenState"
+
+class "offprice::screens::product_promotion.dart::ProductPromotionScreen" {
+  +DealModel productPromotion
+  +_ProductPromotionScreenState createState()
+}
+
+"offprice::screens::product_promotion.dart::ProductPromotionScreen" o-- "offprice::models::deal.dart::DealModel"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "offprice::screens::product_promotion.dart::ProductPromotionScreen"
+
+class "offprice::screens::product_promotion.dart::_ProductPromotionScreenState" {
+  -bool _isFollowed
+  +void initState()
+  +void changeFollowStatus()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "offprice::screens::product_promotion.dart::_ProductPromotionScreenState"
+
+class "offprice::screens::product_promotion.dart::LabeledText" {
+  +String label
+  +String text
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "offprice::screens::product_promotion.dart::LabeledText"
+
+class "offprice::screens::add_promotion_next.dart::AddPromotionNext" {
+  +ProductModel product
+  +State<AddPromotionNext> createState()
+}
+
+"offprice::screens::add_promotion_next.dart::AddPromotionNext" o-- "offprice::models::product.dart::ProductModel"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "offprice::screens::add_promotion_next.dart::AddPromotionNext"
+
+class "offprice::screens::add_promotion_next.dart::_LoginScreenState" {
+  -String _type
+  -String _discountType
+  -String _coupon
+  -DateTime _expiresAt
+  -int _percentage
+  -double _cash
+  -bool _userValidation
+  -GlobalKey<FormState> _formKey
+  -double _width
+  -double _height
+  -void _changeExpiresAt()
+  -void _changeUserValidation()
+  -void _changeCoupon()
+  -void _changeType()
+  -void _changeDiscountType()
+  -void _changePercentage()
+  -void _changeCash()
+  +Widget build()
+}
+
+"offprice::screens::add_promotion_next.dart::_LoginScreenState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"flutter::src::widgets::framework.dart::State" <|-- "offprice::screens::add_promotion_next.dart::_LoginScreenState"
+
+class "offprice::main.dart::MyApp" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "offprice::main.dart::MyApp"
+
+class "offprice::main.dart::Splash" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "offprice::main.dart::Splash"
+
+class "offprice::widgets::gradient_text.dart::GradientText" {
+  +String text
+  +TextStyle? style
+  +Gradient gradient
+  +Widget build()
+}
+
+"offprice::widgets::gradient_text.dart::GradientText" o-- "flutter::src::painting::text_style.dart::TextStyle"
+"offprice::widgets::gradient_text.dart::GradientText" o-- "flutter::src::painting::gradient.dart::Gradient"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "offprice::widgets::gradient_text.dart::GradientText"
+
+class "offprice::widgets::glassmorphism_card.dart::GlassmorphismCard" {
+  +Widget child
+  +double width
+  +double height
+  +Widget build()
+}
+
+"offprice::widgets::glassmorphism_card.dart::GlassmorphismCard" o-- "flutter::src::widgets::framework.dart::Widget"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "offprice::widgets::glassmorphism_card.dart::GlassmorphismCard"
+
+class "offprice::widgets::promotions_list.dart::PromotionsList" {
+  +bool isHot
+  +String searchTerm
+  +State<PromotionsList> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "offprice::widgets::promotions_list.dart::PromotionsList"
+
+class "offprice::widgets::promotions_list.dart::_PromotionsListState" {
+  +void initState()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "offprice::widgets::promotions_list.dart::_PromotionsListState"
+
+class "offprice::widgets::text_field_dark.dart::TextFieldDark" {
+  +String hintText
+  +Icon icon
+  +Function onChanged
+  +String labelText
+  +bool obscureText
+  +Function validator
+  +Function onEditingCompleted
+  +bool isNumeric
+  +String initialValue
+  +_TextFieldDarkState createState()
+}
+
+"offprice::widgets::text_field_dark.dart::TextFieldDark" o-- "flutter::src::widgets::icon.dart::Icon"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "offprice::widgets::text_field_dark.dart::TextFieldDark"
+
+class "offprice::widgets::text_field_dark.dart::_TextFieldDarkState" {
+  +TextEditingController controller
+  +void dispose()
+  +Widget build()
+}
+
+"offprice::widgets::text_field_dark.dart::_TextFieldDarkState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "offprice::widgets::text_field_dark.dart::_TextFieldDarkState"
+
+class "offprice::widgets::products_list.dart::ProductsList" {
+  +Stream<String> name
+  +Stream<int> priceMin
+  +Stream<int> priceMax
+  +Stream<bool> favouritesOnly
+  +Function onProductSelected
+  +State<ProductsList> createState()
+}
+
+"offprice::widgets::products_list.dart::ProductsList" o-- "dart::async::Stream<String>"
+"offprice::widgets::products_list.dart::ProductsList" o-- "dart::async::Stream<int>"
+"offprice::widgets::products_list.dart::ProductsList" o-- "dart::async::Stream<bool>"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "offprice::widgets::products_list.dart::ProductsList"
+
+class "offprice::widgets::products_list.dart::_ProductsListState" {
+  +String name
+  +int priceMin
+  +int priceMax
+  +bool favouritesOnly
+  +void initState()
+  +void dispose()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "offprice::widgets::products_list.dart::_ProductsListState"
+
+class "offprice::widgets::main_screen::hot_deals.dart::HotDeals" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "offprice::widgets::main_screen::hot_deals.dart::HotDeals"
+
+class "offprice::widgets::main_screen::chart.dart::Chart" {
+  +List<Series<dynamic, String>> productChart
+  +bool isProductSeries
+  {static} +String pointerValue
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "offprice::widgets::main_screen::chart.dart::Chart"
+
+class "offprice::widgets::main_screen::chart.dart::CustomCircleSymbolRenderer" {
+  +void paint()
+}
+
+"charts_common::src::common::symbol_renderer.dart::CircleSymbolRenderer" <|-- "offprice::widgets::main_screen::chart.dart::CustomCircleSymbolRenderer"
+
+class "offprice::widgets::main_screen::favourite_product.dart::FavouriteProduct" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "offprice::widgets::main_screen::favourite_product.dart::FavouriteProduct"
+
+class "offprice::widgets::main_screen::favourite_folder.dart::FavouriteFolder" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "offprice::widgets::main_screen::favourite_folder.dart::FavouriteFolder"
+
+class "offprice::widgets::product_card.dart::ProductCard" {
+  +ProductModel product
+  +dynamic Function(ProductModel) onTap
+  +Widget build()
+}
+
+"offprice::widgets::product_card.dart::ProductCard" o-- "offprice::models::product.dart::ProductModel"
+"offprice::widgets::product_card.dart::ProductCard" o-- "null::dynamic Function(ProductModel)"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "offprice::widgets::product_card.dart::ProductCard"
+
+class "offprice::widgets::settings_button.dart::SettingsButton" {
+  +List<Widget> actions
+  +String title
+  +double size
+  +_SettingsButtonState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "offprice::widgets::settings_button.dart::SettingsButton"
+
+class "offprice::widgets::settings_button.dart::_SettingsButtonState" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "offprice::widgets::settings_button.dart::_SettingsButtonState"
+
+
+@enduml

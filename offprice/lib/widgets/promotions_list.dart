@@ -39,12 +39,6 @@ class _PromotionsListState extends State<PromotionsList> {
               );
             }
 
-            int statusCode = snapshot.data as int;
-            if (statusCode == 401) {
-              Provider.of<AuthProvider>(context, listen: false).logout();
-              Navigator.of(context)
-                  .pushNamedAndRemoveUntil('/login', (route) => false);
-            }
             final List<DealModel> data =
                 Provider.of<PromotionsProvider>(context).deals;
             return RefreshIndicator(
@@ -52,12 +46,6 @@ class _PromotionsListState extends State<PromotionsList> {
                 int statusCode = await Provider.of<PromotionsProvider>(context,
                         listen: false)
                     .refreshPromotions();
-
-                if (statusCode == 401) {
-                  Provider.of<AuthProvider>(context, listen: false).logout();
-                  Navigator.of(context)
-                      .pushNamedAndRemoveUntil('/login', (route) => false);
-                }
               },
               child: ListView.builder(
                 shrinkWrap: true,

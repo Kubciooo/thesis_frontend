@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:offprice/constants/colors.dart';
 import 'package:offprice/widgets/glassmorphism_card.dart';
 import 'package:offprice/widgets/text_field_dark.dart';
 import 'package:offprice/providers/auth.dart';

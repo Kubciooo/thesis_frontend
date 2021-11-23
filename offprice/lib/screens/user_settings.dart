@@ -25,7 +25,6 @@ class _AddPromotionScreenState extends State<UserSettingsScreen> {
         .fetchFolders()
         .then((statusCode) {
       if (statusCode == 401) {
-        Provider.of<AuthProvider>(context, listen: false).logout();
         Navigator.of(context)
             .pushNamedAndRemoveUntil('/login', (route) => false);
       } else {
@@ -87,8 +86,10 @@ class _AddPromotionScreenState extends State<UserSettingsScreen> {
                         onPressed: () async {
                           Provider.of<AuthProvider>(context, listen: false)
                               .logout();
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                              '/login', (Route<dynamic> route) => false);
+                          Future.delayed(Duration.zero, () {
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                                '/login', (route) => false);
+                          });
                         },
                         icon: const Icon(Icons.logout),
                         label: const Text(
