@@ -8,6 +8,7 @@ import 'package:offprice/constants/api.dart';
 import 'package:offprice/models/product.dart';
 import 'package:offprice/models/product_chart.dart';
 import 'package:offprice/providers/auth.dart';
+import 'package:offprice/utils/add_endlines_to_string.dart';
 
 class FoldersProvider with ChangeNotifier {
   // create a function to login user via api with url and body
@@ -46,15 +47,19 @@ class FoldersProvider with ChangeNotifier {
 
   List<charts.Series<FolderChartModel, String>> getFolderChart(
       UserProductsModel folder) {
+    print(addEndlinesToString(
+        "JABRA ELITE 75T (1000-4399434994941-4319439134)", 10));
     List<FolderChartModel> folderChart = folder.products.map((product) {
-      return FolderChartModel(price: product.price, shop: product.shop);
+      return FolderChartModel(
+          price: product.price, shop: product.shop, name: product.name);
     }).toList();
     return [
       charts.Series<FolderChartModel, String>(
         id: 'Promotions',
         colorFn: (_, __) => charts.ColorUtil.fromDartColor(Colors.white38),
         patternColorFn: (_, __) => charts.MaterialPalette.white,
-        domainFn: (FolderChartModel folder, _) => folder.shop,
+        domainFn: (FolderChartModel folder, _) =>
+            '${addEndlinesToString(folder.name, 10)}\n${folder.shop}',
         measureFn: (FolderChartModel folder, _) => folder.price,
         data: folderChart,
       )

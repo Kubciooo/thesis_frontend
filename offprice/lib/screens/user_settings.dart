@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+// ignore: unused_import
 import 'package:offprice/constants/colors.dart';
 import 'package:offprice/providers/auth.dart';
 import 'package:offprice/providers/folders.dart';
@@ -27,8 +28,6 @@ class _AddPromotionScreenState extends State<UserSettingsScreen> {
       if (statusCode == 401) {
         Navigator.of(context)
             .pushNamedAndRemoveUntil('/login', (route) => false);
-      } else {
-        Navigator.of(context).pop();
       }
     });
     super.initState();

@@ -165,6 +165,7 @@ class PromotionsProvider with ChangeNotifier {
           'discountType': discountType,
           'coupon': coupon,
           'percentage': percentage,
+          'userValidation': userValidation,
           'cash': cash,
           'expiresAt': expiresAt.toIso8601String(),
         }),

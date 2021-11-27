@@ -32,21 +32,15 @@ class _LoginScreenState extends State<AddPromotionNext> {
   double _height = 0.9;
 
   void _changeExpiresAt(DateTime date) {
-    setState(() {
-      _expiresAt = date;
-    });
+    _expiresAt = date;
   }
 
   void _changeUserValidation(value) {
-    setState(() {
-      _userValidation = value;
-    });
+    _userValidation = value;
   }
 
   void _changeCoupon(value) {
-    setState(() {
-      _coupon = value;
-    });
+    _coupon = value;
   }
 
   void _changeType(value) {
@@ -62,15 +56,11 @@ class _LoginScreenState extends State<AddPromotionNext> {
   }
 
   void _changePercentage(value) {
-    setState(() {
-      _percentage = int.parse(value);
-    });
+    _percentage = int.parse(value);
   }
 
   void _changeCash(value) {
-    setState(() {
-      _cash = double.parse(value);
-    });
+    _cash = double.parse(value);
   }
 
   @override
@@ -181,6 +171,7 @@ class _LoginScreenState extends State<AddPromotionNext> {
                             onChanged: _changeCoupon,
                             labelText: 'Coupon',
                             hintText: 'Enter the coupon',
+                            initialValue: _coupon,
                             icon: const Icon(Icons.person),
                             validator: (value) {
                               if (value.isEmpty) {
@@ -199,6 +190,7 @@ class _LoginScreenState extends State<AddPromotionNext> {
                           ),
                         if (_discountType == 'percentage')
                           TextFieldDark(
+                            initialValue: _percentage.toString(),
                             onEditingCompleted: () {},
                             isNumeric: true,
                             onChanged: _changePercentage,
@@ -222,17 +214,19 @@ class _LoginScreenState extends State<AddPromotionNext> {
                           TextFieldDark(
                             onEditingCompleted: () {},
                             isNumeric: true,
+                            initialValue: _cash.toString(),
                             onChanged: _changeCash,
                             labelText: 'Cash',
                             hintText: Provider.of<PromotionsProvider>(context,
                                     listen: false)
-                                .likes,
+                                .likes
+                                .toString(),
                             icon: const Icon(Icons.attach_money_outlined),
                             validator: (value) {
                               if (value.isEmpty) {
                                 return 'Cash field cannot be empty!';
                               }
-                              if (int.parse(value) < 0) {
+                              if (double.parse(value) < 0) {
                                 return 'Cash cannot be less than 0!';
                               }
                               return null;

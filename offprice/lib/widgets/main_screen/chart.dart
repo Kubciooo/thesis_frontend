@@ -28,7 +28,7 @@ class Chart extends StatelessWidget {
       primaryMeasureAxis: const charts.NumericAxisSpec(
           renderSpec: charts.GridlineRendererSpec(
             labelStyle: charts.TextStyleSpec(
-              fontSize: 12,
+              fontSize: 10,
               color: charts.MaterialPalette.white,
             ),
             lineStyle: charts.LineStyleSpec(
@@ -56,7 +56,7 @@ class Chart extends StatelessWidget {
             3),
         renderSpec: const charts.SmallTickRendererSpec(
           labelStyle: charts.TextStyleSpec(
-            fontSize: 12,
+            fontSize: 10,
             color: charts.MaterialPalette.white,
           ),
           lineStyle: charts.LineStyleSpec(
