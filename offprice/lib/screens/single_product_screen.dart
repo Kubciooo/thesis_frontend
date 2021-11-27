@@ -164,6 +164,51 @@ class _MainScreenState extends State<SingleProductScreen> {
                                       ),
                                 ),
                               )),
+                    ExpansionTile(
+                      title: Text('Coupons',
+                          style: Theme.of(context).textTheme.headline3),
+                      children: [
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          itemCount: widget.product.coupons.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text(widget.product.coupons[index],
+                                  style: Theme.of(context).textTheme.headline3),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                    ExpansionTile(
+                        title: Text("Other promotions",
+                            style: Theme.of(context).textTheme.headline3),
+                        children: [
+                          ListView.builder(
+                            padding: const EdgeInsets.all(0),
+                            shrinkWrap: true,
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            itemCount: widget.product.otherPromotions.length,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                  onTap: () async {
+                                    await canLaunch(widget
+                                            .product.otherPromotions[index].url)
+                                        ? await launch(widget
+                                            .product.otherPromotions[index].url)
+                                        : print('error');
+                                  },
+                                  dense: true,
+                                  title: Text(
+                                    widget.product.otherPromotions[index].name,
+                                  ),
+                                  subtitle: Text(
+                                    widget.product.otherPromotions[index].url,
+                                  ));
+                            },
+                          ),
+                        ]),
                     TextButton(
                       onPressed: () async {
                         final int response = _isFollowed
