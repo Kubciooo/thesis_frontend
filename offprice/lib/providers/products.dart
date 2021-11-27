@@ -294,8 +294,6 @@ class ProductsProvider with ChangeNotifier {
     }
     notifyListeners();
 
-    // print(favouritesOnly); // Todo: why does it happen 3 times?
-
     return statusCode;
   }
 
@@ -337,6 +335,10 @@ class ProductsProvider with ChangeNotifier {
     var url = ('$host/api/products/scrapper');
     var uri = Uri.parse(url);
 
+    if (shops.isEmpty) {
+      await fetchShops();
+    }
+
     try {
       final response = await http.post(
         uri,
@@ -349,13 +351,7 @@ class ProductsProvider with ChangeNotifier {
           'maxPrice': '$max',
           'productName': name,
           "categoryId": "617432a7df9937b6933d193d",
-          "shops": [
-            "6176e55ddff3606763f57472",
-            "6176e56edff3606763f57475",
-            "6176e579dff3606763f57478",
-            "6186c21f34efed2e4e15f6e8",
-            "6186c24634efed2e4e15f6eb"
-          ]
+          "shops": shops.map((e) => e.id).toList(),
         }),
       );
 
@@ -366,7 +362,6 @@ class ProductsProvider with ChangeNotifier {
         return response.statusCode;
       }
       for (var i = 0; i < responseData['data']['products'].length; i++) {
-        // print(responseData['data']['products'][i]);
         _products.add(
             ProductModel.fromJsonShop(responseData['data']['products'][i]));
       }
@@ -417,7 +412,6 @@ class ProductsProvider with ChangeNotifier {
         return response.statusCode;
       }
       for (var i = 0; i < responseData['data']['products'].length; i++) {
-        // print(responseData['data']['products'][i]);
         _products.add(
             ProductModel.fromJsonShop(responseData['data']['products'][i]));
       }
@@ -457,7 +451,6 @@ class ProductsProvider with ChangeNotifier {
       }
 
       for (var i = 0; i < responseData['data']['products'].length; i++) {
-        // print(responseData['data']['products'][i]);
         _favourites.add(
             ProductModel.fromJsonShop(responseData['data']['products'][i]));
       }
