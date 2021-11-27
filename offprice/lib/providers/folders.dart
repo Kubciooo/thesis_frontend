@@ -173,6 +173,10 @@ class FoldersProvider with ChangeNotifier {
       }
 
       _folders.removeWhere((folder) => folder.id == id);
+      if (favouriteFolder.id == id) {
+        _favouriteFolder =
+            UserProductsModel(id: '', name: 'Favourite', products: []);
+      }
 
       notifyListeners();
       return response.statusCode;

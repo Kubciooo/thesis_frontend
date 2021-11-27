@@ -95,6 +95,13 @@ class SingleFolder extends StatelessWidget {
                             TextButton(
                               child: const Text('Delete folder'),
                               onPressed: () async {
+                                int statusCode =
+                                    await Provider.of<FoldersProvider>(context,
+                                            listen: false)
+                                        .deleteFolder(folder.id);
+                                if (statusCode == 201) {
+                                  Navigator.of(context).pop();
+                                }
                                 Navigator.of(context).pop();
                               },
                             ),
