@@ -9,6 +9,7 @@ import 'package:offprice/constants/api.dart';
 
 import 'package:offprice/models/product.dart';
 import 'package:offprice/models/product_chart.dart';
+import 'package:offprice/models/shop.dart';
 import 'package:offprice/providers/auth.dart';
 
 class ProductsProvider with ChangeNotifier {
@@ -28,6 +29,8 @@ class ProductsProvider with ChangeNotifier {
   );
   final List<ProductModel> _products = [];
   final List<ProductModel> _favourites = [];
+  final List<ShopModel> _shops = [];
+  final List<ShopModel> _blockedShops = [];
   get token => _token;
 
   get isFavouriteProductSet => _favouriteProduct.id != '';
@@ -35,6 +38,10 @@ class ProductsProvider with ChangeNotifier {
 
   bool isFavorite(ProductModel product) {
     return favouriteProduct.id == product.id;
+  }
+
+  bool isBlockedShop(ShopModel shop) {
+    return _blockedShops.where((element) => element.id == shop.id).isNotEmpty;
   }
 
   void update(AuthProvider auth) {
@@ -62,6 +69,10 @@ class ProductsProvider with ChangeNotifier {
 
   List<ProductModel> get favourites {
     return [..._favourites];
+  }
+
+  List<ShopModel> get shops {
+    return [..._shops];
   }
 
   void clearProducts() {
@@ -93,6 +104,99 @@ class ProductsProvider with ChangeNotifier {
         print(json.decode(response.body)['message']);
       }
 
+      return response.statusCode;
+    } catch (err) {
+      print(err);
+      return 500;
+    }
+  }
+
+  Future<int> fetchBlockedShops() async {
+    final url = '$host/api/users/blockedShops';
+
+    final uri = Uri.parse(url);
+    try {
+      final response = await http.get(
+        uri,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          "Authorization": "Bearer " + token,
+        },
+      );
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        _blockedShops.clear();
+        for (var shop in responseData['data']['blockedShops']) {
+          _blockedShops.add(ShopModel.fromJson(shop));
+        }
+        notifyListeners();
+      } else {
+        print(json.decode(response.body)['message']);
+      }
+      return response.statusCode;
+    } catch (err) {
+      print(err);
+      return 500;
+    }
+  }
+
+  Future<int> changeShopBlockStatus(ShopModel shop, bool blocked) async {
+    final url = '$host/api/users/blockedShops';
+
+    final uri = Uri.parse(url);
+    try {
+      final response = await http.post(
+        uri,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          "Authorization": "Bearer " + token,
+        },
+        body: jsonEncode(<String, dynamic>{
+          'shopId': shop.id,
+          'blocked': blocked,
+        }),
+      );
+      if (response.statusCode == 201) {
+        if (blocked) {
+          _blockedShops.add(shop);
+        } else {
+          _blockedShops.removeWhere((element) => element.id == shop.id);
+        }
+        notifyListeners();
+      } else {
+        print(json.decode(response.body)['message']);
+      }
+
+      return response.statusCode;
+    } catch (err) {
+      print(err);
+      return 500;
+    }
+  }
+
+  Future<int> fetchShops() async {
+    final url = '$host/api/shops';
+
+    final uri = Uri.parse(url);
+    try {
+      final response = await http.get(
+        uri,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          "Authorization": "Bearer " + token,
+        },
+      );
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        final List<dynamic> shops = responseData['data']['shops'];
+        _shops.clear();
+        for (var shop in shops) {
+          _shops.add(ShopModel.fromJson(shop));
+        }
+        notifyListeners();
+      } else {
+        print(json.decode(response.body)['message']);
+      }
       return response.statusCode;
     } catch (err) {
       print(err);

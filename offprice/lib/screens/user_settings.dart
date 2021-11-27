@@ -5,7 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:offprice/constants/colors.dart';
 import 'package:offprice/providers/auth.dart';
 import 'package:offprice/providers/folders.dart';
-import 'package:offprice/screens/single_folder.dart';
+import 'package:offprice/providers/products.dart';
 import 'package:offprice/widgets/glassmorphism_card.dart';
 import 'package:provider/provider.dart';
 
@@ -22,8 +22,16 @@ class _AddPromotionScreenState extends State<UserSettingsScreen> {
 
   @override
   void initState() {
-    Provider.of<FoldersProvider>(context, listen: false)
-        .fetchFolders()
+    Provider.of<ProductsProvider>(context, listen: false)
+        .fetchShops()
+        .then((statusCode) {
+      if (statusCode == 401) {
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/login', (route) => false);
+      }
+    });
+    Provider.of<ProductsProvider>(context, listen: false)
+        .fetchBlockedShops()
         .then((statusCode) {
       if (statusCode == 401) {
         Navigator.of(context)
@@ -35,7 +43,7 @@ class _AddPromotionScreenState extends State<UserSettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final foldersProvider = Provider.of<FoldersProvider>(context);
+    final shops = Provider.of<ProductsProvider>(context).shops;
     return Scaffold(
       body: Stack(
         children: [
@@ -72,13 +80,33 @@ class _AddPromotionScreenState extends State<UserSettingsScreen> {
                           style: TextStyle(fontSize: 25),
                         ),
                       ),
-                      TextButton.icon(
-                        onPressed: () {},
-                        icon: const Icon(Icons.shopping_cart),
-                        label: const Text(
+                      ExpansionTile(
+                        title: const Text(
                           'Change shops list',
                           style: TextStyle(fontSize: 25),
                         ),
+                        children: [
+                          ListView.builder(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: shops.length,
+                            itemBuilder: (context, index) {
+                              final shop = shops[index];
+                              return CheckboxListTile(
+                                  title: Text(shop.name),
+                                  activeColor: AppColors.colorBackground[900],
+                                  value: Provider.of<ProductsProvider>(context,
+                                          listen: false)
+                                      .isBlockedShop(shop),
+                                  onChanged: (value) {
+                                    Provider.of<ProductsProvider>(context,
+                                            listen: false)
+                                        .changeShopBlockStatus(
+                                            shop, value ?? false);
+                                  });
+                            },
+                          ),
+                        ],
                       ),
                       const Spacer(),
                       TextButton.icon(
