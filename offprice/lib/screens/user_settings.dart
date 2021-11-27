@@ -82,7 +82,7 @@ class _AddPromotionScreenState extends State<UserSettingsScreen> {
                       ),
                       ExpansionTile(
                         title: const Text(
-                          'Change shops list',
+                          'Manage blocked shops',
                           style: TextStyle(fontSize: 25),
                         ),
                         children: [
