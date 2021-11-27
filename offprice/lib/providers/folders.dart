@@ -47,8 +47,6 @@ class FoldersProvider with ChangeNotifier {
 
   List<charts.Series<FolderChartModel, String>> getFolderChart(
       UserProductsModel folder) {
-    print(addEndlinesToString(
-        "JABRA ELITE 75T (1000-4399434994941-4319439134)", 10));
     List<FolderChartModel> folderChart = folder.products.map((product) {
       return FolderChartModel(
           price: product.price, shop: product.shop, name: product.name);
