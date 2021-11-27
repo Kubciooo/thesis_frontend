@@ -129,10 +129,12 @@ class _ProductPromotionScreenState extends State<ProductPromotionScreen> {
                         Navigator.of(context).pushNamedAndRemoveUntil(
                             '/login', (Route<dynamic> route) => false);
                       }
+                      String text = _isFollowed
+                          ? 'You have unfollowed this promotion'
+                          : 'You have followed this promotion';
+
                       Navigator.of(context).restorablePush(_dialogBuilder,
-                          arguments: responseStatus == 200
-                              ? 'Promotion followed'
-                              : 'Failed to add promotion to user');
+                          arguments: responseStatus == 200 ? text : 'Error');
                       if (responseStatus == 200) {
                         changeFollowStatus();
                       }

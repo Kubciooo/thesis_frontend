@@ -136,8 +136,8 @@ class _MainScreenState extends State<SingleProductScreen> {
                                   },
                                 ),
                               TextButton(
-                                child: const Text('Delete product'),
-                                onPressed: () async {
+                                child: const Text('Close'),
+                                onPressed: () {
                                   Navigator.of(context).pop();
                                 },
                               ),
@@ -219,8 +219,14 @@ class _MainScreenState extends State<SingleProductScreen> {
                                     listen: false)
                                 .followProduct(widget.product.id);
 
-                        Navigator.of(context).restorablePush(_dialogBuilder,
-                            arguments: response);
+                        String text = _isFollowed ? 'Unfollowed' : 'Followed';
+
+                        if (response != 200) {
+                          text = 'Error';
+                        }
+
+                        Navigator.of(context)
+                            .restorablePush(_dialogBuilder, arguments: text);
                         if (response == 200 || response == 201) {
                           changeFollowStatus();
                         } else if (response == 401) {

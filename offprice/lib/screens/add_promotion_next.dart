@@ -36,7 +36,9 @@ class _LoginScreenState extends State<AddPromotionNext> {
   }
 
   void _changeUserValidation(value) {
-    _userValidation = value;
+    setState(() {
+      _userValidation = value;
+    });
   }
 
   void _changeCoupon(value) {

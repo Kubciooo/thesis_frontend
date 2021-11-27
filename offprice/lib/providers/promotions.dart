@@ -73,10 +73,8 @@ class PromotionsProvider with ChangeNotifier {
     if (response.statusCode == 200) {
       _favDeals.clear();
       await getUserPromotions();
-      // return 'Promotion followed';
     } else {
       print(response.body);
-      // return 'Failed to add promotion to user';
     }
     return response.statusCode;
   }
