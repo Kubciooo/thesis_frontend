@@ -55,6 +55,7 @@ class MyApp extends StatelessWidget {
         // Show splash screen while waiting for app resources to load:
         if (snapshot.connectionState == ConnectionState.waiting) {
           return MaterialApp(
+            debugShowCheckedModeBanner: false,
             home: const Splash(),
             theme: AppTheme.darkTheme,
           );
@@ -69,6 +70,7 @@ class MyApp extends StatelessWidget {
           }
           return Consumer<AuthProvider>(
               builder: (ctx, auth, _) => MaterialApp(
+                    debugShowCheckedModeBanner: false,
                     title: 'Offprice',
                     theme: AppTheme.darkTheme,
                     home: screen,
