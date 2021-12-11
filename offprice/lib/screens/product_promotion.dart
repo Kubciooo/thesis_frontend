@@ -127,7 +127,6 @@ class _ProductPromotionScreenState extends State<ProductPromotionScreen> {
                         Navigator.of(context).pushNamedAndRemoveUntil(
                             '/login', (Route<dynamic> route) => false);
                       }
-                      print(responseStatus);
                       await showDialog(
                           context: context,
                           builder: (context) => AlertDialog(
@@ -149,22 +148,21 @@ class _ProductPromotionScreenState extends State<ProductPromotionScreen> {
                           ? 'You have unfollowed this promotion'
                           : 'You have followed this promotion';
 
-                      // await showDialog(
-                      //     context: context,
-                      //     builder: (context) => AlertDialog(
-                      //           title: Text(
-                      //               responseStatus == 200 ? text : 'Error'),
-                      //           actions: <Widget>[
-                      //             TextButton(
-                      //                 key: const Key('okButton'),
-                      //                 child: const Text('Ok'),
-                      //                 onPressed: () {
-                      //                   Navigator.of(context).pop();
-                      //                   Navigator.of(context).pop();
-                      //                 }),
-                      //           ],
-                      //         ));
-                      print('xd');
+                      await showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                                title: Text(
+                                    responseStatus == 200 ? text : 'Error'),
+                                actions: <Widget>[
+                                  TextButton(
+                                      key: const Key('okButton'),
+                                      child: const Text('Ok'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                        Navigator.of(context).pop();
+                                      }),
+                                ],
+                              ));
 
                       if (responseStatus == 200) {
                         changeFollowStatus();

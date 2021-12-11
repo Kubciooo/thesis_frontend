@@ -73,8 +73,6 @@ class PromotionsProvider with ChangeNotifier {
     if (response.statusCode == 200) {
       _favDeals.clear();
       await getUserPromotions();
-    } else {
-      print(response.body);
     }
     return response.statusCode;
   }
@@ -96,8 +94,6 @@ class PromotionsProvider with ChangeNotifier {
     if (response.statusCode == 201) {
       _likes = likes;
       notifyListeners();
-    } else {
-      print(response.body);
     }
     return response.statusCode;
   }
@@ -113,8 +109,6 @@ class PromotionsProvider with ChangeNotifier {
     );
     if (response.statusCode == 200) {
       _likes = json.decode(response.body)['data']['likes'];
-    } else {
-      print(response.body);
     }
 
     return response.statusCode;
@@ -132,8 +126,6 @@ class PromotionsProvider with ChangeNotifier {
     if (response.statusCode == 200) {
       _favDeals.clear();
       await getUserPromotions();
-    } else {
-      print(response.body);
     }
     return response.statusCode;
   }
@@ -204,7 +196,6 @@ class PromotionsProvider with ChangeNotifier {
       for (var i = 0;
           i < responseData['data']['productPromotions'].length;
           i++) {
-        // print(responseData['data']['productPromotions'][i]);
         _deals.add(
             DealModel.fromJson(responseData['data']['productPromotions'][i]));
       }
@@ -245,7 +236,6 @@ class PromotionsProvider with ChangeNotifier {
       for (var i = 0;
           i < responseData['data']['productPromotions'].length;
           i++) {
-        // print(responseData['data']['productPromotions'][i]);
         _favDeals.add(
             DealModel.fromJson(responseData['data']['productPromotions'][i]));
       }

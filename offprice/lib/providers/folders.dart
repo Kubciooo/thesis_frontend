@@ -11,7 +11,6 @@ import 'package:offprice/providers/auth.dart';
 import 'package:offprice/utils/add_endlines_to_string.dart';
 
 class FoldersProvider with ChangeNotifier {
-  // create a function to login user via api with url and body
   String _token = '';
   bool shouldFetch = true;
   FoldersModel _favouriteFolder =
@@ -109,8 +108,6 @@ class FoldersProvider with ChangeNotifier {
         }
 
         notifyListeners();
-      } else {
-        print(json.decode(response.body)['message']);
       }
       return response.statusCode;
     } catch (err) {

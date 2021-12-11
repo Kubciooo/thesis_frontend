@@ -100,8 +100,6 @@ class ProductsProvider with ChangeNotifier {
         _favouriteProduct =
             ProductModel.fromJsonShop(responseData['data']['favouriteProduct']);
         notifyListeners();
-      } else {
-        print(json.decode(response.body)['message']);
       }
 
       return response.statusCode;
@@ -130,8 +128,6 @@ class ProductsProvider with ChangeNotifier {
           _blockedShops.add(ShopModel.fromJson(shop));
         }
         notifyListeners();
-      } else {
-        print(json.decode(response.body)['message']);
       }
       return response.statusCode;
     } catch (err) {
@@ -163,8 +159,6 @@ class ProductsProvider with ChangeNotifier {
           _blockedShops.removeWhere((element) => element.id == shop.id);
         }
         notifyListeners();
-      } else {
-        print(json.decode(response.body)['message']);
       }
 
       return response.statusCode;
@@ -194,8 +188,6 @@ class ProductsProvider with ChangeNotifier {
           _shops.add(ShopModel.fromJson(shop));
         }
         notifyListeners();
-      } else {
-        print(json.decode(response.body)['message']);
       }
       return response.statusCode;
     } catch (err) {
@@ -221,8 +213,6 @@ class ProductsProvider with ChangeNotifier {
         }
 
         notifyListeners();
-      } else {
-        print(json.decode(response.body)['message']);
       }
       return response.statusCode;
     } catch (err) {
@@ -358,7 +348,6 @@ class ProductsProvider with ChangeNotifier {
       final responseData = json.decode(response.body);
 
       if (response.statusCode != 200) {
-        print(responseData['message']);
         return response.statusCode;
       }
       for (var i = 0; i < responseData['data']['products'].length; i++) {
@@ -408,7 +397,6 @@ class ProductsProvider with ChangeNotifier {
 
       final responseData = json.decode(response.body);
       if (response.statusCode != 200) {
-        print(responseData['message']);
         return response.statusCode;
       }
       for (var i = 0; i < responseData['data']['products'].length; i++) {
@@ -446,7 +434,6 @@ class ProductsProvider with ChangeNotifier {
       final responseData = json.decode(response.body);
 
       if (response.statusCode != 200) {
-        print(responseData['message']);
         return response.statusCode;
       }
 

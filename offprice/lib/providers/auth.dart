@@ -52,7 +52,6 @@ class AuthProvider with ChangeNotifier {
       required String password,
       bool automatic = false}) async {
     var url = Uri.parse('$host/api/users/login');
-    print(url);
     try {
       final response = await http.post(
         url,
