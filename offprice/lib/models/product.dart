@@ -46,17 +46,16 @@ class Snapshot {
   }
 }
 
-class UserProductsModel {
+class FoldersModel {
   final String name;
   final String id;
   final List<ProductModel> products;
 
-  UserProductsModel(
-      {required this.id, required this.name, required this.products});
+  FoldersModel({required this.id, required this.name, required this.products});
 
   // json to model
-  factory UserProductsModel.fromJson(Map<String, dynamic> json) {
-    return UserProductsModel(
+  factory FoldersModel.fromJson(Map<String, dynamic> json) {
+    return FoldersModel(
       id: json['_id'],
       name: json['name'],
       products: (json['products'] as List<dynamic>)

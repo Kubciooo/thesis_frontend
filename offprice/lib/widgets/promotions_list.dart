@@ -38,6 +38,12 @@ class _PromotionsListState extends State<PromotionsList> {
                 child: CircularProgressIndicator(),
               );
             }
+            int statusCode = snapshot.data as int;
+            if (statusCode == 401) {
+              Provider.of<AuthProvider>(context, listen: false).logout();
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  '/login', (Route<dynamic> route) => false);
+            }
 
             final List<DealModel> data =
                 Provider.of<PromotionsProvider>(context).deals;
@@ -46,12 +52,19 @@ class _PromotionsListState extends State<PromotionsList> {
                 int statusCode = await Provider.of<PromotionsProvider>(context,
                         listen: false)
                     .refreshPromotions();
+
+                if (statusCode == 401) {
+                  Provider.of<AuthProvider>(context, listen: false).logout();
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                      '/login', (Route<dynamic> route) => false);
+                }
               },
               child: ListView.builder(
                 shrinkWrap: true,
                 physics: const AlwaysScrollableScrollPhysics(),
                 itemBuilder: (BuildContext context, int index) {
                   return ListTile(
+                    key: const Key('Single promotion list tile'),
                     onTap: () {
                       Navigator.of(context).push(PageRouteBuilder(
                           opaque: false,
@@ -61,7 +74,7 @@ class _PromotionsListState extends State<PromotionsList> {
                     },
                     title: Text(data[index].product.name,
                         style: Theme.of(context).textTheme.headline3),
-                    subtitle: Text(data[index].finalPrice.toString(),
+                    subtitle: Text(data[index].finalPrice.toStringAsFixed(2),
                         style: Theme.of(context).textTheme.subtitle1),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,

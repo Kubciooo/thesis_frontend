@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:offprice/models/product.dart';
+import 'package:offprice/providers/auth.dart';
 import 'package:offprice/providers/products.dart';
 import 'package:provider/provider.dart';
 
@@ -42,6 +43,11 @@ class _ProductsListState extends State<ProductsList> {
                   max: priceMax,
                   favouritesOnly: favouritesOnly,
                   name: name);
+      if (statusCode == 401) {
+        Provider.of<AuthProvider>(context, listen: false).logout();
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
+      }
     });
 
     widget.name.listen((String event) async {
@@ -53,6 +59,11 @@ class _ProductsListState extends State<ProductsList> {
                   max: priceMax,
                   favouritesOnly: favouritesOnly,
                   name: name);
+      if (statusCode == 401) {
+        Provider.of<AuthProvider>(context, listen: false).logout();
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
+      }
     });
 
     widget.priceMin.listen((int event) async {
@@ -64,6 +75,11 @@ class _ProductsListState extends State<ProductsList> {
                   max: priceMax,
                   favouritesOnly: favouritesOnly,
                   name: name);
+      if (statusCode == 401) {
+        Provider.of<AuthProvider>(context, listen: false).logout();
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
+      }
     });
 
     widget.priceMax.listen((int event) async {
@@ -75,6 +91,11 @@ class _ProductsListState extends State<ProductsList> {
                   max: priceMax,
                   favouritesOnly: favouritesOnly,
                   name: name);
+      if (statusCode == 401) {
+        Provider.of<AuthProvider>(context, listen: false).logout();
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
+      }
     });
   }
 
@@ -122,6 +143,7 @@ class _ProductsListState extends State<ProductsList> {
                 physics: const AlwaysScrollableScrollPhysics(),
                 itemBuilder: (BuildContext context, int index) {
                   return ListTile(
+                    key: const Key("Product list tile"),
                     onTap: () => widget.onProductSelected(products[index]),
                     title: Text(products[index].name,
                         style: Theme.of(context)

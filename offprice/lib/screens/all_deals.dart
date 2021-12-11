@@ -83,6 +83,7 @@ class _AllDealsScreenState extends State<AllDealsScreen> {
                           return null;
                         }),
                     PromotionsList(
+                      key: const Key('Promotions'),
                       searchTerm: _searchTerm,
                     ),
                   ],

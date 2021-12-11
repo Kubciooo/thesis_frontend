@@ -12,7 +12,7 @@ import 'package:offprice/widgets/settings_button.dart';
 import 'package:provider/provider.dart';
 
 class SingleFolder extends StatelessWidget {
-  final UserProductsModel folder;
+  final FoldersModel folder;
   SingleFolder({Key? key, required this.folder}) : super(key: key);
 
   @override
@@ -99,7 +99,7 @@ class SingleFolder extends StatelessWidget {
                                     await Provider.of<FoldersProvider>(context,
                                             listen: false)
                                         .deleteFolder(folder.id);
-                                if (statusCode == 201) {
+                                if (statusCode == 200) {
                                   Navigator.of(context).pop();
                                 }
                                 Navigator.of(context).pop();

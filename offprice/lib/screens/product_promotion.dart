@@ -60,9 +60,6 @@ class _ProductPromotionScreenState extends State<ProductPromotionScreen> {
               width: MediaQuery.of(context).size.width * 0.8,
               height: MediaQuery.of(context).size.height * 0.9,
               child: ListView(
-                // mainAxisAlignment: MainAxisAlignment.center,
-                // spacing: 30,
-                // direction: Axis.vertical,
                 children: [
                   Text(
                     widget.productPromotion.product.name,
@@ -94,11 +91,11 @@ class _ProductPromotionScreenState extends State<ProductPromotionScreen> {
                   LabeledText(
                       label: 'Starting price',
                       text:
-                          '${widget.productPromotion.startingPrice.toString()} PLN'),
+                          '${widget.productPromotion.startingPrice.toStringAsFixed(2)} PLN'),
                   LabeledText(
                       label: 'Final price',
                       text:
-                          '${widget.productPromotion.finalPrice.toString()} PLN'),
+                          '${widget.productPromotion.finalPrice.toStringAsFixed(2)} PLN'),
                   Text(
                     'URL',
                     style: Theme.of(context).textTheme.headline3,
@@ -117,6 +114,7 @@ class _ProductPromotionScreenState extends State<ProductPromotionScreen> {
                             )),
                   ),
                   TextButton(
+                    key: const Key('followButton'),
                     onPressed: () async {
                       final int responseStatus = _isFollowed
                           ? await Provider.of<PromotionsProvider>(context,
@@ -129,18 +127,52 @@ class _ProductPromotionScreenState extends State<ProductPromotionScreen> {
                         Navigator.of(context).pushNamedAndRemoveUntil(
                             '/login', (Route<dynamic> route) => false);
                       }
+                      print(responseStatus);
+                      await showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                                key: const Key('loginError'),
+                                title: const Text('Error'),
+                                content: const Text('Wrong login or password'),
+                                actions: [
+                                  TextButton(
+                                    child: Text('Ok',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline3),
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                  )
+                                ],
+                              ));
                       String text = _isFollowed
                           ? 'You have unfollowed this promotion'
                           : 'You have followed this promotion';
 
-                      Navigator.of(context).restorablePush(_dialogBuilder,
-                          arguments: responseStatus == 200 ? text : 'Error');
+                      // await showDialog(
+                      //     context: context,
+                      //     builder: (context) => AlertDialog(
+                      //           title: Text(
+                      //               responseStatus == 200 ? text : 'Error'),
+                      //           actions: <Widget>[
+                      //             TextButton(
+                      //                 key: const Key('okButton'),
+                      //                 child: const Text('Ok'),
+                      //                 onPressed: () {
+                      //                   Navigator.of(context).pop();
+                      //                   Navigator.of(context).pop();
+                      //                 }),
+                      //           ],
+                      //         ));
+                      print('xd');
+
                       if (responseStatus == 200) {
                         changeFollowStatus();
                       }
                     },
                     child: GradientText(
                       _isFollowed ? 'Unfollow' : 'Follow',
+                      key: const Key('follow_button'),
                       gradient: AppColors.mainLinearGradient,
                       style: Theme.of(context).textTheme.headline1,
                     ),
@@ -182,23 +214,4 @@ class LabeledText extends StatelessWidget {
       ],
     );
   }
-}
-
-Route<Object?> _dialogBuilder(BuildContext context, Object? arguments) {
-  return CupertinoDialogRoute<void>(
-    context: context,
-    builder: (BuildContext context) {
-      return CupertinoAlertDialog(
-        title: Text(arguments.toString()),
-        actions: <Widget>[
-          CupertinoDialogAction(
-              child: const Text('Ok'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-              }),
-        ],
-      );
-    },
-  );
 }

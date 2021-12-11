@@ -61,9 +61,6 @@ class MyApp extends StatelessWidget {
           );
         } else {
           // Loading is done, return the app:
-          /**
-           * @todo autologin -> login on false / mainPage on true 
-           */
           Widget screen = const LoginScreen();
           if (snapshot.data == true) {
             screen = const MainScreen();

@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -89,11 +88,9 @@ class _MainScreenState extends State<MainScreen> {
                     ),
                     Center(
                       child: GlassmorphismCard(
-                        child: Container(
-                          child: Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: FavouriteFolder(),
-                          ),
+                        child: const Padding(
+                          padding: EdgeInsets.all(15.0),
+                          child: FavouriteFolder(),
                         ),
                         width: MediaQuery.of(context).size.width * 0.9,
                         height: MediaQuery.of(context).size.height * 0.8,

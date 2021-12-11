@@ -40,7 +40,7 @@ class HotDeals extends StatelessWidget {
                   initialValue:
                       Provider.of<PromotionsProvider>(context).likes.toString(),
                   icon: const Icon(Icons.drive_file_rename_outline_outlined),
-                  labelText: '',
+                  labelText: 'Minimal likes',
                   onEditingCompleted: (value) async {
                     if (value.isNotEmpty && int.parse(value) >= 0) {
                       final statusCode = await Provider.of<PromotionsProvider>(
@@ -82,8 +82,9 @@ class HotDeals extends StatelessWidget {
                 ),
               ]),
             ]),
-        const PromotionsList(isHot: true),
+        const PromotionsList(key: Key('Promotions'), isHot: true),
         TextButton(
+          key: const Key('See all hot deals'),
           onPressed: () {
             Navigator.pushNamed(context, '/all-deals');
           },

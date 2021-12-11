@@ -14,9 +14,9 @@ class FoldersProvider with ChangeNotifier {
   // create a function to login user via api with url and body
   String _token = '';
   bool shouldFetch = true;
-  UserProductsModel _favouriteFolder =
-      UserProductsModel(id: '', name: 'Favourite', products: []);
-  final List<UserProductsModel> _folders = [];
+  FoldersModel _favouriteFolder =
+      FoldersModel(id: '', name: 'Favourite', products: []);
+  final List<FoldersModel> _folders = [];
   get token => _token;
 
   get isFavouriteFolderSet => _favouriteFolder.id != '';
@@ -26,17 +26,16 @@ class FoldersProvider with ChangeNotifier {
   void update(AuthProvider auth) {
     _token = auth.token;
     shouldFetch = true;
-    _favouriteFolder =
-        UserProductsModel(id: '', name: 'Favourite', products: []);
+    _favouriteFolder = FoldersModel(id: '', name: 'Favourite', products: []);
     _folders.clear();
     notifyListeners();
   }
 
-  bool isFavourite(UserProductsModel folder) {
+  bool isFavourite(FoldersModel folder) {
     return folder.id == _favouriteFolder.id;
   }
 
-  List<UserProductsModel> get folders {
+  List<FoldersModel> get folders {
     return [..._folders];
   }
 
@@ -46,7 +45,7 @@ class FoldersProvider with ChangeNotifier {
   }
 
   List<charts.Series<FolderChartModel, String>> getFolderChart(
-      UserProductsModel folder) {
+      FoldersModel folder) {
     List<FolderChartModel> folderChart = folder.products.map((product) {
       return FolderChartModel(
           price: product.price, shop: product.shop, name: product.name);
@@ -64,7 +63,7 @@ class FoldersProvider with ChangeNotifier {
     ];
   }
 
-  Future<int> setFavouriteFolder(UserProductsModel folder) async {
+  Future<int> setFavouriteFolder(FoldersModel folder) async {
     final url = '$host/api/users/favourites/folder';
 
     final uri = Uri.parse(url);
@@ -81,8 +80,8 @@ class FoldersProvider with ChangeNotifier {
       );
       if (response.statusCode == 201) {
         final folderData = json.decode(response.body);
-        _favouriteFolder = UserProductsModel.fromJson(
-            folderData['data']['favouriteUserProducts']);
+        _favouriteFolder =
+            FoldersModel.fromJson(folderData['data']['favouriteFolder']);
         notifyListeners();
       } else {
         throw HttpException(json.decode(response.body)['message']);
@@ -104,9 +103,9 @@ class FoldersProvider with ChangeNotifier {
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
 
-        if (responseData['data']['favouriteUserProducts'] != null) {
-          _favouriteFolder = UserProductsModel.fromJson(
-              responseData['data']['favouriteUserProducts']);
+        if (responseData['data']['favouriteFolder'] != null) {
+          _favouriteFolder =
+              FoldersModel.fromJson(responseData['data']['favouriteFolder']);
         }
 
         notifyListeners();
@@ -121,7 +120,7 @@ class FoldersProvider with ChangeNotifier {
   }
 
   Future<int> createFolder(String name, List<String> products) async {
-    var url = ('$host/api/userProducts');
+    var url = ('$host/api/folders');
 
     var uri = Uri.parse(url);
 
@@ -141,8 +140,7 @@ class FoldersProvider with ChangeNotifier {
         throw HttpException(responseData['message']);
       }
 
-      _folders.add(
-          UserProductsModel.fromJson(responseData['data']['userProducts']));
+      _folders.add(FoldersModel.fromJson(responseData['data']['folders']));
 
       notifyListeners();
       return response.statusCode;
@@ -153,7 +151,7 @@ class FoldersProvider with ChangeNotifier {
   }
 
   Future<int> deleteFolder(String id) async {
-    var url = ('$host/api/userProducts/$id');
+    var url = ('$host/api/folders/$id');
 
     var uri = Uri.parse(url);
 
@@ -175,7 +173,7 @@ class FoldersProvider with ChangeNotifier {
       _folders.removeWhere((folder) => folder.id == id);
       if (favouriteFolder.id == id) {
         _favouriteFolder =
-            UserProductsModel(id: '', name: 'Favourite', products: []);
+            FoldersModel(id: '', name: 'Favourite', products: []);
       }
 
       notifyListeners();
@@ -187,7 +185,7 @@ class FoldersProvider with ChangeNotifier {
   }
 
   Future<int> removeProductFromFolder(String folderId, String productId) async {
-    var url = ('$host/api/userProducts/$folderId');
+    var url = ('$host/api/folders/$folderId');
 
     var uri = Uri.parse(url);
 
@@ -221,7 +219,7 @@ class FoldersProvider with ChangeNotifier {
   }
 
   Future<int> addProductToFolder(String folderId, String productId) async {
-    var url = ('$host/api/userProducts/$folderId');
+    var url = ('$host/api/folders/$folderId');
 
     var uri = Uri.parse(url);
 
@@ -243,7 +241,7 @@ class FoldersProvider with ChangeNotifier {
 
       _folders.firstWhere((folder) => folder.id == folderId).products.add(
           ProductModel.fromJsonShop(
-              responseData['data']['userProducts']['products']));
+              responseData['data']['folders']['products']));
 
       notifyListeners();
       return response.statusCode;
@@ -254,7 +252,7 @@ class FoldersProvider with ChangeNotifier {
   }
 
   Future<int> fetchFolders() async {
-    var url = ('$host/api/userProducts');
+    var url = ('$host/api/folders');
 
     var uri = Uri.parse(url);
 
@@ -271,8 +269,8 @@ class FoldersProvider with ChangeNotifier {
 
       if (response.statusCode != 200) return response.statusCode;
       clearFolders();
-      for (var folder in responseData['data']['userProducts']) {
-        _folders.add(UserProductsModel.fromJson(folder));
+      for (var folder in responseData['data']['folders']) {
+        _folders.add(FoldersModel.fromJson(folder));
       }
 
       notifyListeners();

@@ -47,6 +47,7 @@ class _TextFieldDarkState extends State<TextFieldDark> {
         TextPosition(offset: controller.text.length));
     return TextFormField(
       autovalidateMode: AutovalidateMode.onUserInteraction,
+      key: Key(widget.labelText),
       controller: controller,
       onChanged: (value) => widget.onChanged(value),
       onEditingComplete: () async =>

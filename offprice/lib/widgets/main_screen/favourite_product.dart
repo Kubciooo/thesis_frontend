@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:offprice/providers/auth.dart';
 import 'package:offprice/providers/products.dart';
 import 'package:offprice/widgets/gradient_text.dart';
 import 'package:offprice/constants/colors.dart';
@@ -27,6 +28,13 @@ class FavouriteProduct extends StatelessWidget {
                 return Center(
                   child: Text('Error: ${snapshot.error}'),
                 );
+              }
+
+              int statusCode = snapshot.data as int;
+              if (statusCode == 401) {
+                Provider.of<AuthProvider>(context, listen: false).logout();
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    '/login', (Route<dynamic> route) => false);
               }
               final favouriteProduct =
                   Provider.of<ProductsProvider>(context).favouriteProduct;

@@ -85,10 +85,10 @@ class _LoginScreenState extends State<LoginScreen> {
               height: MediaQuery.of(context).size.height * _height,
               duration: const Duration(milliseconds: 300),
               child: GlassmorphismCard(
-                width: double.infinity,
-                height: double.infinity,
+                width: MediaQuery.of(context).size.width * _width,
+                height: MediaQuery.of(context).size.height * _height,
                 child: Container(
-                    height: double.infinity,
+                    height: MediaQuery.of(context).size.height * _height - 80,
                     padding: const EdgeInsets.all(40),
                     child: Form(
                       key: _formKey,
@@ -170,6 +170,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     switchLoginAndRegister();
                                   }),
                               TextButton(
+                                key: const Key('loginButton'),
                                 onPressed: () async {
                                   if (_formKey.currentState!.validate()) {
                                     if (_isLogin) {
@@ -188,6 +189,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         showDialog(
                                             context: context,
                                             builder: (context) => AlertDialog(
+                                                  key: const Key('loginError'),
                                                   title: const Text('Error'),
                                                   content: const Text(
                                                       'Wrong login or password'),
@@ -229,6 +231,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                                       'There was an error during register!\nTry again!'),
                                                   actions: [
                                                     TextButton(
+                                                      key: const Key(
+                                                          'ErrorRegister'),
                                                       child: Text('Ok',
                                                           style:
                                                               Theme.of(context)

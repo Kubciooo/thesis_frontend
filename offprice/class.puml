@@ -5,7 +5,7 @@ class "offprice::constants::main_theme.dart::AppTheme" {
   {static} +ThemeData darkTheme
 }
 
-"offprice::constants::main_theme.dart::AppTheme" o-- "flutter::src::material::theme_data.dart::ThemeData"
+"offprice::constants::main_theme.dart::AppTheme" o---------------- "flutter::src::material::theme_data.dart::ThemeData"
 
 class "offprice::constants::colors.dart::AppColors" {
   {static} +Map<int, Color?> colorBackground
@@ -17,8 +17,8 @@ class "offprice::constants::colors.dart::AppColors" {
   {static} +Map<int, Color> colorPrimary
 }
 
-"offprice::constants::colors.dart::AppColors" o-- "dart::ui::Color"
-"offprice::constants::colors.dart::AppColors" o-- "flutter::src::painting::gradient.dart::LinearGradient"
+"offprice::constants::colors.dart::AppColors" o---------------- "dart::ui::Color"
+"offprice::constants::colors.dart::AppColors" o---------------- "flutter::src::painting::gradient.dart::LinearGradient"
 
 class "offprice::providers::auth.dart::AuthProvider" {
   -String _token
@@ -63,18 +63,18 @@ class "offprice::providers::products.dart::ProductsProvider" {
   +Future<int> getFavourites()
 }
 
-"offprice::providers::products.dart::ProductsProvider" o-- "offprice::models::product.dart::ProductModel"
+"offprice::providers::products.dart::ProductsProvider" o---------------- "offprice::models::product.dart::ProductModel"
 "flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "offprice::providers::products.dart::ProductsProvider"
 
 class "offprice::providers::folders.dart::FoldersProvider" {
   -String _token
   +bool shouldFetch
-  -UserProductsModel _favouriteFolder
-  -List<UserProductsModel> _folders
+  -FoldersModel _favouriteFolder
+  -List<FoldersModel> _folders
   +dynamic token
   +dynamic isFavouriteFolderSet
   +dynamic favouriteFolder
-  +List<UserProductsModel> folders
+  +List<FoldersModel> folders
   +void update()
   +bool isFavourite()
   +void clearFolders()
@@ -88,7 +88,7 @@ class "offprice::providers::folders.dart::FoldersProvider" {
   +Future<int> fetchFolders()
 }
 
-"offprice::providers::folders.dart::FoldersProvider" o-- "offprice::models::product.dart::UserProductsModel"
+"offprice::providers::folders.dart::FoldersProvider" o---------------- "offprice::models::product.dart::FoldersModel"
 "flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "offprice::providers::folders.dart::FoldersProvider"
 
 class "offprice::providers::promotions.dart::PromotionsProvider" {
@@ -131,7 +131,7 @@ class "offprice::models::product.dart::Snapshot" {
   +DateTime updatedAt
 }
 
-class "offprice::models::product.dart::UserProductsModel" {
+class "offprice::models::product.dart::FoldersModel" {
   +String name
   +String id
   +List<ProductModel> products
@@ -180,7 +180,7 @@ class "offprice::models::deal.dart::DealModel" {
   +double finalPrice
 }
 
-"offprice::models::deal.dart::DealModel" o-- "offprice::models::product.dart::ProductModel"
+"offprice::models::deal.dart::DealModel" o---------------- "offprice::models::product.dart::ProductModel"
 
 class "offprice::screens::all_folders.dart::AllFoldersScreen" {
   +State<AllFoldersScreen> createState()
@@ -221,9 +221,9 @@ class "offprice::screens::all_products.dart::_AllProductsScreenState" {
   +Widget build()
 }
 
-"offprice::screens::all_products.dart::_AllProductsScreenState" o-- "dart::async::StreamController<String>"
-"offprice::screens::all_products.dart::_AllProductsScreenState" o-- "dart::async::StreamController<int>"
-"offprice::screens::all_products.dart::_AllProductsScreenState" o-- "dart::async::StreamController<bool>"
+"offprice::screens::all_products.dart::_AllProductsScreenState" o---------------- "dart::async::StreamController<String>"
+"offprice::screens::all_products.dart::_AllProductsScreenState" o---------------- "dart::async::StreamController<int>"
+"offprice::screens::all_products.dart::_AllProductsScreenState" o---------------- "dart::async::StreamController<bool>"
 "flutter::src::widgets::framework.dart::State" <|-- "offprice::screens::all_products.dart::_AllProductsScreenState"
 
 class "offprice::screens::all_products.dart::ScrapperArguments" {
@@ -255,17 +255,17 @@ class "offprice::screens::add_promotion.dart::_AddPromotionScreenState" {
   +Widget build()
 }
 
-"offprice::screens::add_promotion.dart::_AddPromotionScreenState" o-- "dart::async::StreamController<String>"
-"offprice::screens::add_promotion.dart::_AddPromotionScreenState" o-- "dart::async::StreamController<int>"
-"offprice::screens::add_promotion.dart::_AddPromotionScreenState" o-- "dart::async::StreamController<bool>"
+"offprice::screens::add_promotion.dart::_AddPromotionScreenState" o---------------- "dart::async::StreamController<String>"
+"offprice::screens::add_promotion.dart::_AddPromotionScreenState" o---------------- "dart::async::StreamController<int>"
+"offprice::screens::add_promotion.dart::_AddPromotionScreenState" o---------------- "dart::async::StreamController<bool>"
 "flutter::src::widgets::framework.dart::State" <|-- "offprice::screens::add_promotion.dart::_AddPromotionScreenState"
 
 class "offprice::screens::single_folder.dart::SingleFolder" {
-  +UserProductsModel folder
+  +FoldersModel folder
   +Widget build()
 }
 
-"offprice::screens::single_folder.dart::SingleFolder" o-- "offprice::models::product.dart::UserProductsModel"
+"offprice::screens::single_folder.dart::SingleFolder" o---------------- "offprice::models::product.dart::FoldersModel"
 "flutter::src::widgets::framework.dart::StatelessWidget" <|-- "offprice::screens::single_folder.dart::SingleFolder"
 
 class "offprice::screens::all_deals.dart::AllDealsScreen" {
@@ -282,7 +282,7 @@ class "offprice::screens::all_deals.dart::_AllDealsScreenState" {
   +Widget build()
 }
 
-"offprice::screens::all_deals.dart::_AllDealsScreenState" o-- "dart::async::Timer"
+"offprice::screens::all_deals.dart::_AllDealsScreenState" o---------------- "dart::async::Timer"
 "flutter::src::widgets::framework.dart::State" <|-- "offprice::screens::all_deals.dart::_AllDealsScreenState"
 
 class "offprice::screens::add_foder.dart::AddFolderScreen" {
@@ -307,7 +307,7 @@ class "offprice::screens::add_foder.dart::_AddFolderScreenState" {
   +Widget build()
 }
 
-"offprice::screens::add_foder.dart::_AddFolderScreenState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"offprice::screens::add_foder.dart::_AddFolderScreenState" o---------------- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
 "flutter::src::widgets::framework.dart::State" <|-- "offprice::screens::add_foder.dart::_AddFolderScreenState"
 
 class "offprice::screens::single_product_screen.dart::SingleProductScreen" {
@@ -315,7 +315,7 @@ class "offprice::screens::single_product_screen.dart::SingleProductScreen" {
   +State<SingleProductScreen> createState()
 }
 
-"offprice::screens::single_product_screen.dart::SingleProductScreen" o-- "offprice::models::product.dart::ProductModel"
+"offprice::screens::single_product_screen.dart::SingleProductScreen" o---------------- "offprice::models::product.dart::ProductModel"
 "flutter::src::widgets::framework.dart::StatefulWidget" <|-- "offprice::screens::single_product_screen.dart::SingleProductScreen"
 
 class "offprice::screens::single_product_screen.dart::_MainScreenState" {
@@ -350,7 +350,7 @@ class "offprice::screens::login_screen.dart::_LoginScreenState" {
   +Widget build()
 }
 
-"offprice::screens::login_screen.dart::_LoginScreenState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"offprice::screens::login_screen.dart::_LoginScreenState" o---------------- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
 "flutter::src::widgets::framework.dart::State" <|-- "offprice::screens::login_screen.dart::_LoginScreenState"
 
 class "offprice::screens::user_settings.dart::UserSettingsScreen" {
@@ -386,7 +386,7 @@ class "offprice::screens::product_promotion.dart::ProductPromotionScreen" {
   +_ProductPromotionScreenState createState()
 }
 
-"offprice::screens::product_promotion.dart::ProductPromotionScreen" o-- "offprice::models::deal.dart::DealModel"
+"offprice::screens::product_promotion.dart::ProductPromotionScreen" o---------------- "offprice::models::deal.dart::DealModel"
 "flutter::src::widgets::framework.dart::StatefulWidget" <|-- "offprice::screens::product_promotion.dart::ProductPromotionScreen"
 
 class "offprice::screens::product_promotion.dart::_ProductPromotionScreenState" {
@@ -411,7 +411,7 @@ class "offprice::screens::add_promotion_next.dart::AddPromotionNext" {
   +State<AddPromotionNext> createState()
 }
 
-"offprice::screens::add_promotion_next.dart::AddPromotionNext" o-- "offprice::models::product.dart::ProductModel"
+"offprice::screens::add_promotion_next.dart::AddPromotionNext" o---------------- "offprice::models::product.dart::ProductModel"
 "flutter::src::widgets::framework.dart::StatefulWidget" <|-- "offprice::screens::add_promotion_next.dart::AddPromotionNext"
 
 class "offprice::screens::add_promotion_next.dart::_LoginScreenState" {
@@ -435,7 +435,7 @@ class "offprice::screens::add_promotion_next.dart::_LoginScreenState" {
   +Widget build()
 }
 
-"offprice::screens::add_promotion_next.dart::_LoginScreenState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"offprice::screens::add_promotion_next.dart::_LoginScreenState" o---------------- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
 "flutter::src::widgets::framework.dart::State" <|-- "offprice::screens::add_promotion_next.dart::_LoginScreenState"
 
 class "offprice::main.dart::MyApp" {
@@ -457,8 +457,8 @@ class "offprice::widgets::gradient_text.dart::GradientText" {
   +Widget build()
 }
 
-"offprice::widgets::gradient_text.dart::GradientText" o-- "flutter::src::painting::text_style.dart::TextStyle"
-"offprice::widgets::gradient_text.dart::GradientText" o-- "flutter::src::painting::gradient.dart::Gradient"
+"offprice::widgets::gradient_text.dart::GradientText" o---------------- "flutter::src::painting::text_style.dart::TextStyle"
+"offprice::widgets::gradient_text.dart::GradientText" o---------------- "flutter::src::painting::gradient.dart::Gradient"
 "flutter::src::widgets::framework.dart::StatelessWidget" <|-- "offprice::widgets::gradient_text.dart::GradientText"
 
 class "offprice::widgets::glassmorphism_card.dart::GlassmorphismCard" {
@@ -468,7 +468,7 @@ class "offprice::widgets::glassmorphism_card.dart::GlassmorphismCard" {
   +Widget build()
 }
 
-"offprice::widgets::glassmorphism_card.dart::GlassmorphismCard" o-- "flutter::src::widgets::framework.dart::Widget"
+"offprice::widgets::glassmorphism_card.dart::GlassmorphismCard" o---------------- "flutter::src::widgets::framework.dart::Widget"
 "flutter::src::widgets::framework.dart::StatelessWidget" <|-- "offprice::widgets::glassmorphism_card.dart::GlassmorphismCard"
 
 class "offprice::widgets::promotions_list.dart::PromotionsList" {
@@ -499,7 +499,7 @@ class "offprice::widgets::text_field_dark.dart::TextFieldDark" {
   +_TextFieldDarkState createState()
 }
 
-"offprice::widgets::text_field_dark.dart::TextFieldDark" o-- "flutter::src::widgets::icon.dart::Icon"
+"offprice::widgets::text_field_dark.dart::TextFieldDark" o---------------- "flutter::src::widgets::icon.dart::Icon"
 "flutter::src::widgets::framework.dart::StatefulWidget" <|-- "offprice::widgets::text_field_dark.dart::TextFieldDark"
 
 class "offprice::widgets::text_field_dark.dart::_TextFieldDarkState" {
@@ -508,7 +508,7 @@ class "offprice::widgets::text_field_dark.dart::_TextFieldDarkState" {
   +Widget build()
 }
 
-"offprice::widgets::text_field_dark.dart::_TextFieldDarkState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"offprice::widgets::text_field_dark.dart::_TextFieldDarkState" o---------------- "flutter::src::widgets::editable_text.dart::TextEditingController"
 "flutter::src::widgets::framework.dart::State" <|-- "offprice::widgets::text_field_dark.dart::_TextFieldDarkState"
 
 class "offprice::widgets::products_list.dart::ProductsList" {
@@ -520,9 +520,9 @@ class "offprice::widgets::products_list.dart::ProductsList" {
   +State<ProductsList> createState()
 }
 
-"offprice::widgets::products_list.dart::ProductsList" o-- "dart::async::Stream<String>"
-"offprice::widgets::products_list.dart::ProductsList" o-- "dart::async::Stream<int>"
-"offprice::widgets::products_list.dart::ProductsList" o-- "dart::async::Stream<bool>"
+"offprice::widgets::products_list.dart::ProductsList" o---------------- "dart::async::Stream<String>"
+"offprice::widgets::products_list.dart::ProductsList" o---------------- "dart::async::Stream<int>"
+"offprice::widgets::products_list.dart::ProductsList" o---------------- "dart::async::Stream<bool>"
 "flutter::src::widgets::framework.dart::StatefulWidget" <|-- "offprice::widgets::products_list.dart::ProductsList"
 
 class "offprice::widgets::products_list.dart::_ProductsListState" {
@@ -576,8 +576,8 @@ class "offprice::widgets::product_card.dart::ProductCard" {
   +Widget build()
 }
 
-"offprice::widgets::product_card.dart::ProductCard" o-- "offprice::models::product.dart::ProductModel"
-"offprice::widgets::product_card.dart::ProductCard" o-- "null::dynamic Function(ProductModel)"
+"offprice::widgets::product_card.dart::ProductCard" o---------------- "offprice::models::product.dart::ProductModel"
+"offprice::widgets::product_card.dart::ProductCard" o---------------- "null::dynamic Function(ProductModel)"
 "flutter::src::widgets::framework.dart::StatelessWidget" <|-- "offprice::widgets::product_card.dart::ProductCard"
 
 class "offprice::widgets::settings_button.dart::SettingsButton" {

@@ -1,30 +1,61 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility that Flutter provides. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
+// import 'package:flutter_test/flutter_test.dart';
+// import 'package:integration_test/integration_test.dart';
+// import 'package:offprice/main.dart' as app;
 
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
+// void main() {
+//   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-import 'package:my_app/main.dart';
+//   group('end-to-end test', () {
+//     testWidgets('Login to the App', (WidgetTester tester) async {
+//       app.main();
+//       await tester.pumpAndSettle();
 
-void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+//       // // Verify the counter starts at 0.
+//       // expect(find.text('0'), findsOneWidget);
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+//       // // Finds the floating action button to tap on.
+//       // final Finder fab = find.byTooltip('Increment');
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+//       // // Emulate a tap on the floating action button.
+//       // await tester.tap(fab);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
-  });
-}
+//       // // Trigger a frame.
+//       // await tester.pumpAndSettle();
+
+//       // // Verify the counter increments by 1.
+//       // expect(find.text('1'), findsOneWidget);
+//     });
+//   });
+// }
+
+
+// // void main() {
+// //   Widget createWidgetForTesting({required Widget child}) {
+// //     return MaterialApp(
+// //       home: MediaQuery(
+// //           data: const MediaQueryData(size: Size(5000, 640)), child: child),
+// //     );
+// //   }
+
+// //   testWidgets('Open login button', (WidgetTester tester) async {
+// //     // Build our app and trigger a frame.
+// //     await tester.pumpWidget(MultiProvider(providers: [
+// //       ChangeNotifierProvider(
+// //         create: (context) => AuthProvider(),
+// //       ),
+// //       ChangeNotifierProxyProvider<AuthProvider, PromotionsProvider>(
+// //         create: (context) => PromotionsProvider(),
+// //         update: (context, auth, promotions) => promotions!..update(auth),
+// //       ),
+// //       ChangeNotifierProxyProvider<AuthProvider, ProductsProvider>(
+// //         create: (context) => ProductsProvider(),
+// //         update: (context, auth, products) => products!..update(auth),
+// //       ),
+// //       ChangeNotifierProxyProvider<AuthProvider, FoldersProvider>(
+// //         create: (context) => FoldersProvider(),
+// //         update: (context, auth, folders) => folders!..update(auth),
+// //       ),
+// //     ], child: createWidgetForTesting(child: const LoginScreen())));
+// //     expect(find.text('Login'), findsNWidgets(2));
+// //   });
+// // }

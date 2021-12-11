@@ -209,6 +209,10 @@ class _MainScreenState extends State<SingleProductScreen> {
                             },
                           ),
                         ]),
+                    Text(
+                      '${widget.product.price.toStringAsFixed(2)} PLN',
+                      style: Theme.of(context).textTheme.headline3,
+                    ),
                     TextButton(
                       onPressed: () async {
                         final int response = _isFollowed

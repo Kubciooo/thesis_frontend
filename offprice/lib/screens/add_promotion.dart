@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:dcdg/dcdg.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,10 +28,10 @@ class _AddPromotionScreenState extends State<AddPromotionScreen> {
 
   final double _width = 0.9;
   final double _height = 0.9;
+  final _formKey = GlobalKey<FormState>();
 
   void _changeName(String value) {
     _name = value;
-    _nameController.add(_name);
   }
 
   void _changePriceMin(String value) {
@@ -40,7 +40,6 @@ class _AddPromotionScreenState extends State<AddPromotionScreen> {
     } else {
       _priceMin = 0;
     }
-    _priceMinController.add(_priceMin);
   }
 
   void _changePriceMax(String value) {
@@ -49,7 +48,13 @@ class _AddPromotionScreenState extends State<AddPromotionScreen> {
     } else {
       _priceMax = 9999999;
     }
-    _priceMaxController.add(_priceMax);
+  }
+
+  void _restart() {
+    if (_formKey.currentState!.validate()) {
+      _priceMinController.add(_priceMin);
+      _priceMaxController.add(_priceMax);
+    }
   }
 
   @override
@@ -86,40 +91,93 @@ class _AddPromotionScreenState extends State<AddPromotionScreen> {
                         'Choose product',
                         style: Theme.of(context).textTheme.headline1,
                       ),
-                      Column(children: [
-                        TextField(
-                          decoration: const InputDecoration(
-                            hintText: 'Name',
+                      Form(
+                        key: _formKey,
+                        child: Column(children: [
+                          TextFormField(
+                            key: const Key('name'),
+                            decoration: const InputDecoration(
+                              hintText: 'Name',
+                            ),
+                            onChanged: _changeName,
+                            onFieldSubmitted: (value) {
+                              _name = value;
+                              _restart();
+                            },
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter some text';
+                              }
+                              return null;
+                            },
                           ),
-                          onSubmitted: _changeName,
-                        ),
-                        TextField(
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
-                          ],
-                          decoration: const InputDecoration(
-                            hintText: 'Price min',
+                          TextFormField(
+                            key: const Key('priceMin'),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
+                            decoration: const InputDecoration(
+                              hintText: 'Price min',
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter some text';
+                              }
+                              if (int.tryParse(value) == null) {
+                                return 'Please enter a valid number';
+                              }
+                              if (int.parse(value) < 0) {
+                                return 'Please enter a positive number';
+                              }
+                              return null;
+                            },
+                            onChanged: _changePriceMin,
+                            onFieldSubmitted: (value) {
+                              _priceMin = int.parse(value);
+                              _restart();
+                            },
                           ),
-                          onSubmitted: _changePriceMin,
-                        ),
-                        TextField(
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
-                          ],
-                          decoration: const InputDecoration(
-                            hintText: 'Price max',
+                          TextFormField(
+                            key: const Key('priceMax'),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
+                            decoration: const InputDecoration(
+                              hintText: 'Price max',
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter some text';
+                              }
+                              if (int.tryParse(value) == null) {
+                                return 'Please enter a valid number';
+                              }
+                              if (int.parse(value) < 0) {
+                                return 'Please enter a positive number';
+                              }
+                              if (int.parse(value) < _priceMin) {
+                                return 'Please enter a number greater than $_priceMin';
+                              }
+                              return null;
+                            },
+                            onFieldSubmitted: (value) {
+                              _priceMax = int.parse(value);
+                              _restart();
+                            },
+                            onChanged: _changePriceMax,
                           ),
-                          onSubmitted: _changePriceMax,
-                        ),
-                      ]),
+                        ]),
+                      ),
                       ProductsList(
+                          key: const Key('productsList'),
                           onProductSelected: (product) {
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      AddPromotionNext(product: product),
-                                ));
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    AddPromotionNext(product: product),
+                              ),
+                            );
                           },
                           name: _nameController.stream,
                           priceMin: _priceMinController.stream,
