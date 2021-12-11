@@ -9,7 +9,7 @@ import 'package:offprice/widgets/text_field_dark.dart';
 import 'package:provider/provider.dart';
 
 class HotDeals extends StatelessWidget {
-  HotDeals({Key? key}) : super(key: key);
+  const HotDeals({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

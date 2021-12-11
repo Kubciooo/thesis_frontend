@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:offprice/models/shop.dart';
 
 class _OtherPromotions {

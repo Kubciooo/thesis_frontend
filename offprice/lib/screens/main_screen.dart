@@ -56,7 +56,7 @@ class _MainScreenState extends State<MainScreen> {
                   ]),
                 ),
               ),
-              Container(
+              SizedBox(
                 height: MediaQuery.of(context).size.height * 0.8,
                 child: PageView(
                   controller: pageController,
@@ -68,8 +68,8 @@ class _MainScreenState extends State<MainScreen> {
                   children: <Widget>[
                     Center(
                       child: GlassmorphismCard(
-                        child: Padding(
-                          padding: const EdgeInsets.all(15.0),
+                        child: const Padding(
+                          padding: EdgeInsets.all(15.0),
                           child: HotDeals(),
                         ),
                         width: MediaQuery.of(context).size.width * 0.9,
@@ -78,8 +78,8 @@ class _MainScreenState extends State<MainScreen> {
                     ),
                     Center(
                       child: GlassmorphismCard(
-                        child: Padding(
-                          padding: const EdgeInsets.all(15.0),
+                        child: const Padding(
+                          padding: EdgeInsets.all(15.0),
                           child: FavouriteProduct(),
                         ),
                         width: MediaQuery.of(context).size.width * 0.9,

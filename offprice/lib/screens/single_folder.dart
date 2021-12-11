@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 
 class SingleFolder extends StatelessWidget {
   final FoldersModel folder;
-  SingleFolder({Key? key, required this.folder}) : super(key: key);
+  const SingleFolder({Key? key, required this.folder}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -129,13 +129,13 @@ class SingleFolder extends StatelessWidget {
                                     content: Text(product.shop),
                                     actions: [
                                       TextButton(
-                                        child: Text('Close'),
+                                        child: const Text('Close'),
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                         },
                                       ),
                                       TextButton(
-                                        child: Text('Delete'),
+                                        child: const Text('Delete'),
                                         onPressed: () async {
                                           int statusCode = await Provider.of<
                                                       FoldersProvider>(context,

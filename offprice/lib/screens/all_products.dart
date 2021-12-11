@@ -11,7 +11,7 @@ import 'package:offprice/widgets/text_field_dark.dart';
 import 'package:provider/provider.dart';
 
 class AllProductsScreen extends StatefulWidget {
-  AllProductsScreen({Key? key}) : super(key: key);
+  const AllProductsScreen({Key? key}) : super(key: key);
 
   @override
   State<AllProductsScreen> createState() => _AllProductsScreenState();

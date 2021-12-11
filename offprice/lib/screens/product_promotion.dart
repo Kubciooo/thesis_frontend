@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -10,7 +12,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class ProductPromotionScreen extends StatefulWidget {
   final DealModel productPromotion;
-  ProductPromotionScreen({Key? key, required this.productPromotion})
+  const ProductPromotionScreen({Key? key, required this.productPromotion})
       : super(key: key);
 
   @override

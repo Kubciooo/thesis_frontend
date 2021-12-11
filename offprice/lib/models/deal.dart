@@ -45,7 +45,7 @@ class DealModel {
       rating: json['rating'],
       coupon: json['coupon'] ?? '',
       cash: json['cash'] != null ? json['cash'].toDouble() : 0.0,
-      percent: json['percentage'] != null ? json['percentage'] : 0,
+      percent: json['percentage'] ?? 0,
       startsAt: DateTime.parse(json['startsAt']),
       expiresAt: DateTime.parse(json['expiresAt']),
       product: ProductModel.fromJson(json['product']),

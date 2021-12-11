@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:dcdg/dcdg.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,7 +15,6 @@ class AddPromotionScreen extends StatefulWidget {
 }
 
 class _AddPromotionScreenState extends State<AddPromotionScreen> {
-  String _name = '';
   int _priceMin = 0;
   int _priceMax = 0;
 
@@ -30,9 +28,7 @@ class _AddPromotionScreenState extends State<AddPromotionScreen> {
   final double _height = 0.9;
   final _formKey = GlobalKey<FormState>();
 
-  void _changeName(String value) {
-    _name = value;
-  }
+  void _changeName(String value) {}
 
   void _changePriceMin(String value) {
     if (value != '') {
@@ -101,7 +97,6 @@ class _AddPromotionScreenState extends State<AddPromotionScreen> {
                             ),
                             onChanged: _changeName,
                             onFieldSubmitted: (value) {
-                              _name = value;
                               _restart();
                             },
                             validator: (value) {

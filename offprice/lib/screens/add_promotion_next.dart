@@ -29,7 +29,7 @@ class _LoginScreenState extends State<AddPromotionNext> {
   final _formKey = GlobalKey<FormState>();
 
   final double _width = 0.9;
-  double _height = 0.9;
+  final double _height = 0.9;
 
   void _changeExpiresAt(DateTime date) {
     _expiresAt = date;

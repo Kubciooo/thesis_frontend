@@ -8,7 +8,7 @@ import 'package:offprice/widgets/main_screen/chart.dart';
 import 'package:provider/provider.dart';
 
 class FavouriteProduct extends StatelessWidget {
-  FavouriteProduct({Key? key}) : super(key: key);
+  const FavouriteProduct({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

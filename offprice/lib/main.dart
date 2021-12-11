@@ -77,9 +77,9 @@ class MyApp extends StatelessWidget {
                       '/all-deals': (context) => const AllDealsScreen(),
                       '/add-promotion': (context) => const AddPromotionScreen(),
                       '/add-folder': (context) => const AddFolderScreen(),
-                      '/all-products': (context) => AllProductsScreen(),
+                      '/all-products': (context) => const AllProductsScreen(),
                       '/all-folders': (context) => const AllFoldersScreen(),
-                      '/user-settings': (context) => UserSettingsScreen(),
+                      '/user-settings': (context) => const UserSettingsScreen(),
                     },
                   ));
         }

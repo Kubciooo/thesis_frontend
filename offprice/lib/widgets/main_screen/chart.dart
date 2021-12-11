@@ -1,5 +1,7 @@
 // import 'package:charts_common/common.dart' as chartsCommon;
 // import 'package:charts_common/src/data/series.dart' show AccessorFn;
+// ignore_for_file: implementation_imports, library_prefixes
+
 import 'dart:math';
 
 //   tooltip.dart
