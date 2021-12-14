@@ -5,6 +5,7 @@ import 'package:offprice/models/product.dart';
 import 'package:offprice/providers/folders.dart';
 import 'package:offprice/screens/add_products_to_folder.dart';
 import 'package:offprice/screens/login_screen.dart';
+import 'package:offprice/screens/single_product_screen.dart';
 import 'package:offprice/widgets/glassmorphism_card.dart';
 import 'package:offprice/widgets/gradient_text.dart';
 import 'package:offprice/constants/colors.dart';
@@ -156,6 +157,19 @@ class SingleFolder extends StatelessWidget {
                                             Navigator.of(context).pop();
                                           },
                                         ),
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      SingleProductScreen(
+                                                    product: product,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            child: const Text(
+                                                'Open product card')),
                                         TextButton(
                                           child: const Text('Delete'),
                                           onPressed: () async {
