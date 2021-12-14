@@ -23,25 +23,7 @@ class _AddPromotionScreenState extends State<AllFoldersScreen> {
   final double _height = 0.9;
 
   @override
-  void initState() {
-    Provider.of<FoldersProvider>(context, listen: false)
-        .fetchFolders()
-        .then((statusCode) => {
-              if (statusCode == 401)
-                {
-                  Future.delayed(Duration.zero, () {
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        LoginScreen.routeName, (Route<dynamic> route) => false);
-                    Provider.of<AuthProvider>(context, listen: false).logout();
-                  })
-                }
-            });
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final foldersProvider = Provider.of<FoldersProvider>(context);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         key: const Key('addFolder'),
@@ -88,54 +70,91 @@ class _AddPromotionScreenState extends State<AllFoldersScreen> {
                         textAlign: TextAlign.left,
                       ),
                       Expanded(
-                        child: RefreshIndicator(
-                          onRefresh: () async {
-                            int statusCode =
-                                await foldersProvider.fetchFolders();
-                            if (statusCode == 401) {
-                              Future.delayed(Duration.zero, () {
-                                Navigator.of(context).pushNamedAndRemoveUntil(
-                                    LoginScreen.routeName,
-                                    (Route<dynamic> route) => false);
+                        child: FutureBuilder(
+                            future: Provider.of<FoldersProvider>(context,
+                                    listen: false)
+                                .fetchFolders(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                  child: CircularProgressIndicator.adaptive(),
+                                );
+                              }
+                              if (snapshot.hasError) {
+                                return Center(
+                                    child: Text(
+                                  'Error: ${snapshot.error}',
+                                ));
+                              }
+                              int statusCode = snapshot.data as int;
+
+                              if (statusCode == 401) {
                                 Provider.of<AuthProvider>(context,
                                         listen: false)
                                     .logout();
-                              });
-                            }
-                          },
-                          child: ListView.builder(
-                            itemCount: foldersProvider.folders.length,
-                            itemBuilder: (context, index) {
-                              return Card(
-                                elevation: 1,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                child: ListTile(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(15.0)),
-                                  title: Text(
-                                      foldersProvider.folders[index].name,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline2!
-                                          .copyWith(
-                                            color: Colors.white,
-                                          )),
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => SingleFolder(
-                                                folder: foldersProvider
-                                                    .folders[index])));
+                                Navigator.of(context).pushNamedAndRemoveUntil(
+                                    LoginScreen.routeName, (route) => false);
+                              }
+
+                              final foldersProvider =
+                                  Provider.of<FoldersProvider>(context,
+                                      listen: false);
+
+                              return RefreshIndicator(
+                                onRefresh: () async {
+                                  int statusCode =
+                                      await foldersProvider.fetchFolders();
+                                  if (statusCode == 401) {
+                                    Future.delayed(Duration.zero, () {
+                                      Navigator.of(context)
+                                          .pushNamedAndRemoveUntil(
+                                              LoginScreen.routeName,
+                                              (Route<dynamic> route) => false);
+                                      Provider.of<AuthProvider>(context,
+                                              listen: false)
+                                          .logout();
+                                    });
+                                  }
+                                },
+                                child: ListView.builder(
+                                  itemCount: foldersProvider.folders.length,
+                                  itemBuilder: (context, index) {
+                                    return Card(
+                                      key: const Key('folder item'),
+                                      elevation: 1,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      child: ListTile(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(15.0)),
+                                        title: Text(
+                                            foldersProvider.folders[index].name,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline2!
+                                                .copyWith(
+                                                  color: Colors.white,
+                                                )),
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      SingleFolder(
+                                                          folder:
+                                                              foldersProvider
+                                                                      .folders[
+                                                                  index])));
+                                        },
+                                      ),
+                                    );
                                   },
                                 ),
                               );
-                            },
-                          ),
-                        ),
+                            }),
                       ),
                     ],
                   ),

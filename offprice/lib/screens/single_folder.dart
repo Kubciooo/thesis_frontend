@@ -143,6 +143,7 @@ class SingleFolder extends StatelessWidget {
                         itemCount: folder.products.length,
                         itemBuilder: (context, index) {
                           return ProductCard(
+                            key: const Key("Product Card"),
                             onTap: (ProductModel product) {
                               showDialog(
                                   context: context,
@@ -168,6 +169,7 @@ class SingleFolder extends StatelessWidget {
                                                 ),
                                               );
                                             },
+                                            key: const Key("Open product card"),
                                             child: const Text(
                                                 'Open product card')),
                                         TextButton(

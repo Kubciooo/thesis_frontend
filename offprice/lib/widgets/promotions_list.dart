@@ -36,7 +36,7 @@ class _PromotionsListState extends State<PromotionsList> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator.adaptive(),
               );
             }
             int statusCode = snapshot.data as int;

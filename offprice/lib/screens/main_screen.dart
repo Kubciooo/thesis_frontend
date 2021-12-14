@@ -112,6 +112,7 @@ class _MainScreenState extends State<MainScreen> {
                   children: [
                     for (int i = 0; i < 3; i++)
                       ClipOval(
+                        key: Key('Main$i'),
                         child: InkWell(
                           onTap: () => {
                             pageController.animateToPage(i,

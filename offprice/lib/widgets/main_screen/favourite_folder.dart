@@ -23,7 +23,7 @@ class FavouriteFolder extends StatelessWidget {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator.adaptive(),
                 );
               }
               if (snapshot.hasError) {
@@ -105,6 +105,7 @@ class FavouriteFolder extends StatelessWidget {
           },
           child: Text(
             'Show more',
+            key: const Key('Show more folders'),
             style: Theme.of(context).textTheme.headline2!.copyWith(
                   color: Colors.white,
                 ),
