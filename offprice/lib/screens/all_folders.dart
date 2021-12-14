@@ -2,13 +2,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:offprice/constants/colors.dart';
+import 'package:offprice/providers/auth.dart';
 import 'package:offprice/providers/folders.dart';
+import 'package:offprice/screens/add_folder.dart';
+import 'package:offprice/screens/login_screen.dart';
 import 'package:offprice/screens/single_folder.dart';
 import 'package:offprice/widgets/glassmorphism_card.dart';
 import 'package:provider/provider.dart';
 
 class AllFoldersScreen extends StatefulWidget {
   const AllFoldersScreen({Key? key}) : super(key: key);
+  static const routeName = '/all-folders';
 
   @override
   State<AllFoldersScreen> createState() => _AddPromotionScreenState();
@@ -25,8 +29,11 @@ class _AddPromotionScreenState extends State<AllFoldersScreen> {
         .then((statusCode) => {
               if (statusCode == 401)
                 {
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                      '/login', (Route<dynamic> route) => false)
+                  Future.delayed(Duration.zero, () {
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        LoginScreen.routeName, (Route<dynamic> route) => false);
+                    Provider.of<AuthProvider>(context, listen: false).logout();
+                  })
                 }
             });
     super.initState();
@@ -37,8 +44,9 @@ class _AddPromotionScreenState extends State<AllFoldersScreen> {
     final foldersProvider = Provider.of<FoldersProvider>(context);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
+        key: const Key('addFolder'),
         onPressed: () {
-          Navigator.of(context).pushNamed('/add-folder');
+          Navigator.of(context).pushNamed(AddFolderScreen.routeName);
         },
         child: const Icon(
           Icons.add,
@@ -85,8 +93,14 @@ class _AddPromotionScreenState extends State<AllFoldersScreen> {
                             int statusCode =
                                 await foldersProvider.fetchFolders();
                             if (statusCode == 401) {
-                              Navigator.of(context).pushNamedAndRemoveUntil(
-                                  '/login', (Route<dynamic> route) => false);
+                              Future.delayed(Duration.zero, () {
+                                Navigator.of(context).pushNamedAndRemoveUntil(
+                                    LoginScreen.routeName,
+                                    (Route<dynamic> route) => false);
+                                Provider.of<AuthProvider>(context,
+                                        listen: false)
+                                    .logout();
+                              });
                             }
                           },
                           child: ListView.builder(

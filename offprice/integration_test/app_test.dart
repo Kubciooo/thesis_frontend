@@ -82,32 +82,16 @@ void main() {
 
       final followButton = find.byKey(const Key('followButton'));
       expect(followButton, findsOneWidget);
-      // final type = find.text('Follow');
 
-      await Future.delayed(const Duration(seconds: 3));
-
-      await tester.tap(followButton);
       await tester.pumpAndSettle();
-      await Future.delayed(const Duration(minutes: 5));
+      final closePromotionButton = find.byKey(const Key('closeButton'));
+      expect(closePromotionButton, findsOneWidget);
 
-      // if (type.evaluate().isNotEmpty) {
-      //   await tester.tap(followButton);
-      //   await Future.delayed(const Duration(seconds: 10));
-      //   expect(find.byKey(const Key('okButton')), findsOneWidget);
-      //   await tester.tap(find.byKey(const Key('okButton')).first);
-      //   await tester.pumpAndSettle();
-      //   expect(find.text('Unfollow'), findsOneWidget);
-      // } else {
-      //   await tester.tap(followButton);
-      //   // await tester.pumpAndSettle();
-      //   await Future.delayed(const Duration(seconds: 10));
-      //   expect(find.byKey(const Key('okButton')), findsOneWidget);
-      //   await tester.tap(find.byKey(const Key('okButton')).first);
-      //   await tester.pumpAndSettle();
-      //   expect(find.text('Follow'), findsOneWidget);
-      // }
+      await tester.tap(closePromotionButton);
+      await tester.pumpAndSettle();
+      await Future.delayed(const Duration(seconds: 5));
 
-      final addNewPromotionButton = find.byElementType(FloatingActionButton);
+      final addNewPromotionButton = find.byKey(const Key('AddDeal'));
 
       expect(addNewPromotionButton, findsOneWidget);
       await tester.tap(addNewPromotionButton.first);
@@ -116,7 +100,7 @@ void main() {
 
       expect(find.text('Choose product'), findsOneWidget);
       final product = find.byKey(const Key('Product list tile'));
-      expect(product, findsOneWidget);
+      expect(product, findsWidgets);
       await tester.tap(product.first);
       await tester.pumpAndSettle();
 

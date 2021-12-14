@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:offprice/screens/user_settings.dart';
 import 'package:offprice/widgets/glassmorphism_card.dart';
 import 'package:offprice/widgets/main_screen/favourite_folder.dart';
 import 'package:offprice/widgets/main_screen/favourite_product.dart';
@@ -9,6 +10,7 @@ import 'package:offprice/widgets/main_screen/hot_deals.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
+  static const routeName = '/home';
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -46,7 +48,8 @@ class _MainScreenState extends State<MainScreen> {
                       Row(mainAxisAlignment: MainAxisAlignment.end, children: [
                     IconButton(
                         onPressed: () {
-                          Navigator.of(context).pushNamed('/user-settings');
+                          Navigator.of(context)
+                              .pushNamed(UserSettingsScreen.routeName);
                         },
                         icon: const Icon(
                           Icons.menu,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:offprice/constants/colors.dart';
+import 'package:offprice/screens/add_promotion.dart';
 import 'package:offprice/widgets/glassmorphism_card.dart';
 import 'package:offprice/widgets/promotions_list.dart';
 import 'package:offprice/widgets/text_field_dark.dart';
@@ -9,6 +10,7 @@ import 'dart:async';
 
 class AllDealsScreen extends StatefulWidget {
   const AllDealsScreen({Key? key}) : super(key: key);
+  static const String routeName = '/all-deals';
 
   @override
   State<AllDealsScreen> createState() => _AllDealsScreenState();
@@ -94,8 +96,9 @@ class _AllDealsScreenState extends State<AllDealsScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        key: const Key('AddDeal'),
         onPressed: () {
-          Navigator.of(context).pushNamed('/add-promotion');
+          Navigator.of(context).pushNamed(AddPromotionScreen.routeName);
         },
         child: const Icon(
           Icons.add,

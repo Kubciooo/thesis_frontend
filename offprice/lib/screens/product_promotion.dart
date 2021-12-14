@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:offprice/constants/colors.dart';
 import 'package:offprice/models/deal.dart';
+import 'package:offprice/providers/auth.dart';
 import 'package:offprice/providers/promotions.dart';
+import 'package:offprice/screens/login_screen.dart';
 import 'package:offprice/widgets/gradient_text.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -45,6 +47,7 @@ class _ProductPromotionScreenState extends State<ProductPromotionScreen> {
               top: 30,
               right: 30,
               child: IconButton(
+                key: const Key('closeButton'),
                 alignment: Alignment.center,
                 iconSize: 30,
                 onPressed: () {
@@ -126,26 +129,15 @@ class _ProductPromotionScreenState extends State<ProductPromotionScreen> {
                                   listen: false)
                               .followPromotion(widget.productPromotion.id);
                       if (responseStatus == 401) {
-                        Navigator.of(context).pushNamedAndRemoveUntil(
-                            '/login', (Route<dynamic> route) => false);
+                        Future.delayed(Duration.zero, () {
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              LoginScreen.routeName,
+                              (Route<dynamic> route) => false);
+                          Provider.of<AuthProvider>(context, listen: false)
+                              .logout();
+                        });
                       }
-                      await showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                                key: const Key('loginError'),
-                                title: const Text('Error'),
-                                content: const Text('Wrong login or password'),
-                                actions: [
-                                  TextButton(
-                                    child: Text('Ok',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline3),
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(),
-                                  )
-                                ],
-                              ));
+
                       String text = _isFollowed
                           ? 'You have unfollowed this promotion'
                           : 'You have followed this promotion';

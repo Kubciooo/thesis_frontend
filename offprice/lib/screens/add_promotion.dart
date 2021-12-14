@@ -9,6 +9,7 @@ import 'package:offprice/widgets/products_list.dart';
 
 class AddPromotionScreen extends StatefulWidget {
   const AddPromotionScreen({Key? key}) : super(key: key);
+  static const String routeName = '/add-promotion';
 
   @override
   State<AddPromotionScreen> createState() => _AddPromotionScreenState();

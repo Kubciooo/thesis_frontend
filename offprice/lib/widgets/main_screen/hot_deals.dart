@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:offprice/providers/promotions.dart';
+import 'package:offprice/screens/all_deals.dart';
 import 'package:offprice/widgets/gradient_text.dart';
 import 'package:offprice/constants/colors.dart';
 import 'package:offprice/widgets/promotions_list.dart';
@@ -86,7 +87,7 @@ class HotDeals extends StatelessWidget {
         TextButton(
           key: const Key('See all hot deals'),
           onPressed: () {
-            Navigator.pushNamed(context, '/all-deals');
+            Navigator.pushNamed(context, AllDealsScreen.routeName);
           },
           child: Text(
             'Show more',

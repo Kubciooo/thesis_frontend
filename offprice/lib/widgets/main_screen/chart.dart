@@ -24,6 +24,11 @@ class Chart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (productChart.isEmpty) {
+      return const Center(
+        child: Text('No data available'),
+      );
+    }
     return charts.BarChart(
       productChart,
       animate: true,

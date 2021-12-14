@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:offprice/constants/colors.dart';
 import 'package:offprice/models/product.dart';
+import 'package:offprice/providers/auth.dart';
 import 'package:offprice/providers/products.dart';
+import 'package:offprice/screens/login_screen.dart';
 import 'package:offprice/widgets/glassmorphism_card.dart';
 import 'package:offprice/widgets/gradient_text.dart';
 import 'package:offprice/widgets/main_screen/chart.dart';
@@ -131,7 +133,8 @@ class _MainScreenState extends State<SingleProductScreen> {
                                     if (statusCode == 401) {
                                       Navigator.of(context)
                                           .pushNamedAndRemoveUntil(
-                                              '/login', (route) => false);
+                                              LoginScreen.routeName,
+                                              (route) => false);
                                     } else {
                                       Navigator.of(context).pop();
                                     }
@@ -237,8 +240,12 @@ class _MainScreenState extends State<SingleProductScreen> {
                           changeFollowStatus();
                         } else if (response == 401) {
                           //redirect to login
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                              '/login', (route) => false);
+                          Future.delayed(Duration.zero, () {
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                                LoginScreen.routeName, (route) => false);
+                            Provider.of<AuthProvider>(context, listen: false)
+                                .logout();
+                          });
                         }
                       },
                       child: Text(

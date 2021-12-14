@@ -42,7 +42,7 @@ class PromotionsProvider with ChangeNotifier {
 
   Future<int> getPromotions(
       {refresh = false, filter = '', fetchUser = false}) async {
-    int statusCode = 401;
+    int statusCode = 200;
     if (refresh) {
       clearPromotions();
     }

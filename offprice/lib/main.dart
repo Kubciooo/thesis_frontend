@@ -7,7 +7,7 @@ import 'package:offprice/providers/auth.dart';
 import 'package:offprice/providers/folders.dart';
 import 'package:offprice/providers/products.dart';
 import 'package:offprice/providers/promotions.dart';
-import 'package:offprice/screens/add_foder.dart';
+import 'package:offprice/screens/add_folder.dart';
 import 'package:offprice/screens/add_promotion.dart';
 import 'package:offprice/screens/all_deals.dart';
 import 'package:offprice/screens/all_folders.dart';
@@ -72,14 +72,20 @@ class MyApp extends StatelessWidget {
                     theme: AppTheme.darkTheme,
                     home: screen,
                     routes: {
-                      '/login': (context) => const LoginScreen(),
-                      '/home': (context) => const MainScreen(),
-                      '/all-deals': (context) => const AllDealsScreen(),
-                      '/add-promotion': (context) => const AddPromotionScreen(),
-                      '/add-folder': (context) => const AddFolderScreen(),
-                      '/all-products': (context) => const AllProductsScreen(),
-                      '/all-folders': (context) => const AllFoldersScreen(),
-                      '/user-settings': (context) => const UserSettingsScreen(),
+                      LoginScreen.routeName: (context) => const LoginScreen(),
+                      MainScreen.routeName: (context) => const MainScreen(),
+                      AllDealsScreen.routeName: (context) =>
+                          const AllDealsScreen(),
+                      AddPromotionScreen.routeName: (context) =>
+                          const AddPromotionScreen(),
+                      AddFolderScreen.routeName: (context) =>
+                          const AddFolderScreen(),
+                      AllProductsScreen.routeName: (context) =>
+                          const AllProductsScreen(),
+                      AllFoldersScreen.routeName: (context) =>
+                          const AllFoldersScreen(),
+                      UserSettingsScreen.routeName: (context) =>
+                          const UserSettingsScreen(),
                     },
                   ));
         }

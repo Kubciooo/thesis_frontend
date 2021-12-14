@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:offprice/providers/auth.dart';
 import 'package:offprice/providers/folders.dart';
+import 'package:offprice/screens/all_folders.dart';
+import 'package:offprice/screens/login_screen.dart';
 import 'package:offprice/widgets/gradient_text.dart';
 import 'package:offprice/constants/colors.dart';
 import 'package:offprice/widgets/main_screen/chart.dart';
@@ -31,9 +33,11 @@ class FavouriteFolder extends StatelessWidget {
               }
               int statusCode = snapshot.data as int;
               if (statusCode == 401) {
-                Provider.of<AuthProvider>(context, listen: false).logout();
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                    '/login', (Route<dynamic> route) => false);
+                Future.delayed(Duration.zero, () {
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                      LoginScreen.routeName, (Route<dynamic> route) => false);
+                  Provider.of<AuthProvider>(context, listen: false).logout();
+                });
               }
               final folder =
                   Provider.of<FoldersProvider>(context).favouriteFolder;
@@ -66,22 +70,38 @@ class FavouriteFolder extends StatelessWidget {
                           Text(
                             folder.name,
                             textAlign: TextAlign.left,
-                            style: Theme.of(context).textTheme.headline1,
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline1!
+                                .copyWith(fontSize: 25),
                           ),
                         ],
                       ),
                     ),
                     Expanded(
-                        child: Chart(
-                      productChart: productCharts,
-                    )),
+                        child: productCharts.first.data.isNotEmpty
+                            ? Chart(
+                                productChart: productCharts,
+                              )
+                            : Center(
+                                child: Text(
+                                  'No items found...',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline1!
+                                      .copyWith(
+                                        fontSize: 30,
+                                        color: Colors.white,
+                                      ),
+                                ),
+                              )),
                   ],
                 ),
               );
             }),
         TextButton(
           onPressed: () {
-            Navigator.pushNamed(context, '/all-folders');
+            Navigator.pushNamed(context, AllFoldersScreen.routeName);
           },
           child: Text(
             'Show more',

@@ -3,13 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:offprice/constants/colors.dart';
+import 'package:offprice/providers/auth.dart';
 import 'package:offprice/providers/folders.dart';
 import 'package:offprice/providers/products.dart';
+import 'package:offprice/screens/login_screen.dart';
 import 'package:offprice/widgets/glassmorphism_card.dart';
 import 'package:provider/provider.dart';
 
 class AddFolderScreen extends StatefulWidget {
   const AddFolderScreen({Key? key}) : super(key: key);
+  static const routeName = '/add-folder';
 
   @override
   State<AddFolderScreen> createState() => _AddFolderScreenState();
@@ -40,8 +43,13 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
           .then((statusCode) => {
                 if (statusCode == 401)
                   {
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        '/login', (Route<dynamic> route) => false)
+                    Future.delayed(Duration.zero, () {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          LoginScreen.routeName,
+                          (Route<dynamic> route) => false);
+                      Provider.of<AuthProvider>(context, listen: false)
+                          .logout();
+                    })
                   }
               });
     });
@@ -59,8 +67,13 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
           .then((statusCode) => {
                 if (statusCode == 401)
                   {
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        '/login', (Route<dynamic> route) => false)
+                    Future.delayed(Duration.zero, () {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          LoginScreen.routeName,
+                          (Route<dynamic> route) => false);
+                      Provider.of<AuthProvider>(context, listen: false)
+                          .logout();
+                    })
                   }
               });
     });
@@ -79,8 +92,13 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
           .then((statusCode) => {
                 if (statusCode == 401)
                   {
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        '/login', (Route<dynamic> route) => false)
+                    Future.delayed(Duration.zero, () {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          LoginScreen.routeName,
+                          (Route<dynamic> route) => false);
+                      Provider.of<AuthProvider>(context, listen: false)
+                          .logout();
+                    })
                   }
               });
     });
@@ -98,8 +116,11 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
                     .createFolder(_folderName, _products);
 
             if (statusCode == 401) {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                  '/login', (Route<dynamic> route) => false);
+              Future.delayed(Duration.zero, () {
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    LoginScreen.routeName, (Route<dynamic> route) => false);
+                Provider.of<AuthProvider>(context, listen: false).logout();
+              });
             } else if (statusCode == 201) {
               Navigator.of(context).pop();
             }
@@ -198,8 +219,14 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
                                 max: _priceMax,
                               );
                               if (statusCode == 401) {
-                                Navigator.of(context).pushNamedAndRemoveUntil(
-                                    '/login', (Route<dynamic> route) => false);
+                                Future.delayed(Duration.zero, () {
+                                  Navigator.of(context).pushNamedAndRemoveUntil(
+                                      LoginScreen.routeName,
+                                      (Route<dynamic> route) => false);
+                                  Provider.of<AuthProvider>(context,
+                                          listen: false)
+                                      .logout();
+                                });
                               }
                             },
                             child: ListView.builder(

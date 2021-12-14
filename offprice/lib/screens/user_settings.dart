@@ -4,11 +4,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:offprice/constants/colors.dart';
 import 'package:offprice/providers/auth.dart';
 import 'package:offprice/providers/products.dart';
+import 'package:offprice/screens/login_screen.dart';
 import 'package:offprice/widgets/glassmorphism_card.dart';
 import 'package:provider/provider.dart';
 
 class UserSettingsScreen extends StatefulWidget {
   const UserSettingsScreen({Key? key}) : super(key: key);
+  static const routeName = '/user-settings';
 
   @override
   State<UserSettingsScreen> createState() => _AddPromotionScreenState();
@@ -25,7 +27,7 @@ class _AddPromotionScreenState extends State<UserSettingsScreen> {
         .then((statusCode) {
       if (statusCode == 401) {
         Navigator.of(context)
-            .pushNamedAndRemoveUntil('/login', (route) => false);
+            .pushNamedAndRemoveUntil(LoginScreen.routeName, (route) => false);
       }
     });
     Provider.of<ProductsProvider>(context, listen: false)
@@ -33,7 +35,7 @@ class _AddPromotionScreenState extends State<UserSettingsScreen> {
         .then((statusCode) {
       if (statusCode == 401) {
         Navigator.of(context)
-            .pushNamedAndRemoveUntil('/login', (route) => false);
+            .pushNamedAndRemoveUntil(LoginScreen.routeName, (route) => false);
       }
     });
     super.initState();
@@ -113,7 +115,9 @@ class _AddPromotionScreenState extends State<UserSettingsScreen> {
                               .logout();
                           Future.delayed(Duration.zero, () {
                             Navigator.of(context).pushNamedAndRemoveUntil(
-                                '/login', (route) => false);
+                                LoginScreen.routeName, (route) => false);
+                            Provider.of<AuthProvider>(context, listen: false)
+                                .logout();
                           });
                         },
                         icon: const Icon(Icons.logout),

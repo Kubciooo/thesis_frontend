@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:offprice/providers/auth.dart';
 import 'package:offprice/providers/products.dart';
+import 'package:offprice/screens/login_screen.dart';
 import 'package:offprice/screens/single_product_screen.dart';
 import 'package:offprice/widgets/glassmorphism_card.dart';
 import 'package:offprice/widgets/products_list.dart';
@@ -12,6 +13,7 @@ import 'package:provider/provider.dart';
 
 class AllProductsScreen extends StatefulWidget {
   const AllProductsScreen({Key? key}) : super(key: key);
+  static const routeName = '/all-products';
 
   @override
   State<AllProductsScreen> createState() => _AllProductsScreenState();
@@ -243,8 +245,8 @@ Route<Object?> _dialogBuilder(BuildContext context, Object? arguments) {
 
             if (statusCode == 401) {
               Provider.of<AuthProvider>(context, listen: false).logout();
-              Navigator.of(context)
-                  .pushNamedAndRemoveUntil('/login', (route) => false);
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  LoginScreen.routeName, (route) => false);
             }
             return CupertinoAlertDialog(
               title: const Text(

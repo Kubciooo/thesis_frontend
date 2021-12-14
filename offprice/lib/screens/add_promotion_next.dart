@@ -4,7 +4,9 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:offprice/constants/colors.dart';
 import 'package:offprice/models/product.dart';
+import 'package:offprice/providers/auth.dart';
 import 'package:offprice/providers/promotions.dart';
+import 'package:offprice/screens/login_screen.dart';
 import 'package:offprice/widgets/glassmorphism_card.dart';
 import 'package:offprice/widgets/text_field_dark.dart';
 import 'package:provider/provider.dart';
@@ -90,8 +92,11 @@ class _LoginScreenState extends State<AddPromotionNext> {
                     cash: _cash)
                 .then((value) {
               if (value == 401) {
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                    '/login', (Route<dynamic> route) => false);
+                Future.delayed(Duration.zero, () {
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                      LoginScreen.routeName, (Route<dynamic> route) => false);
+                  Provider.of<AuthProvider>(context, listen: false).logout();
+                });
               }
               Navigator.of(context).restorablePush(
                 _dialogBuilder,

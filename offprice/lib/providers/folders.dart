@@ -138,8 +138,7 @@ class FoldersProvider with ChangeNotifier {
       if (responseData['status'] == 'error') {
         throw HttpException(responseData['message']);
       }
-
-      _folders.add(FoldersModel.fromJson(responseData['data']['folders']));
+      _folders.add(FoldersModel.fromJson(responseData['data']['folder']));
 
       notifyListeners();
       return response.statusCode;
@@ -217,7 +216,7 @@ class FoldersProvider with ChangeNotifier {
     }
   }
 
-  Future<int> addProductToFolder(String folderId, String productId) async {
+  Future<int> addProductToFolder(String folderId, ProductModel product) async {
     var url = ('$host/api/folders/$folderId');
 
     var uri = Uri.parse(url);
@@ -229,7 +228,7 @@ class FoldersProvider with ChangeNotifier {
           'Content-Type': 'application/json; charset=UTF-8',
           "Authorization": "Bearer " + token,
         },
-        body: jsonEncode(<String, dynamic>{'productId': productId}),
+        body: jsonEncode(<String, dynamic>{'productId': product.id}),
       );
 
       final responseData = json.decode(response.body);
@@ -238,9 +237,10 @@ class FoldersProvider with ChangeNotifier {
         throw HttpException(responseData['message']);
       }
 
-      _folders.firstWhere((folder) => folder.id == folderId).products.add(
-          ProductModel.fromJsonShop(
-              responseData['data']['folders']['products']));
+      _folders
+          .firstWhere((folder) => folder.id == folderId)
+          .products
+          .add(product);
 
       notifyListeners();
       return response.statusCode;
