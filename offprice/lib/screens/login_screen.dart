@@ -17,6 +17,10 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   String _login = '';
+  String _forgotPasswordLogin = '';
+  String _resetPassword = '';
+  String _retypeResetPassword = '';
+  String _resetToken = '';
   String _password = '';
   String _email = '';
   String _retypePassword = '';
@@ -89,7 +93,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: MediaQuery.of(context).size.width * _width,
                 height: MediaQuery.of(context).size.height * _height,
                 child: Container(
-                    height: MediaQuery.of(context).size.height * _height - 80,
                     padding: const EdgeInsets.all(40),
                     child: Form(
                       key: _formKey,
@@ -126,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               return null;
                             },
                           ),
-                          if (!_isLogin)
+                          if (!_isLogin) ...[
                             TextFieldDark(
                               initialValue: _email,
                               onEditingCompleted: () {},
@@ -141,7 +144,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                 return null;
                               },
                             ),
-                          if (!_isLogin)
                             TextFieldDark(
                               initialValue: _retypePassword,
                               onEditingCompleted: () {},
@@ -154,6 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ? 'Passwords do not match'
                                   : null,
                             ),
+                          ],
                           const SizedBox(height: 20),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -254,6 +257,299 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ],
                           ),
+                          if (_isLogin)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                TextButton(
+                                    child: const Text(
+                                      'Forgot Password?',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) =>
+                                            CupertinoAlertDialog(
+                                          key: const Key('forgotPassword'),
+                                          title: const Text('Forgot Password'),
+                                          content: Card(
+                                            color: Colors.transparent,
+                                            elevation: 0.0,
+                                            child: Column(
+                                              children: [
+                                                TextFieldDark(
+                                                  onEditingCompleted: () {},
+                                                  onChanged: (value) {
+                                                    _forgotPasswordLogin =
+                                                        value;
+                                                  },
+                                                  labelText: 'Login',
+                                                  hintText: 'Enter your login',
+                                                  icon:
+                                                      const Icon(Icons.person),
+                                                  validator: (value) {
+                                                    if (value.isEmpty) {
+                                                      return 'Please enter your login';
+                                                    }
+                                                    return null;
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          actions: [
+                                            CupertinoDialogAction(
+                                              child: const Text('Cancel'),
+                                              onPressed: () => {
+                                                Navigator.of(context).pop(),
+                                                _forgotPasswordLogin = ''
+                                              },
+                                            ),
+                                            TextButton(
+                                                child: Text('Ok',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline3),
+                                                onPressed: () async {
+                                                  int statusCode = await Provider
+                                                          .of<AuthProvider>(
+                                                              context,
+                                                              listen: false)
+                                                      .forgotPassword(
+                                                          _forgotPasswordLogin);
+                                                  _forgotPasswordLogin = '';
+
+                                                  if (statusCode == 200) {
+                                                    Navigator.of(context).pop();
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (context) =>
+                                                          CupertinoAlertDialog(
+                                                        key: const Key(
+                                                            'forgotPasswordSuccess'),
+                                                        title: const Text(
+                                                            'Success'),
+                                                        content: const Text(
+                                                            'Check your email'),
+                                                        actions: [
+                                                          TextButton(
+                                                            child: Text('Ok',
+                                                                style: Theme.of(
+                                                                        context)
+                                                                    .textTheme
+                                                                    .headline3),
+                                                            onPressed: () =>
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop(),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    );
+                                                  } else {
+                                                    Navigator.of(context).pop();
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (context) =>
+                                                          CupertinoAlertDialog(
+                                                        key: const Key(
+                                                            'forgotPasswordError'),
+                                                        title:
+                                                            const Text('Error'),
+                                                        content: const Text(
+                                                            'There was an error during sending password token!\nTry again!'),
+                                                        actions: [
+                                                          TextButton(
+                                                            key: const Key(
+                                                                'ErrorForgotPassword'),
+                                                            child: Text('Ok',
+                                                                style: Theme.of(
+                                                                        context)
+                                                                    .textTheme
+                                                                    .headline3),
+                                                            onPressed: () =>
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop(),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    );
+                                                  }
+                                                })
+                                          ],
+                                        ),
+                                      );
+                                    }),
+                                TextButton(
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) =>
+                                            CupertinoAlertDialog(
+                                          key: const Key('resetPassword'),
+                                          title: const Text('Reset Password'),
+                                          content: Card(
+                                            color: Colors.transparent,
+                                            elevation: 0.0,
+                                            child: Column(
+                                              children: [
+                                                TextFieldDark(
+                                                  onEditingCompleted: () {},
+                                                  onChanged: (value) {
+                                                    _resetToken = value;
+                                                  },
+                                                  labelText: 'Token',
+                                                  hintText: 'Enter your token',
+                                                  icon:
+                                                      const Icon(Icons.person),
+                                                  validator: (value) {
+                                                    if (value.isEmpty) {
+                                                      return 'Please enter your token';
+                                                    }
+                                                    return null;
+                                                  },
+                                                ),
+                                                TextFieldDark(
+                                                  onEditingCompleted: () {},
+                                                  onChanged: (value) {
+                                                    _resetPassword = value;
+                                                  },
+                                                  labelText: 'Password',
+                                                  hintText:
+                                                      'Enter new password',
+                                                  icon: const Icon(
+                                                      Icons.password),
+                                                  validator: (value) {
+                                                    if (value.isEmpty) {
+                                                      return 'Please enter your password';
+                                                    }
+                                                    return null;
+                                                  },
+                                                ),
+                                                TextFieldDark(
+                                                  onEditingCompleted: () {},
+                                                  onChanged: (value) {
+                                                    _retypeResetPassword =
+                                                        value;
+                                                  },
+                                                  labelText: 'Retype Password',
+                                                  hintText:
+                                                      'Retype your password',
+                                                  icon: const Icon(
+                                                      Icons.password),
+                                                  validator: (value) {
+                                                    if (value.isEmpty) {
+                                                      return 'Please enter your password';
+                                                    }
+                                                    return null;
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          actions: [
+                                            CupertinoDialogAction(
+                                              child: const Text('Cancel'),
+                                              onPressed: () => {
+                                                Navigator.of(context).pop(),
+                                                _resetPassword = '',
+                                                _resetToken = '',
+                                                _retypeResetPassword = '',
+                                              },
+                                            ),
+                                            TextButton(
+                                              child: Text('Ok',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline3),
+                                              onPressed: () async {
+                                                int statusCode = await Provider
+                                                        .of<AuthProvider>(
+                                                            context,
+                                                            listen: false)
+                                                    .resetPassword(
+                                                        token: _resetToken,
+                                                        password:
+                                                            _resetPassword,
+                                                        retypePassword:
+                                                            _retypeResetPassword);
+                                                _resetPassword = '';
+                                                _resetToken = '';
+                                                _retypeResetPassword = '';
+
+                                                if (statusCode == 200) {
+                                                  Navigator.of(context).pop();
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (context) =>
+                                                        CupertinoAlertDialog(
+                                                      key: const Key(
+                                                          'resetPasswordSuccess'),
+                                                      title:
+                                                          const Text('Success'),
+                                                      content: const Text(
+                                                          'Password has been reset'),
+                                                      actions: [
+                                                        TextButton(
+                                                          child: Text('Ok',
+                                                              style: Theme.of(
+                                                                      context)
+                                                                  .textTheme
+                                                                  .headline3),
+                                                          onPressed: () =>
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop(),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  );
+                                                } else {
+                                                  Navigator.of(context).pop();
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (context) =>
+                                                        CupertinoAlertDialog(
+                                                      key: const Key(
+                                                          'resetPasswordFailed'),
+                                                      title:
+                                                          const Text('Failed'),
+                                                      content: const Text(
+                                                          'Failed to reset password'),
+                                                      actions: [
+                                                        TextButton(
+                                                          child: Text('Ok',
+                                                              style: Theme.of(
+                                                                      context)
+                                                                  .textTheme
+                                                                  .headline3),
+                                                          onPressed: () =>
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop(),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  );
+                                                }
+                                              },
+                                            )
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                    child: const Text(
+                                      'Reset Password',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                      ),
+                                    )),
+                              ],
+                            ),
                         ],
                       ),
                     )),

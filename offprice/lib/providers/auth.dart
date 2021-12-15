@@ -86,6 +86,62 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  Future<int> forgotPassword(String login) async {
+    var url = Uri.parse('$host/api/users/forgotPassword');
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          "Access-Control-Allow-Origin":
+              "*", // Required for CORS support to work
+          "Access-Control-Allow-Headers":
+              "Origin,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,locale",
+          "Access-Control-Allow-Methods": "POST, OPTIONS"
+        },
+        body: jsonEncode(<String, String>{
+          'login': login,
+        }),
+      );
+
+      return response.statusCode;
+    } catch (error) {
+      print(error);
+      return 500;
+    }
+  }
+
+  Future<int> resetPassword(
+      {required String token,
+      required String password,
+      required String retypePassword}) async {
+    var url = Uri.parse('$host/api/users/resetPassword/$token');
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          "Access-Control-Allow-Origin":
+              "*", // Required for CORS support to work
+          "Access-Control-Allow-Headers":
+              "Origin,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,locale",
+          "Access-Control-Allow-Methods": "POST, OPTIONS"
+        },
+        body: jsonEncode(<String, String>{
+          'password': password,
+          'retypePassword': retypePassword,
+        }),
+      );
+
+      print(response.body);
+
+      return response.statusCode;
+    } catch (error) {
+      print(error);
+      return 500;
+    }
+  }
+
   //function to register user via api with url and body
   Future<bool> signUp(
       {required String login,
@@ -127,33 +183,5 @@ class AuthProvider with ChangeNotifier {
     prefs.remove('login');
     prefs.remove('password');
     notifyListeners();
-  }
-
-  // function to reset forgotten password
-  Future<bool> forgotPassword(String login) async {
-    var url = Uri.parse('$host/api/users/forgotPassword');
-
-    try {
-      final response = await http.post(
-        url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, String>{
-          'login': login,
-        }),
-      );
-
-      final responseData = json.decode(response.body);
-
-      if (responseData['status'] != null) {
-        throw HttpException(responseData['message']);
-      }
-      notifyListeners();
-      return true;
-    } catch (error) {
-      print(error);
-      return false;
-    }
   }
 }
