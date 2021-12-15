@@ -6,6 +6,7 @@ import 'package:offprice/providers/auth.dart';
 import 'package:offprice/providers/products.dart';
 import 'package:offprice/screens/login_screen.dart';
 import 'package:offprice/widgets/glassmorphism_card.dart';
+import 'package:offprice/widgets/text_field_dark.dart';
 import 'package:provider/provider.dart';
 
 class UserSettingsScreen extends StatefulWidget {
@@ -13,12 +14,14 @@ class UserSettingsScreen extends StatefulWidget {
   static const routeName = '/user-settings';
 
   @override
-  State<UserSettingsScreen> createState() => _AddPromotionScreenState();
+  State<UserSettingsScreen> createState() => _UserSettingScreenState();
 }
 
-class _AddPromotionScreenState extends State<UserSettingsScreen> {
+class _UserSettingScreenState extends State<UserSettingsScreen> {
   final double _width = 0.9;
   final double _height = 0.9;
+  String _password = '';
+  String _retypePassword = '';
 
   @override
   void initState() {
@@ -73,7 +76,145 @@ class _AddPromotionScreenState extends State<UserSettingsScreen> {
                   child: Column(
                     children: [
                       TextButton.icon(
-                        onPressed: () {},
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => CupertinoAlertDialog(
+                              key: const Key('resetPassword'),
+                              title: const Text('Reset Password'),
+                              content: Card(
+                                color: Colors.transparent,
+                                elevation: 0.0,
+                                child: Column(
+                                  children: [
+                                    TextFieldDark(
+                                      onEditingCompleted: () {},
+                                      obscureText: true,
+                                      onChanged: (value) {
+                                        _password = value;
+                                      },
+                                      labelText: 'Password',
+                                      hintText: 'Enter new password',
+                                      icon: const Icon(Icons.password),
+                                      validator: (value) {
+                                        if (value.isEmpty) {
+                                          return 'Please enter your password';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                    TextFieldDark(
+                                      obscureText: true,
+                                      onEditingCompleted: () {},
+                                      onChanged: (value) {
+                                        _retypePassword = value;
+                                      },
+                                      labelText: 'Retype Password',
+                                      hintText: 'Retype your password',
+                                      icon: const Icon(Icons.password),
+                                      validator: (value) {
+                                        if (value.isEmpty) {
+                                          return 'Please enter your password';
+                                        }
+                                        if (value != _password) {
+                                          return 'Passwords do not match';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              actions: [
+                                CupertinoDialogAction(
+                                  child: const Text('Cancel'),
+                                  onPressed: () => {
+                                    Navigator.of(context).pop(),
+                                    _password = '',
+                                    _retypePassword = '',
+                                  },
+                                ),
+                                TextButton(
+                                  child: Text('Ok',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline3),
+                                  onPressed: () async {
+                                    int statusCode =
+                                        await Provider.of<AuthProvider>(context,
+                                                listen: false)
+                                            .updatePassword(
+                                                password: _password,
+                                                retypePassword:
+                                                    _retypePassword);
+                                    _password = '';
+                                    _retypePassword = '';
+
+                                    if (statusCode == 201) {
+                                      Navigator.of(context).pop();
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) =>
+                                            CupertinoAlertDialog(
+                                          key:
+                                              const Key('resetPasswordSuccess'),
+                                          title: const Text('Success'),
+                                          content: const Text(
+                                              'Password has been updated! Now login with your new password'),
+                                          actions: [
+                                            TextButton(
+                                                child: Text('Ok',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline3),
+                                                onPressed: () {
+                                                  Future.delayed(Duration.zero,
+                                                      () {
+                                                    Navigator.of(context)
+                                                        .pushNamedAndRemoveUntil(
+                                                            LoginScreen
+                                                                .routeName,
+                                                            (Route<dynamic>
+                                                                    route) =>
+                                                                false);
+                                                    Provider.of<AuthProvider>(
+                                                            context,
+                                                            listen: false)
+                                                        .logout();
+                                                  });
+                                                })
+                                          ],
+                                        ),
+                                      );
+                                    } else {
+                                      Navigator.of(context).pop();
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) =>
+                                            CupertinoAlertDialog(
+                                          key: const Key('resetPasswordFailed'),
+                                          title: const Text('Failed'),
+                                          content: const Text(
+                                              'Failed to reset password'),
+                                          actions: [
+                                            TextButton(
+                                              child: Text('Ok',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline3),
+                                              onPressed: () =>
+                                                  Navigator.of(context).pop(),
+                                            )
+                                          ],
+                                        ),
+                                      );
+                                    }
+                                  },
+                                )
+                              ],
+                            ),
+                          );
+                        },
                         icon: const Icon(Icons.password),
                         label: const Text(
                           'Change password',

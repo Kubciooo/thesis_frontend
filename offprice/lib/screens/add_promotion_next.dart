@@ -16,10 +16,10 @@ class AddPromotionNext extends StatefulWidget {
   const AddPromotionNext({Key? key, required this.product}) : super(key: key);
 
   @override
-  State<AddPromotionNext> createState() => _LoginScreenState();
+  State<AddPromotionNext> createState() => _AddPromotionNextState();
 }
 
-class _LoginScreenState extends State<AddPromotionNext> {
+class _AddPromotionNextState extends State<AddPromotionNext> {
   String _type = 'coupon';
   String _discountType = 'percentage';
   String _coupon = '';

@@ -142,6 +142,37 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  Future<int> updatePassword(
+      {required String password, required String retypePassword}) async {
+    var url = Uri.parse('$host/api/users/updatePassword');
+    try {
+      final response = await http.patch(
+        url,
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $_token',
+          "Access-Control-Allow-Origin":
+              "*", // Required for CORS support to work
+          "Access-Control-Allow-Headers":
+              "Origin,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,locale",
+          "Access-Control-Allow-Methods": "POST, OPTIONS"
+        },
+        body: jsonEncode(<String, String>{
+          'password': password,
+          'retypePassword': retypePassword,
+        }),
+      );
+
+      print(response.body);
+      print(response.statusCode);
+
+      return response.statusCode;
+    } catch (error) {
+      print(error);
+      return 500;
+    }
+  }
+
   //function to register user via api with url and body
   Future<bool> signUp(
       {required String login,
