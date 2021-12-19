@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 import 'package:offprice/constants/colors.dart';
 
+/// klasa komponentu karty
 class GlassmorphismCard extends StatelessWidget {
   final Widget child;
   final double width, height;

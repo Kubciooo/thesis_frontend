@@ -9,15 +9,22 @@ import 'package:offprice/constants/api.dart';
 import 'package:offprice/models/deal.dart';
 import 'package:offprice/providers/auth.dart';
 
+/// klasa odpowiedzialna za pobieranie danych o promocjach z API
 class PromotionsProvider with ChangeNotifier {
-  // create a function to login user via api with url and body
+  /// token JWT
   String _token = '';
+
+  /// lista promocji
   final List<DealModel> _deals = [];
+
+  /// lista obserwowanych promocji
   final List<DealModel> _favDeals = [];
 
   get deals => [..._deals];
   get favDeals => [..._favDeals];
   bool _shouldFetch = true;
+
+  /// minimalna ilość obserwowanych do wyswietlenia promocji
   int _likes = 0;
   get likes => _likes;
   get token => _token;
@@ -40,6 +47,7 @@ class PromotionsProvider with ChangeNotifier {
     return getPromotions(refresh: true);
   }
 
+  /// pobranie listy promocji
   Future<int> getPromotions(
       {refresh = false, filter = '', fetchUser = false}) async {
     int statusCode = 200;
@@ -63,6 +71,7 @@ class PromotionsProvider with ChangeNotifier {
     return statusCode;
   }
 
+  /// zaobserwowanie promocji
   Future<int> followPromotion(promotionId) async {
     final url = '$host/api/promotions/products/$promotionId';
     final uri = Uri.parse(url);
@@ -79,6 +88,7 @@ class PromotionsProvider with ChangeNotifier {
     return response.statusCode;
   }
 
+  /// wysłanie do API zapytania ustawienie minimalnej ilości obserwujących do wyświetlenia promocji
   Future<int> setLikes(int likes) async {
     final url = '$host/api/users/likes';
     final uri = Uri.parse(url);
@@ -100,6 +110,7 @@ class PromotionsProvider with ChangeNotifier {
     return response.statusCode;
   }
 
+  /// pobranie z API minimalnej ilości obserwujących do wyświetlenia promocji
   Future<int> getLikes() async {
     final url = '$host/api/users/likes';
     final uri = Uri.parse(url);
@@ -116,6 +127,7 @@ class PromotionsProvider with ChangeNotifier {
     return response.statusCode;
   }
 
+  /// wysłanie do API zapytania o odobserwowanie promocji
   Future<int> unfollowPromotion(promotionId) async {
     final url = '$host/api/promotions/products/$promotionId';
     final uri = Uri.parse(url);
@@ -132,6 +144,7 @@ class PromotionsProvider with ChangeNotifier {
     return response.statusCode;
   }
 
+  /// wysłanie do API zapytania o stworzenie nowej promocji
   Future<int> addPromotion(
       {required String product,
       required double startingPrice,
@@ -175,6 +188,7 @@ class PromotionsProvider with ChangeNotifier {
     }
   }
 
+  // pobranie z API listy promocji
   Future<int> getLatestPromotions() async {
     var url = Uri.parse('$host/api/promotions/products');
     try {
@@ -218,6 +232,7 @@ class PromotionsProvider with ChangeNotifier {
     return false;
   }
 
+  /// pobranie z API listy obserwowanych promocji
   Future<int> getUserPromotions() async {
     var url = Uri.parse('$host/api/users/productPromotions');
     try {

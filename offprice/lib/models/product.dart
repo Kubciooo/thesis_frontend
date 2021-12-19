@@ -1,5 +1,6 @@
 import 'package:offprice/models/shop.dart';
 
+/// model dla listy innych promocji produktu
 class _OtherPromotions {
   final String name;
   final String id;
@@ -16,6 +17,7 @@ class _OtherPromotions {
   }
 }
 
+/// model dla danych historycznych produktu
 class Snapshot {
   final String id;
   final List<String> coupons;
@@ -30,7 +32,7 @@ class Snapshot {
       required this.price,
       required this.updatedAt});
 
-  //json to model object
+  // model z jsona
   factory Snapshot.fromJson(Map<String, dynamic> json) {
     return Snapshot(
       id: json['_id'],
@@ -44,6 +46,7 @@ class Snapshot {
   }
 }
 
+/// model dla folderu produktów
 class FoldersModel {
   final String name;
   final String id;
@@ -63,6 +66,7 @@ class FoldersModel {
   }
 }
 
+/// model produktu
 class ProductModel {
   final String id;
   final String url;
@@ -85,7 +89,7 @@ class ProductModel {
       required this.otherPromotions,
       required this.snapshots});
 
-  //json to model object
+  /// tworzenie modelu z jsona z listą sklepów jako listą ID
   factory ProductModel.fromJson(Map<String, dynamic> json) {
     return ProductModel(
       id: json['_id'],
@@ -104,6 +108,7 @@ class ProductModel {
     );
   }
 
+  /// tworzenie modelu z jsona z listą sklepów jako listą obiektów
   factory ProductModel.fromJsonShop(Map<String, dynamic> json) {
     return ProductModel(
       id: json['_id'],

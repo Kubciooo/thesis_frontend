@@ -1,3 +1,4 @@
+/// funkcja pomocnicza do dodawania znaków endline do tekstu co określoną liczbę znaków w linii
 String addEndlinesToString(String str, int maxLength) {
   String result = "";
   List<String> words = str.split(" ");

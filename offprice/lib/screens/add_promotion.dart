@@ -7,6 +7,7 @@ import 'package:offprice/screens/add_promotion_next.dart';
 import 'package:offprice/widgets/glassmorphism_card.dart';
 import 'package:offprice/widgets/products_list.dart';
 
+/// Widok wybierania produktu do stworzenia promocji
 class AddPromotionScreen extends StatefulWidget {
   const AddPromotionScreen({Key? key}) : super(key: key);
   static const String routeName = '/add-promotion';

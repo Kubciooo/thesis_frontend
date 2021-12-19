@@ -12,18 +12,28 @@ import 'package:offprice/models/product_chart.dart';
 import 'package:offprice/providers/auth.dart';
 import 'package:offprice/utils/add_endlines_to_string.dart';
 
+/// klasa odpowiadająca za foldery z produktami
 class FoldersProvider with ChangeNotifier {
+  /// token JWT
   String _token = '';
+
+  /// czy należy pobrać foldery z API
   bool shouldFetch = true;
+
+  /// Ulubiony folder
   FoldersModel _favouriteFolder =
       FoldersModel(id: '', name: 'Favourite', products: []);
+
+  /// Lista folderów z API
   final List<FoldersModel> _folders = [];
   get token => _token;
 
+  /// czy istnieje ulubiony folder
   get isFavouriteFolderSet => _favouriteFolder.id != '';
 
   get favouriteFolder => _favouriteFolder;
 
+  /// funkcja resetująca listę folderów
   void update(AuthProvider auth) {
     _token = auth.token;
     shouldFetch = true;
@@ -32,6 +42,7 @@ class FoldersProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  /// czy folder jest ulubony
   bool isFavourite(FoldersModel folder) {
     return folder.id == _favouriteFolder.id;
   }
@@ -40,11 +51,13 @@ class FoldersProvider with ChangeNotifier {
     return [..._folders];
   }
 
+  /// czyszczenie danych
   void clearFolders() {
     _folders.clear();
     shouldFetch = true;
   }
 
+  /// funkcja zmieniająca dane z folderu na dane do wykresu
   List<charts.Series<FolderChartModel, String>> getFolderChart(
       FoldersModel folder) {
     List<FolderChartModel> folderChart = folder.products.map((product) {
@@ -64,6 +77,7 @@ class FoldersProvider with ChangeNotifier {
     ];
   }
 
+  /// funkcja ustawiania ulubionego folderu
   Future<int> setFavouriteFolder(FoldersModel folder) async {
     final url = '$host/api/users/favourites/folder';
 
@@ -93,6 +107,7 @@ class FoldersProvider with ChangeNotifier {
     }
   }
 
+  /// funkcja pobierania ulubionego folderu z API
   Future<int> fetchFavouriteFolder() async {
     final url = '$host/api/users/favourites/folder';
     final uri = Uri.parse(url);
@@ -118,6 +133,7 @@ class FoldersProvider with ChangeNotifier {
     }
   }
 
+  /// funkcja tworzenia folderu z API
   Future<int> createFolder(String name, List<String> products) async {
     var url = ('$host/api/folders');
 
@@ -148,6 +164,7 @@ class FoldersProvider with ChangeNotifier {
     }
   }
 
+  /// funkcja usuwania folderu z API
   Future<int> deleteFolder(String id) async {
     var url = ('$host/api/folders/$id');
 
@@ -182,6 +199,7 @@ class FoldersProvider with ChangeNotifier {
     }
   }
 
+  /// funkcja usuwania produktu z folderu z API
   Future<int> removeProductFromFolder(String folderId, String productId) async {
     var url = ('$host/api/folders/$folderId');
 
@@ -216,6 +234,7 @@ class FoldersProvider with ChangeNotifier {
     }
   }
 
+  /// funkcja dodania produktu do folderu z API
   Future<int> addProductToFolder(String folderId, ProductModel product) async {
     var url = ('$host/api/folders/$folderId');
 
@@ -250,6 +269,7 @@ class FoldersProvider with ChangeNotifier {
     }
   }
 
+  /// funkcja pobierająca foldery z API
   Future<int> fetchFolders() async {
     var url = ('$host/api/folders');
 

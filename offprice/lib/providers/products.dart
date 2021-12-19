@@ -7,17 +7,20 @@ import 'package:charts_flutter/flutter.dart' as charts;
 
 import 'package:flutter/material.dart';
 import 'package:offprice/constants/api.dart';
-// import color package
-
 import 'package:offprice/models/product.dart';
 import 'package:offprice/models/product_chart.dart';
 import 'package:offprice/models/shop.dart';
 import 'package:offprice/providers/auth.dart';
 
+/// klasa obsługująca zapytania do API odnośnie produktów
 class ProductsProvider with ChangeNotifier {
-  // create a function to login user via api with url and body
+  /// token JWT
   String _token = '';
+
+  /// czy należy pobrać produkty z API
   bool shouldFetch = true;
+
+  /// ulubiony produkt
   ProductModel _favouriteProduct = ProductModel(
     categories: [],
     id: '',
@@ -29,9 +32,17 @@ class ProductsProvider with ChangeNotifier {
     snapshots: [],
     url: '',
   );
+
+  /// lista produktów
   final List<ProductModel> _products = [];
+
+  /// lista ulubionych produktów
   final List<ProductModel> _favourites = [];
+
+  /// lista sklepów
   final List<ShopModel> _shops = [];
+
+  /// lista zablokowanych sklepów
   final List<ShopModel> _blockedShops = [];
   get token => _token;
 
@@ -82,6 +93,7 @@ class ProductsProvider with ChangeNotifier {
     shouldFetch = true;
   }
 
+  /// wysłanie do API zapytania o ustawienie produktu jako ulubionego
   Future<int> setFavouriteProduct(ProductModel product) async {
     final url = '$host/api/users/favourites/product';
 
@@ -111,6 +123,7 @@ class ProductsProvider with ChangeNotifier {
     }
   }
 
+  /// pobranie zablokowanych sklepów z API
   Future<int> fetchBlockedShops() async {
     final url = '$host/api/users/blockedShops';
 
@@ -138,6 +151,7 @@ class ProductsProvider with ChangeNotifier {
     }
   }
 
+  /// wysłanie do API zapytania o zablokowanie lub odblokowanie sklepu
   Future<int> changeShopBlockStatus(ShopModel shop, bool blocked) async {
     final url = '$host/api/users/blockedShops';
 
@@ -170,6 +184,7 @@ class ProductsProvider with ChangeNotifier {
     }
   }
 
+  /// pobranie z API listy sklepów
   Future<int> fetchShops() async {
     final url = '$host/api/shops';
 
@@ -198,6 +213,7 @@ class ProductsProvider with ChangeNotifier {
     }
   }
 
+  /// pobranie ulubionego produktu z API
   Future<int> fetchFavouriteProduct() async {
     final url = '$host/api/users/favourites/product';
     final uri = Uri.parse(url);
@@ -223,6 +239,7 @@ class ProductsProvider with ChangeNotifier {
     }
   }
 
+  /// zmiana modelu produktu na  model do wykresu
   List<charts.Series<ProductChartModel, String>> getProductChart(
       ProductModel product) {
     List<ProductChartModel> productChart = [];
@@ -253,6 +270,7 @@ class ProductsProvider with ChangeNotifier {
     return '${date.year}-${appendZero(date.month)}-${appendZero(date.day)}\n${appendZero(date.hour)}:${appendZero(date.minute)}';
   }
 
+  /// pobranie z API listy produktów na nowo
   Future<int> refreshProducts({
     min,
     max,
@@ -267,6 +285,7 @@ class ProductsProvider with ChangeNotifier {
         favouritesOnly: favouritesOnly);
   }
 
+  // pobranie z API listy produktów
   Future<int> getProducts(
       {refresh = false,
       min = 0,
@@ -289,6 +308,7 @@ class ProductsProvider with ChangeNotifier {
     return statusCode;
   }
 
+  /// wysłanie do API zapytania o zaobserwowanie produktu
   Future<int> followProduct(productId) async {
     final url = '$host/api/products/$productId';
     final uri = Uri.parse(url);
@@ -305,6 +325,7 @@ class ProductsProvider with ChangeNotifier {
     return response.statusCode;
   }
 
+  /// wysłanie do API zapytania o usunięcie obserwowania produktu
   Future<int> unfollowProduct(productId) async {
     final url = '$host/api/products/$productId';
     final uri = Uri.parse(url);
@@ -322,6 +343,7 @@ class ProductsProvider with ChangeNotifier {
     return response.statusCode;
   }
 
+  /// wysłanie zapytania do API o wykorzystanie scrapera do pobrania produktów z wybranych sklepów
   Future<int> getProductsFromScrapper(
       {min = 0, max = 9000000, name = ''}) async {
     var url = ('$host/api/products/scrapper');
@@ -364,6 +386,7 @@ class ProductsProvider with ChangeNotifier {
     }
   }
 
+  /// pobranie produktów z API
   Future<int> getLatestProducts({min = 0, max = 9000000, name = ''}) async {
     var url = ('$host/api/products');
     if (min > 0) {
@@ -412,6 +435,7 @@ class ProductsProvider with ChangeNotifier {
     }
   }
 
+  /// czy produkt jest obserwowany
   bool isFollowed(String productId) {
     for (var i = 0; i < _favourites.length; i++) {
       if (_favourites[i].id == productId) {
@@ -421,6 +445,7 @@ class ProductsProvider with ChangeNotifier {
     return false;
   }
 
+  /// pobranie listy obserwowanych produktów
   Future<int> getFavourites() async {
     _favourites.clear();
     var url = Uri.parse('$host/api/users/products');

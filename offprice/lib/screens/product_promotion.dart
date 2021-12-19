@@ -12,6 +12,7 @@ import 'package:offprice/widgets/gradient_text.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+/// widok promocji wybranej przez użytkownika
 class ProductPromotionScreen extends StatefulWidget {
   final DealModel productPromotion;
   const ProductPromotionScreen({Key? key, required this.productPromotion})

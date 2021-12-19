@@ -14,6 +14,7 @@ import 'package:offprice/widgets/product_card.dart';
 import 'package:offprice/widgets/settings_button.dart';
 import 'package:provider/provider.dart';
 
+/// widok pojedynczego folderu
 class SingleFolder extends StatelessWidget {
   final FoldersModel folder;
   const SingleFolder({Key? key, required this.folder}) : super(key: key);

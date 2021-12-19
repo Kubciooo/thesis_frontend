@@ -8,13 +8,16 @@ import 'package:flutter/material.dart';
 import 'package:offprice/constants/api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+///
+/// klasa odpowiedzialna za autoryzację użytkownika
 class AuthProvider with ChangeNotifier {
-  // create a function to login user via api with url and body
+  /// token JWT
   String _token = '';
 
+  /// getter dla tokena JWT
   String get token => _token;
 
-  // funtion to store login and password in shared preferences
+  /// funkcja zapisująca login i hasło użytkownika do SharedPreferences
   Future<void> storeUser(String login, String password) async {
     final prefs = await SharedPreferences.getInstance();
     const key = 'login';
@@ -25,7 +28,7 @@ class AuthProvider with ChangeNotifier {
     prefs.setString(key1, value1);
   }
 
-  // function to get login and password from shared preferences
+  /// funkcja pobierająca login i hasło z SharedPreferences
   Future<Map<String, String>> getUserLoginAndPassword() async {
     final prefs = await SharedPreferences.getInstance();
     const key = 'login';
@@ -35,6 +38,7 @@ class AuthProvider with ChangeNotifier {
     return {'login': value!, 'password': value1!};
   }
 
+  /// funkcja automatycznie logująca użytkownika
   Future<bool> automaticLogin() async {
     var userData = await getUserLoginAndPassword();
     if (userData['login'] == null || userData['password'] == null) {
@@ -49,6 +53,7 @@ class AuthProvider with ChangeNotifier {
     return userLoggedIn;
   }
 
+  /// funkcja logująca użytkownika
   Future<bool> signIn(
       {required String login,
       required String password,
@@ -86,6 +91,7 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  /// funkcja wysyłająca zapytanie o zapomniane hasło
   Future<int> forgotPassword(String login) async {
     var url = Uri.parse('$host/api/users/forgotPassword');
     try {
@@ -93,8 +99,7 @@ class AuthProvider with ChangeNotifier {
         url,
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
-          "Access-Control-Allow-Origin":
-              "*", // Required for CORS support to work
+          "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Headers":
               "Origin,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,locale",
           "Access-Control-Allow-Methods": "POST, OPTIONS"
@@ -111,6 +116,11 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  /// funkcja resetująca hasło
+  /// @param token - token resetowania hasła
+  ///  @param password - nowe hasło
+  /// @param passwordConfirm - powtórzenie nowego hasła
+  /// @returns kod statusu zapytania
   Future<int> resetPassword(
       {required String token,
       required String password,
@@ -142,6 +152,9 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  /// funkcja zmieniająca hasła
+  /// @param password - nowe hasło
+  /// @param passwordConfirm - powtórzenie nowego hasła
   Future<int> updatePassword(
       {required String password, required String retypePassword}) async {
     var url = Uri.parse('$host/api/users/updatePassword');
@@ -173,7 +186,12 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  //function to register user via api with url and body
+  /// funkcja rejestrująca nowego użytkownika
+  /// @param login - login
+  /// @param password - hasło
+  /// @param email - email
+  /// @param passwordConfirm - powtórzenie hasła
+  /// @returns kod statusu zapytania
   Future<bool> signUp(
       {required String login,
       required String email,
@@ -208,6 +226,7 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  /// funkcja wylogowująca użytkownika
   Future<void> logout() async {
     _token = '';
     final prefs = await SharedPreferences.getInstance();

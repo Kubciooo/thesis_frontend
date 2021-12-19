@@ -8,6 +8,7 @@ import 'package:offprice/widgets/promotions_list.dart';
 import 'package:offprice/widgets/text_field_dark.dart';
 import 'dart:async';
 
+/// Widok wszystkich promocji
 class AllDealsScreen extends StatefulWidget {
   const AllDealsScreen({Key? key}) : super(key: key);
   static const String routeName = '/all-deals';

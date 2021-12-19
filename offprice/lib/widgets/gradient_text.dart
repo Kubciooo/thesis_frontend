@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// klasa tworząca komponent tekstu z gradientem
 class GradientText extends StatelessWidget {
   const GradientText(
     this.text, {

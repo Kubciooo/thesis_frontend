@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:offprice/constants/colors.dart';
 import 'package:offprice/models/product.dart';
 
+/// klasa tworząca komponent który wyświetla informacje o produkcie
 class ProductCard extends StatelessWidget {
   final ProductModel product;
   final Function(ProductModel) onTap;

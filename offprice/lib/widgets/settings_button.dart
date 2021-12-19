@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+/// klasa wyświetlająca przycisk ustawień
 class SettingsButton extends StatefulWidget {
   final List<Widget> actions;
   final String title;

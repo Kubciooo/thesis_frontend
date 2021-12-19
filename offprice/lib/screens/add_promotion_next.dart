@@ -11,6 +11,7 @@ import 'package:offprice/widgets/glassmorphism_card.dart';
 import 'package:offprice/widgets/text_field_dark.dart';
 import 'package:provider/provider.dart';
 
+/// Widok dodawania promocji do produktu po wybraniu produktu
 class AddPromotionNext extends StatefulWidget {
   final ProductModel product;
   const AddPromotionNext({Key? key, required this.product}) : super(key: key);

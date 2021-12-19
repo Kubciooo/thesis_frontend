@@ -1,5 +1,7 @@
 import 'package:offprice/models/product.dart';
 
+///
+/// Model promocji produktu
 class DealModel {
   final String id;
   final String type;
@@ -27,6 +29,7 @@ class DealModel {
     this.percent = 0,
   });
 
+  /// Zwraca cenę po zniżce
   double get finalPrice {
     if (discountType == 'CASH') {
       return startingPrice - cash;
@@ -35,7 +38,7 @@ class DealModel {
     }
   }
 
-  // json to model
+  /// funkcja tworzenia modelu promocji z jsona
   factory DealModel.fromJson(Map<String, dynamic> json) {
     return DealModel(
       id: json['_id'],

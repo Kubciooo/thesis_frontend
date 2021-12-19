@@ -10,6 +10,7 @@ import 'package:offprice/screens/login_screen.dart';
 import 'package:offprice/widgets/glassmorphism_card.dart';
 import 'package:provider/provider.dart';
 
+/// Widok odpowiedzialny za dodawanie nowego folderu
 class AddFolderScreen extends StatefulWidget {
   const AddFolderScreen({Key? key}) : super(key: key);
   static const routeName = '/add-folder';

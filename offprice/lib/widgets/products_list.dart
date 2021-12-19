@@ -6,6 +6,7 @@ import 'package:offprice/providers/products.dart';
 import 'package:offprice/screens/login_screen.dart';
 import 'package:provider/provider.dart';
 
+/// klasa tworząca komponent listy produktów
 class ProductsList extends StatefulWidget {
   final Stream<String> name;
   final Stream<int> priceMin;

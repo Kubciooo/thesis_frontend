@@ -11,6 +11,7 @@ import 'package:offprice/screens/login_screen.dart';
 import 'package:offprice/widgets/glassmorphism_card.dart';
 import 'package:provider/provider.dart';
 
+/// Widok odpowiedzialny za dodanie produktów do folderu
 class AddProductsToFolderScreen extends StatefulWidget {
   final FoldersModel folder;
   const AddProductsToFolderScreen({Key? key, required this.folder})

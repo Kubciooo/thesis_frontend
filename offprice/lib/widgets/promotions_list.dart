@@ -8,6 +8,7 @@ import 'package:offprice/screens/login_screen.dart';
 import 'package:offprice/screens/product_promotion.dart';
 import 'package:provider/provider.dart';
 
+/// klasa tworząca komponent wyświetlający listę promocji
 class PromotionsList extends StatefulWidget {
   final bool isHot;
   final String searchTerm;

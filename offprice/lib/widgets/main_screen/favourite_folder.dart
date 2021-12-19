@@ -9,6 +9,7 @@ import 'package:offprice/constants/colors.dart';
 import 'package:offprice/widgets/main_screen/chart.dart';
 import 'package:provider/provider.dart';
 
+/// klasa tworząca komponent ulubionego folderu
 class FavouriteFolder extends StatelessWidget {
   const FavouriteFolder({Key? key}) : super(key: key);
 

@@ -10,6 +10,7 @@ import 'package:offprice/screens/single_folder.dart';
 import 'package:offprice/widgets/glassmorphism_card.dart';
 import 'package:provider/provider.dart';
 
+/// Widok wszystkich folderów
 class AllFoldersScreen extends StatefulWidget {
   const AllFoldersScreen({Key? key}) : super(key: key);
   static const routeName = '/all-folders';
@@ -100,6 +101,8 @@ class _AddPromotionScreenState extends State<AllFoldersScreen> {
                               final foldersProvider =
                                   Provider.of<FoldersProvider>(context,
                                       listen: false);
+                              final folders =
+                                  Provider.of<FoldersProvider>(context).folders;
 
                               return RefreshIndicator(
                                 onRefresh: () async {
@@ -118,7 +121,7 @@ class _AddPromotionScreenState extends State<AllFoldersScreen> {
                                   }
                                 },
                                 child: ListView.builder(
-                                  itemCount: foldersProvider.folders.length,
+                                  itemCount: folders.length,
                                   itemBuilder: (context, index) {
                                     return Card(
                                       key: const Key('folder item'),
@@ -130,8 +133,7 @@ class _AddPromotionScreenState extends State<AllFoldersScreen> {
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(15.0)),
-                                        title: Text(
-                                            foldersProvider.folders[index].name,
+                                        title: Text(folders[index].name,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline2!

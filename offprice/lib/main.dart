@@ -18,6 +18,7 @@ import 'package:offprice/screens/user_settings.dart';
 import 'package:provider/provider.dart';
 import 'constants/main_theme.dart';
 
+/// główna aplikacja
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,

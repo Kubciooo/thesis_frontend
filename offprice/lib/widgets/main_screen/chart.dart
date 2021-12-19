@@ -1,10 +1,7 @@
-// import 'package:charts_common/common.dart' as chartsCommon;
-// import 'package:charts_common/src/data/series.dart' show AccessorFn;
 // ignore_for_file: implementation_imports, library_prefixes
 
 import 'dart:math';
 
-//   tooltip.dart
 import 'package:charts_flutter/flutter.dart';
 import 'package:charts_flutter/src/text_element.dart' as ChartText;
 import 'package:charts_flutter/src/text_style.dart' as ChartStyle;
@@ -14,6 +11,7 @@ import 'package:offprice/providers/products.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
+/// klasa tworząca wykres wykorzystując bibliotekę charts_flutter
 class Chart extends StatelessWidget {
   final List<charts.Series<dynamic, String>> productChart;
   final bool isProductSeries;

@@ -8,6 +8,7 @@ import 'package:offprice/widgets/main_screen/favourite_folder.dart';
 import 'package:offprice/widgets/main_screen/favourite_product.dart';
 import 'package:offprice/widgets/main_screen/hot_deals.dart';
 
+/// Główny widok aplikacji
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
   static const routeName = '/home';

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 
+/// klasa wyświetlająca komunikaty
 Route<Object?> dialogBuilder(BuildContext context, Object? arguments) {
   return CupertinoDialogRoute<void>(
     context: context,

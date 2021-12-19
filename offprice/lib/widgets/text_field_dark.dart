@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:offprice/constants/colors.dart';
 
+/// klasa wyświetlająca pole tekstowe
 class TextFieldDark extends StatefulWidget {
   final String hintText;
   final Icon icon;

@@ -9,6 +9,7 @@ import 'package:offprice/widgets/glassmorphism_card.dart';
 import 'package:offprice/widgets/text_field_dark.dart';
 import 'package:provider/provider.dart';
 
+/// widok ustawień użytkownika
 class UserSettingsScreen extends StatefulWidget {
   const UserSettingsScreen({Key? key}) : super(key: key);
   static const routeName = '/user-settings';

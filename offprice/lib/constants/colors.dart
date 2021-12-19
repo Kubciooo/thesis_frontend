@@ -1,6 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
+///
+/// klasa z listą kolorów wykorzystywanych w aplikacji
+///
 class AppColors {
   static const Map<int, Color?> colorBackground = {
     50: Color.fromRGBO(48, 48, 48, .1),

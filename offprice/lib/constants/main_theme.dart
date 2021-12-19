@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'colors.dart';
 
+///
+/// Klasa odpowiedzialna za główne kolory i czcionki w aplikacji
 class AppTheme {
   static ThemeData get darkTheme {
     return ThemeData(

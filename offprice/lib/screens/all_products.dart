@@ -11,6 +11,7 @@ import 'package:offprice/widgets/products_list.dart';
 import 'package:offprice/widgets/text_field_dark.dart';
 import 'package:provider/provider.dart';
 
+/// Widok wszystkich produktów
 class AllProductsScreen extends StatefulWidget {
   const AllProductsScreen({Key? key}) : super(key: key);
   static const routeName = '/all-products';

@@ -9,6 +9,7 @@ import 'package:offprice/widgets/settings_button.dart';
 import 'package:offprice/widgets/text_field_dark.dart';
 import 'package:provider/provider.dart';
 
+/// klasa wyświetająca komponent gorących promocji
 class HotDeals extends StatelessWidget {
   const HotDeals({Key? key}) : super(key: key);
 

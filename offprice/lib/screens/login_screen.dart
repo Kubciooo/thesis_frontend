@@ -7,6 +7,7 @@ import 'package:offprice/providers/auth.dart';
 import 'package:provider/provider.dart';
 import 'package:validators/validators.dart';
 
+/// Widok logowania i rejestracji
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
   static const routeName = '/login';

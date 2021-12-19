@@ -15,6 +15,7 @@ import 'package:offprice/widgets/settings_button.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+/// widok pojedynczego produktu
 class SingleProductScreen extends StatefulWidget {
   final ProductModel product;
 
