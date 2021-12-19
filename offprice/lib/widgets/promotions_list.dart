@@ -24,16 +24,14 @@ class PromotionsList extends StatefulWidget {
 
 class _PromotionsListState extends State<PromotionsList> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Expanded(
       child: FutureBuilder(
           future: Provider.of<PromotionsProvider>(context, listen: false)
-              .getPromotions(filter: widget.searchTerm, fetchUser: true),
+              .getPromotions(
+                  isHot: widget.isHot,
+                  filter: widget.searchTerm,
+                  fetchUser: true),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
@@ -55,7 +53,7 @@ class _PromotionsListState extends State<PromotionsList> {
               onRefresh: () async {
                 int statusCode = await Provider.of<PromotionsProvider>(context,
                         listen: false)
-                    .refreshPromotions();
+                    .refreshPromotions(isHot: widget.isHot);
 
                 if (statusCode == 401) {
                   Provider.of<AuthProvider>(context, listen: false).logout();

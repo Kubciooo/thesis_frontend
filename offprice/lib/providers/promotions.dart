@@ -43,13 +43,13 @@ class PromotionsProvider with ChangeNotifier {
     _deals.clear();
   }
 
-  Future<int> refreshPromotions() async {
-    return getPromotions(refresh: true);
+  Future<int> refreshPromotions({isHot = false}) async {
+    return getPromotions(refresh: true, isHot: isHot);
   }
 
   /// pobranie listy promocji
   Future<int> getPromotions(
-      {refresh = false, filter = '', fetchUser = false}) async {
+      {refresh = false, filter = '', fetchUser = false, isHot = false}) async {
     int statusCode = 200;
     if (refresh) {
       clearPromotions();
@@ -58,7 +58,7 @@ class PromotionsProvider with ChangeNotifier {
     if (_shouldFetch) {
       await getLikes();
       _shouldFetch = false;
-      statusCode = await getLatestPromotions();
+      statusCode = await getLatestPromotions(isHot);
       if (fetchUser) {
         statusCode = await getUserPromotions();
       }
@@ -189,8 +189,13 @@ class PromotionsProvider with ChangeNotifier {
   }
 
   // pobranie z API listy promocji
-  Future<int> getLatestPromotions() async {
+  Future<int> getLatestPromotions(bool isHot) async {
     var url = Uri.parse('$host/api/promotions/products');
+
+    if (isHot) {
+      url = Uri.parse('$host/api/promotions/products?hot=true');
+    }
+
     try {
       final response = await http.get(
         url,

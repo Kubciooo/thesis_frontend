@@ -112,6 +112,7 @@ class _ProductsListState extends State<ProductsList> {
       child: FutureBuilder(
           future: Provider.of<ProductsProvider>(context, listen: false)
               .getProducts(
+                  refresh: true,
                   name: name,
                   min: priceMin,
                   favouritesOnly: favouritesOnly,

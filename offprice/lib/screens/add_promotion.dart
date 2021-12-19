@@ -19,6 +19,7 @@ class AddPromotionScreen extends StatefulWidget {
 class _AddPromotionScreenState extends State<AddPromotionScreen> {
   int _priceMin = 0;
   int _priceMax = 0;
+  String _name = '';
 
   final StreamController<String> _nameController = StreamController<String>();
   final StreamController<int> _priceMinController = StreamController<int>();
@@ -30,7 +31,9 @@ class _AddPromotionScreenState extends State<AddPromotionScreen> {
   final double _height = 0.9;
   final _formKey = GlobalKey<FormState>();
 
-  void _changeName(String value) {}
+  void _changeName(String value) {
+    _name = value;
+  }
 
   void _changePriceMin(String value) {
     if (value != '') {
@@ -52,6 +55,7 @@ class _AddPromotionScreenState extends State<AddPromotionScreen> {
     if (_formKey.currentState!.validate()) {
       _priceMinController.add(_priceMin);
       _priceMaxController.add(_priceMax);
+      _nameController.add(_name);
     }
   }
 

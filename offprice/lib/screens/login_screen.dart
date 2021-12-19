@@ -112,7 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               if (value.isEmpty) {
                                 return 'Please enter your login';
                               }
-                              if (value.lenght < 6) {
+                              if (value.length < 6) {
                                 return 'Login must be at least 6 characters long';
                               }
                               if (value.length > 20) {
@@ -133,7 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               if (value.isEmpty) {
                                 return 'Please enter your password';
                               }
-                              if (value.lenght < 6) {
+                              if (value.length < 6) {
                                 return 'Password must be at least 6 characters long';
                               }
                               if (value.length > 20) {
@@ -445,7 +445,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                     if (value.isEmpty) {
                                                       return 'Please enter your password';
                                                     }
-                                                    if (value.lenght < 6) {
+                                                    if (value.length < 6) {
                                                       return 'Login must be at least 6 characters long';
                                                     }
                                                     if (value.length > 20) {
@@ -474,7 +474,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                         _resetPassword) {
                                                       return 'Passwords do not match';
                                                     }
-                                                    if (value.lenght < 6) {
+                                                    if (value.length < 6) {
                                                       return 'Login must be at least 6 characters long';
                                                     }
                                                     if (value.length > 20) {

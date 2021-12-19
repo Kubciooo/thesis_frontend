@@ -424,6 +424,7 @@ class ProductsProvider with ChangeNotifier {
       if (response.statusCode != 200) {
         return response.statusCode;
       }
+      _products.clear();
       for (var i = 0; i < responseData['data']['products'].length; i++) {
         _products.add(
             ProductModel.fromJsonShop(responseData['data']['products'][i]));
