@@ -112,6 +112,12 @@ class _LoginScreenState extends State<LoginScreen> {
                               if (value.isEmpty) {
                                 return 'Please enter your login';
                               }
+                              if (value.lenght < 6) {
+                                return 'Login must be at least 6 characters long';
+                              }
+                              if (value.length > 20) {
+                                return 'Login must be less than 20 characters long';
+                              }
                               return null;
                             },
                           ),
@@ -126,6 +132,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             validator: (value) {
                               if (value.isEmpty) {
                                 return 'Please enter your password';
+                              }
+                              if (value.lenght < 6) {
+                                return 'Password must be at least 6 characters long';
+                              }
+                              if (value.length > 20) {
+                                return 'Password must be less than 20 characters long';
                               }
                               return null;
                             },
@@ -146,17 +158,22 @@ class _LoginScreenState extends State<LoginScreen> {
                               },
                             ),
                             TextFieldDark(
-                              initialValue: _retypePassword,
-                              onEditingCompleted: () {},
-                              onChanged: _changeRetypePassword,
-                              labelText: 'Retype password',
-                              hintText: 'Enter your password again',
-                              icon: const Icon(Icons.lock),
-                              obscureText: true,
-                              validator: (value) => value != _password
-                                  ? 'Passwords do not match'
-                                  : null,
-                            ),
+                                initialValue: _retypePassword,
+                                onEditingCompleted: () {},
+                                onChanged: _changeRetypePassword,
+                                labelText: 'Retype password',
+                                hintText: 'Enter your password again',
+                                icon: const Icon(Icons.lock),
+                                obscureText: true,
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Please enter your password again';
+                                  }
+                                  if (value != _password) {
+                                    return 'Passwords do not match';
+                                  }
+                                  return null;
+                                }),
                           ],
                           const SizedBox(height: 20),
                           Row(
@@ -428,6 +445,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                                     if (value.isEmpty) {
                                                       return 'Please enter your password';
                                                     }
+                                                    if (value.lenght < 6) {
+                                                      return 'Login must be at least 6 characters long';
+                                                    }
+                                                    if (value.length > 20) {
+                                                      return 'Login must be less than 20 characters long';
+                                                    }
+
                                                     return null;
                                                   },
                                                 ),
@@ -445,6 +469,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                                   validator: (value) {
                                                     if (value.isEmpty) {
                                                       return 'Please enter your password';
+                                                    }
+                                                    if (value !=
+                                                        _resetPassword) {
+                                                      return 'Passwords do not match';
+                                                    }
+                                                    if (value.lenght < 6) {
+                                                      return 'Login must be at least 6 characters long';
+                                                    }
+                                                    if (value.length > 20) {
+                                                      return 'Login must be less than 20 characters long';
                                                     }
                                                     return null;
                                                   },
