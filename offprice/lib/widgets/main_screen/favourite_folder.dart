@@ -36,7 +36,7 @@ class FavouriteFolder extends StatelessWidget {
               if (statusCode == 401) {
                 Future.delayed(Duration.zero, () {
                   Navigator.of(context).pushNamedAndRemoveUntil(
-                      LoginScreen.routeName, (Route<dynamic> route) => false);
+                      LoginScreen.routeName, ModalRoute.withName('/'));
                   Provider.of<AuthProvider>(context, listen: false).logout();
                 });
               }

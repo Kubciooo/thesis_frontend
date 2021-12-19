@@ -46,8 +46,7 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
                   {
                     Future.delayed(Duration.zero, () {
                       Navigator.of(context).pushNamedAndRemoveUntil(
-                          LoginScreen.routeName,
-                          (Route<dynamic> route) => false);
+                          LoginScreen.routeName, ModalRoute.withName('/'));
                       Provider.of<AuthProvider>(context, listen: false)
                           .logout();
                     })
@@ -70,8 +69,7 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
                   {
                     Future.delayed(Duration.zero, () {
                       Navigator.of(context).pushNamedAndRemoveUntil(
-                          LoginScreen.routeName,
-                          (Route<dynamic> route) => false);
+                          LoginScreen.routeName, ModalRoute.withName('/'));
                       Provider.of<AuthProvider>(context, listen: false)
                           .logout();
                     })
@@ -95,8 +93,7 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
                   {
                     Future.delayed(Duration.zero, () {
                       Navigator.of(context).pushNamedAndRemoveUntil(
-                          LoginScreen.routeName,
-                          (Route<dynamic> route) => false);
+                          LoginScreen.routeName, ModalRoute.withName('/'));
                       Provider.of<AuthProvider>(context, listen: false)
                           .logout();
                     })
@@ -119,7 +116,7 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
             if (statusCode == 401) {
               Future.delayed(Duration.zero, () {
                 Navigator.of(context).pushNamedAndRemoveUntil(
-                    LoginScreen.routeName, (Route<dynamic> route) => false);
+                    LoginScreen.routeName, ModalRoute.withName('/'));
                 Provider.of<AuthProvider>(context, listen: false).logout();
               });
             } else if (statusCode == 201) {
@@ -223,7 +220,7 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
                                 Future.delayed(Duration.zero, () {
                                   Navigator.of(context).pushNamedAndRemoveUntil(
                                       LoginScreen.routeName,
-                                      (Route<dynamic> route) => false);
+                                      ModalRoute.withName('/'));
                                   Provider.of<AuthProvider>(context,
                                           listen: false)
                                       .logout();

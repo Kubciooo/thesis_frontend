@@ -38,7 +38,7 @@ class FavouriteProduct extends StatelessWidget {
                 Provider.of<AuthProvider>(context, listen: false).logout();
                 Future.delayed(Duration.zero, () {
                   Navigator.of(context).pushNamedAndRemoveUntil(
-                      LoginScreen.routeName, (Route<dynamic> route) => false);
+                      LoginScreen.routeName, ModalRoute.withName('/'));
                 });
               }
               final favouriteProduct =

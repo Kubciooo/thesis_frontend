@@ -132,8 +132,7 @@ class _ProductPromotionScreenState extends State<ProductPromotionScreen> {
                       if (responseStatus == 401) {
                         Future.delayed(Duration.zero, () {
                           Navigator.of(context).pushNamedAndRemoveUntil(
-                              LoginScreen.routeName,
-                              (Route<dynamic> route) => false);
+                              LoginScreen.routeName, ModalRoute.withName('/'));
                           Provider.of<AuthProvider>(context, listen: false)
                               .logout();
                         });

@@ -113,7 +113,7 @@ class _AddPromotionScreenState extends State<AllFoldersScreen> {
                                       Navigator.of(context)
                                           .pushNamedAndRemoveUntil(
                                               LoginScreen.routeName,
-                                              (Route<dynamic> route) => false);
+                                              ModalRoute.withName('/'));
                                       Provider.of<AuthProvider>(context,
                                               listen: false)
                                           .logout();

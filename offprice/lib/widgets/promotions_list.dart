@@ -29,6 +29,7 @@ class _PromotionsListState extends State<PromotionsList> {
       child: FutureBuilder(
           future: Provider.of<PromotionsProvider>(context, listen: false)
               .getPromotions(
+                  refresh: true,
                   isHot: widget.isHot,
                   filter: widget.searchTerm,
                   fetchUser: true),
@@ -43,7 +44,7 @@ class _PromotionsListState extends State<PromotionsList> {
               Provider.of<AuthProvider>(context, listen: false).logout();
               Future.delayed(Duration.zero, () {
                 Navigator.of(context).pushNamedAndRemoveUntil(
-                    LoginScreen.routeName, (Route<dynamic> route) => false);
+                    LoginScreen.routeName, ModalRoute.withName('/'));
               });
             }
 
@@ -59,7 +60,7 @@ class _PromotionsListState extends State<PromotionsList> {
                   Provider.of<AuthProvider>(context, listen: false).logout();
                   Future.delayed(Duration.zero, () {
                     Navigator.of(context).pushNamedAndRemoveUntil(
-                        LoginScreen.routeName, (Route<dynamic> route) => false);
+                        LoginScreen.routeName, ModalRoute.withName('/'));
                   });
                 }
               },

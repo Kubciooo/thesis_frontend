@@ -109,7 +109,7 @@ class ProductsProvider with ChangeNotifier {
           'productId': product.id,
         }),
       );
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
         _favouriteProduct =
             ProductModel.fromJsonShop(responseData['data']['favouriteProduct']);

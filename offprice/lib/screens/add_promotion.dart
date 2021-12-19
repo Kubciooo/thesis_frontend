@@ -18,7 +18,7 @@ class AddPromotionScreen extends StatefulWidget {
 
 class _AddPromotionScreenState extends State<AddPromotionScreen> {
   int _priceMin = 0;
-  int _priceMax = 0;
+  int _priceMax = 99999999;
   String _name = '';
 
   final StreamController<String> _nameController = StreamController<String>();
@@ -53,7 +53,6 @@ class _AddPromotionScreenState extends State<AddPromotionScreen> {
 
   void _restart() {
     if (_formKey.currentState!.validate()) {
-      _priceMinController.add(_priceMin);
       _priceMaxController.add(_priceMax);
       _nameController.add(_name);
     }
@@ -102,8 +101,10 @@ class _AddPromotionScreenState extends State<AddPromotionScreen> {
                               hintText: 'Name',
                             ),
                             onChanged: _changeName,
-                            onFieldSubmitted: (value) {
-                              _restart();
+                            onEditingComplete: () {
+                              if (_formKey.currentState!.validate()) {
+                                _nameController.add(_name);
+                              }
                             },
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -114,6 +115,7 @@ class _AddPromotionScreenState extends State<AddPromotionScreen> {
                           ),
                           TextFormField(
                             key: const Key('priceMin'),
+                            initialValue: _priceMin.toString(),
                             inputFormatters: [
                               FilteringTextInputFormatter.digitsOnly,
                             ],
@@ -133,13 +135,15 @@ class _AddPromotionScreenState extends State<AddPromotionScreen> {
                               return null;
                             },
                             onChanged: _changePriceMin,
-                            onFieldSubmitted: (value) {
-                              _priceMin = int.parse(value);
-                              _restart();
+                            onEditingComplete: () {
+                              if (_formKey.currentState!.validate()) {
+                                _priceMinController.add(_priceMin);
+                              }
                             },
                           ),
                           TextFormField(
                             key: const Key('priceMax'),
+                            initialValue: _priceMax.toString(),
                             inputFormatters: [
                               FilteringTextInputFormatter.digitsOnly,
                             ],
@@ -161,9 +165,10 @@ class _AddPromotionScreenState extends State<AddPromotionScreen> {
                               }
                               return null;
                             },
-                            onFieldSubmitted: (value) {
-                              _priceMax = int.parse(value);
-                              _restart();
+                            onEditingComplete: () {
+                              if (_formKey.currentState!.validate()) {
+                                _priceMaxController.add(_priceMax);
+                              }
                             },
                             onChanged: _changePriceMax,
                           ),

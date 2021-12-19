@@ -48,7 +48,7 @@ class _ProductsListState extends State<ProductsList> {
       if (statusCode == 401) {
         Provider.of<AuthProvider>(context, listen: false).logout();
         Navigator.of(context).pushNamedAndRemoveUntil(
-            LoginScreen.routeName, (Route<dynamic> route) => false);
+            LoginScreen.routeName, ModalRoute.withName('/'));
       }
     });
 
@@ -64,7 +64,7 @@ class _ProductsListState extends State<ProductsList> {
       if (statusCode == 401) {
         Provider.of<AuthProvider>(context, listen: false).logout();
         Navigator.of(context).pushNamedAndRemoveUntil(
-            LoginScreen.routeName, (Route<dynamic> route) => false);
+            LoginScreen.routeName, ModalRoute.withName('/'));
       }
     });
 
@@ -80,7 +80,7 @@ class _ProductsListState extends State<ProductsList> {
       if (statusCode == 401) {
         Provider.of<AuthProvider>(context, listen: false).logout();
         Navigator.of(context).pushNamedAndRemoveUntil(
-            LoginScreen.routeName, (Route<dynamic> route) => false);
+            LoginScreen.routeName, ModalRoute.withName('/'));
       }
     });
 
@@ -96,7 +96,7 @@ class _ProductsListState extends State<ProductsList> {
       if (statusCode == 401) {
         Provider.of<AuthProvider>(context, listen: false).logout();
         Navigator.of(context).pushNamedAndRemoveUntil(
-            LoginScreen.routeName, (Route<dynamic> route) => false);
+            LoginScreen.routeName, ModalRoute.withName('/'));
       }
     });
   }

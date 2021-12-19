@@ -80,30 +80,72 @@ class _AddPromotionNextState extends State<AddPromotionNext> {
         focusColor: AppColors.colorBackground[900],
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            await Provider.of<PromotionsProvider>(context, listen: false)
-                .addPromotion(
-                    userValidation: _userValidation,
-                    startingPrice: widget.product.price,
-                    product: widget.product.id,
-                    type: _type,
-                    discountType: _discountType,
-                    expiresAt: _expiresAt,
-                    coupon: _coupon,
-                    percentage: _percentage,
-                    cash: _cash)
-                .then((value) {
-              if (value == 401) {
-                Future.delayed(Duration.zero, () {
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                      LoginScreen.routeName, (Route<dynamic> route) => false);
-                  Provider.of<AuthProvider>(context, listen: false).logout();
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return FutureBuilder(
+                      future: Provider.of<PromotionsProvider>(context,
+                              listen: false)
+                          .addPromotion(
+                              userValidation: _userValidation,
+                              startingPrice: widget.product.price,
+                              product: widget.product.id,
+                              type: _type,
+                              discountType: _discountType,
+                              expiresAt: _expiresAt,
+                              coupon: _coupon,
+                              percentage: _percentage,
+                              cash: _cash),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator.adaptive(),
+                          );
+                        } else if (snapshot.hasError) {
+                          return const Center(
+                            child: Text('Błąd podczas dodawania promocji'),
+                          );
+                        } else {
+                          if ((snapshot.data as int) == 401) {
+                            Future.delayed(Duration.zero, () {
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                  LoginScreen.routeName,
+                                  ModalRoute.withName('/'));
+                              Provider.of<AuthProvider>(context, listen: false)
+                                  .logout();
+                            });
+                          } else if ((snapshot.data as int) == 201) {
+                            return AlertDialog(
+                              title: const Text('Dodano promocję'),
+                              content: const Text('Promocja została dodana'),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: const Text('OK'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    Navigator.of(context).pop();
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          }
+                          return AlertDialog(
+                            title: const Text('Nie dodano promocji'),
+                            content: const Text('Zły kupon!'),
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text('OK'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        }
+                      });
                 });
-              }
-              Navigator.of(context).restorablePush(
-                _dialogBuilder,
-                arguments: value == 201 ? 'Promotion added' : 'Error',
-              );
-            });
           }
         },
       ),
@@ -271,24 +313,4 @@ class _AddPromotionNextState extends State<AddPromotionNext> {
       ),
     );
   }
-}
-
-Route<Object?> _dialogBuilder(BuildContext context, Object? arguments) {
-  return CupertinoDialogRoute<void>(
-    context: context,
-    builder: (BuildContext context) {
-      return CupertinoAlertDialog(
-        title: Text(arguments.toString()),
-        actions: <Widget>[
-          CupertinoDialogAction(
-              child: const Text('Ok'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-              }),
-        ],
-      );
-    },
-  );
 }

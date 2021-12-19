@@ -32,8 +32,8 @@ void main() {
         expect(password, findsOneWidget);
         expect(loginButton, findsOneWidget);
 
-        await tester.enterText(login, "k");
-        await tester.enterText(password, "k");
+        await tester.enterText(login, "testingUser");
+        await tester.enterText(password, "testingUser");
         await tester.pumpAndSettle();
 
         await tester.tap(loginButton);

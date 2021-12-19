@@ -175,16 +175,11 @@ class PromotionsProvider with ChangeNotifier {
           'expiresAt': expiresAt.toIso8601String(),
         }),
       );
-      final responseData = json.decode(response.body);
 
-      if (responseData['status'] == 'error') {
-        throw HttpException(responseData['message']);
-      }
       notifyListeners();
       return response.statusCode;
     } catch (error) {
-      print(error);
-      return 401;
+      return 500;
     }
   }
 
