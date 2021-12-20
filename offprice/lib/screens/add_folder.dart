@@ -166,6 +166,7 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
                         Form(
                           key: _formKey,
                           child: TextFormField(
+                            autocorrect: false,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter some text';

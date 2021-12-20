@@ -126,6 +126,7 @@ class _AddPromotionNextState extends State<AddPromotionNext> {
                                     Navigator.of(context).pop();
                                     Navigator.of(context).pop();
                                     Navigator.of(context).pop();
+                                    Navigator.of(context).pop();
                                   },
                                 ),
                               ],
@@ -138,6 +139,9 @@ class _AddPromotionNextState extends State<AddPromotionNext> {
                               TextButton(
                                 child: const Text('OK'),
                                 onPressed: () {
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
                                   Navigator.of(context).pop();
                                 },
                               ),

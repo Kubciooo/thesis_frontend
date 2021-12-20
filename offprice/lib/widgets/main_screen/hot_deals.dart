@@ -35,7 +35,6 @@ class HotDeals extends StatelessWidget {
                 ],
               ),
               SettingsButton(title: 'Deal settings', actions: [
-                // textFormField that shouldn't be null and should be an integer value that is greater than 0
                 TextFieldDark(
                   onChanged: (value) {},
                   hintText: 'Enter a number',

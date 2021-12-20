@@ -96,6 +96,7 @@ class _AddPromotionScreenState extends State<AddPromotionScreen> {
                         key: _formKey,
                         child: Column(children: [
                           TextFormField(
+                            autocorrect: false,
                             key: const Key('name'),
                             decoration: const InputDecoration(
                               hintText: 'Name',
@@ -114,6 +115,7 @@ class _AddPromotionScreenState extends State<AddPromotionScreen> {
                             },
                           ),
                           TextFormField(
+                            autocorrect: false,
                             key: const Key('priceMin'),
                             initialValue: _priceMin.toString(),
                             inputFormatters: [
@@ -142,6 +144,7 @@ class _AddPromotionScreenState extends State<AddPromotionScreen> {
                             },
                           ),
                           TextFormField(
+                            autocorrect: false,
                             key: const Key('priceMax'),
                             initialValue: _priceMax.toString(),
                             inputFormatters: [
