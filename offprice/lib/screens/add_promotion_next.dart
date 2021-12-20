@@ -104,7 +104,7 @@ class _AddPromotionNextState extends State<AddPromotionNext> {
                           );
                         } else if (snapshot.hasError) {
                           return const Center(
-                            child: Text('Błąd podczas dodawania promocji'),
+                            child: Text('Error during promotion adding'),
                           );
                         } else {
                           if ((snapshot.data as int) == 401) {
@@ -117,8 +117,8 @@ class _AddPromotionNextState extends State<AddPromotionNext> {
                             });
                           } else if ((snapshot.data as int) == 201) {
                             return AlertDialog(
-                              title: const Text('Dodano promocję'),
-                              content: const Text('Promocja została dodana'),
+                              title: const Text('Promotion was added'),
+                              content: const Text('Promotion was added'),
                               actions: <Widget>[
                                 TextButton(
                                   child: const Text('OK'),
@@ -133,8 +133,8 @@ class _AddPromotionNextState extends State<AddPromotionNext> {
                             );
                           }
                           return AlertDialog(
-                            title: const Text('Nie dodano promocji'),
-                            content: const Text('Zły kupon!'),
+                            title: const Text('Promotion was not added'),
+                            content: const Text('Invalid coupon!'),
                             actions: <Widget>[
                               TextButton(
                                 child: const Text('OK'),

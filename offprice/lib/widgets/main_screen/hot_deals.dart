@@ -51,7 +51,7 @@ class HotDeals extends StatelessWidget {
                       if (statusCode == 201) {
                         await Provider.of<PromotionsProvider>(context,
                                 listen: false)
-                            .refreshPromotions();
+                            .refreshPromotions(isHot: true);
                         Navigator.of(context).pop();
                       } else {
                         Navigator.of(context).pop();

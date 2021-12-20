@@ -111,8 +111,11 @@ class _AddProductsToFolderScreenState extends State<AddProductsToFolderScreen> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          for (final product in _products.where((product) =>
-              !widget.folder.products.toList().contains(product))) {
+          for (final product in _products.where((product) => !widget
+              .folder.products
+              .map((product) => product.id)
+              .toList()
+              .contains(product.id))) {
             int statusCode =
                 await Provider.of<FoldersProvider>(context, listen: false)
                     .addProductToFolder(widget.folder.id, product);
@@ -238,7 +241,10 @@ class _AddProductsToFolderScreenState extends State<AddProductsToFolderScreen> {
                                       title:
                                           Text(provider.products[index].name),
                                       value: _products
-                                          .contains(provider.products[index]),
+                                          .map((product) => product.id)
+                                          .toList()
+                                          .contains(
+                                              provider.products[index].id),
                                       onChanged: (bool? value) {
                                         setState(() {
                                           if (value == true) {
